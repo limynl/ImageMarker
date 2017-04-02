@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_home"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/title_bar"/>
+
+    <com.team.limynl.utils.CircleImageView
+        android:layout_marginTop="100dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:src="@mipmap/default_avatar"
+        app:border_width="1dp"
+        app:border_color="#808080"/>
+
+</LinearLayout>

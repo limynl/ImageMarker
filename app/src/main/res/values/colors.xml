@@ -3,4 +3,8 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <color name="background">#f3f3f3</color><!--主题背景颜色-->
+    <color name="write">#fff</color>
+    <color name="gray1">#808080</color>
 </resources>

@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:widget="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_gravity="center_horizontal"
+            android:layout_marginRight="40dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:id="@+id/rela_name"
+            android:background="@drawable/bg_border_color_black">
+            <ImageView
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="15dp"
+                android:src="@mipmap/iconmbile"
+                android:id="@+id/loginusericon" />
+
+            <com.team.limynl.utils.EditTextWithDel
+                android:id="@+id/userph"
+                android:layout_width="match_parent"
+                android:textColor="#ffffff"
+                android:inputType="number"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:textColorHint="#ffffff"
+                android:hint="请输入您的手机号"
+                android:textSize="13sp"
+                android:background="@null"
+                android:layout_marginRight="10dp"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/loginusericon" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/rela_pass"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginRight="40dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_border_color_black">
+
+            <ImageView
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_marginLeft="15dp"
+                android:src="@mipmap/codeicon"
+                android:id="@+id/codeicon" />
+
+            <com.team.limynl.utils.EditTextWithDel
+                android:id="@+id/userpass"
+                android:layout_width="match_parent"
+                android:textColor="#ffffff"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:hint="请输入您的密码"
+                android:inputType="textPassword"
+                android:textColorHint="#ffffff"
+                android:textSize="13sp"
+                android:background="@null"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/codeicon" />
+        </RelativeLayout>
+
+        <com.team.limynl.utils.PaperButton
+            android:id="@+id/bt_login"
+            widget:paper_corner_radius="19dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginRight="40dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:gravity="center"
+            widget:paper_text="登录"
+            widget:paper_text_size="15sp"
+            widget:paper_color="#ff7474"
+            widget:paper_text_color="#ffffff" />
+
+        <!--<TextView
+            android:id="@+id/tv_forgetcode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center_horizontal"
+            android:textSize="13sp"
+            android:textColor="#ffffff"
+            android:padding="13dp"
+            android:text="忘记登录密码？" />-->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_marginTop="40dp"
+            android:gravity="center_horizontal"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp">
+            <View
+                android:layout_gravity="center_vertical"
+                android:layout_width="50dp"
+                android:background="#ffffff"
+                android:layout_marginLeft="35dp"
+                android:layout_marginRight="20dp"
+                android:layout_height="1px"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="13sp"
+                android:textColor="#ffffff"
+                android:text="忘记登录密码？" />
+
+            <View
+                android:layout_gravity="center_vertical"
+                android:layout_width="50dp"
+                android:layout_marginRight="35dp"
+                android:layout_marginLeft="20dp"
+                android:background="#ffffff"
+                android:layout_height="1px"/>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <ProgressBar
+        android:visibility="invisible"
+        android:layout_marginTop="50dp"
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/login_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</FrameLayout>

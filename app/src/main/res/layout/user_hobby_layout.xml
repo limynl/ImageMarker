@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:widget="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/radius_drawable_bg">
+
+    <LinearLayout
+        android:layout_centerHorizontal="true"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/car_select_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="请选择您的兴趣爱好"
+            android:gravity="center"
+            android:textColor="#ffffff"
+            android:textSize="14sp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:background="#66ba8e"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:paddingRight="40dp"
+            android:paddingLeft="40dp"
+            android:text="用户兴趣标签选择"
+            android:textColor="#212121"
+            android:textSize="16sp"
+            android:gravity="center"/>
+
+        <com.team.limynl.utils.PaperButton
+            android:layout_marginTop="100dp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:layout_width="180dp"
+            android:layout_height="40dp"
+            widget:paper_corner_radius="19dp"
+            widget:paper_text="确 定"
+            widget:paper_text_size="16sp"
+            widget:paper_color="#66ba8e"
+            widget:paper_text_color="#ffffff" />
+
+    </LinearLayout>
+
+</RelativeLayout>

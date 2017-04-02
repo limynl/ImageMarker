@@ -8,4 +8,10 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!--PopupWindow弹出动画-->
+    <style name="anim_popup_centerbar">
+        <item name="android:windowEnterAnimation">@anim/popup_centerbar_in</item>
+        <item name="android:windowExitAnimation">@anim/popup_centerbar_out</item>
+    </style>
+
 </resources>
