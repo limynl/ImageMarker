@@ -24,7 +24,7 @@
             android:src="@mipmap/iconmbile"
             android:id="@+id/usericon" />
 
-        <com.team.limynl.utils.EditTextWithDel
+        <com.team.imagemarker.utils.EditTextWithDel
             android:id="@+id/userphone"
             android:layout_width="match_parent"
             android:textColor="#ffffff"
@@ -60,7 +60,7 @@
             android:src="@mipmap/codeicon"
             android:id="@+id/codeicon" />
 
-        <com.team.limynl.utils.EditTextWithDel
+        <com.team.imagemarker.utils.EditTextWithDel
             android:id="@+id/userpassword"
             android:layout_width="match_parent"
             android:textColor="#ffffff"
@@ -101,7 +101,7 @@
                 android:src="@mipmap/keyicon"
                 android:id="@+id/keyicon" />
 
-            <com.team.limynl.utils.EditTextWithDel
+            <com.team.imagemarker.utils.EditTextWithDel
                 android:id="@+id/smscode"
                 android:layout_width="match_parent"
                 android:textColor="#ffffff"
@@ -118,7 +118,7 @@
 
         </RelativeLayout>
 
-        <com.team.limynl.utils.PaperButton
+        <com.team.imagemarker.utils.PaperButton
             android:id="@+id/send_smscode"
             android:layout_weight="1"
             android:layout_marginLeft="20dp"
@@ -134,7 +134,7 @@
 
     </LinearLayout>
 
-    <com.team.limynl.utils.PaperButton
+    <com.team.imagemarker.utils.PaperButton
         android:id="@+id/next"
         widget:paper_corner_radius="19dp"
         android:layout_gravity="center_horizontal"

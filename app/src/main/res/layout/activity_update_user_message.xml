@@ -28,7 +28,7 @@
             android:layout_marginLeft="20dp"
             android:layout_centerVertical="true"/>
 
-        <com.team.limynl.utils.CircleImageView
+        <com.team.imagemarker.utils.CircleImageView
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:src="@mipmap/default_avatar"
@@ -232,7 +232,7 @@
 
     </LinearLayout>
 
-    <com.team.limynl.utils.PaperButton
+    <com.team.imagemarker.utils.PaperButton
         android:layout_gravity="center_horizontal"
         android:layout_marginRight="40dp"
         android:layout_marginLeft="40dp"
