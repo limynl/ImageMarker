@@ -1,7 +1,6 @@
 package com.team.imagemarker.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,26 +54,26 @@ public class UserIntegralAdapter extends BaseAdapter {
             convertView = LayoutInflater.from(context).inflate(R.layout.integral_list_item, null);
             viewHolder.headImageView = (CircleImageView) convertView.findViewById(R.id.integral_user_header);
             viewHolder.userNickName = (TextView) convertView.findViewById(R.id.integral_user_nick_name);
-            viewHolder.userIntegralFlag = (ImageView) convertView.findViewById(R.id.user_integral_flag);
+//            viewHolder.userIntegralFlag = (ImageView) convertView.findViewById(R.id.user_integral_flag);
             viewHolder.userIntegral = (TextView) convertView.findViewById(R.id.integral_user_count);
             convertView.setTag(viewHolder);
         }else{
             viewHolder = (ViewHolder) convertView.getTag();
         }
         UserIntegralModel model = list.get(position);
-        if(position == 0){
-            viewHolder.userIntegralFlag.setImageResource(R.mipmap.number_one);
-            Log.d("UserIntegralAdapter", "第一名");
-        }else if(position == 1){
-            viewHolder.userIntegralFlag.setImageResource(R.mipmap.number_two);
-            Log.d("UserIntegralAdapter", "第二名");
-        }else if(position == 2){
-            viewHolder.userIntegralFlag.setImageResource(R.mipmap.number_three);
-            Log.d("UserIntegralAdapter", "第三名");
-        }else{
-            viewHolder.userIntegralFlag.setVisibility(View.GONE);
-            Log.d("UserIntegralAdapter", "其余名次");
-        }
+//        if(position == 0){
+//            viewHolder.userIntegralFlag.setImageResource(R.mipmap.number_one);
+//            Log.d("UserIntegralAdapter", "第一名");
+//        }else if(position == 1){
+//            viewHolder.userIntegralFlag.setImageResource(R.mipmap.number_two);
+//            Log.d("UserIntegralAdapter", "第二名");
+//        }else if(position == 2){
+//            viewHolder.userIntegralFlag.setImageResource(R.mipmap.number_three);
+//            Log.d("UserIntegralAdapter", "第三名");
+//        }else{
+//            viewHolder.userIntegralFlag.setVisibility(View.GONE);
+//            Log.d("UserIntegralAdapter", "其余名次");
+//        }
 
         Glide.with(context)
                 .load(model.getUserHeadUrl())
