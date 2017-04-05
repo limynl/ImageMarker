@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -55,6 +56,7 @@ public class UserIntegralAdapter extends BaseAdapter {
             viewHolder.headImageView = (CircleImageView) convertView.findViewById(R.id.integral_user_header);
             viewHolder.userNickName = (TextView) convertView.findViewById(R.id.integral_user_nick_name);
 //            viewHolder.userIntegralFlag = (ImageView) convertView.findViewById(R.id.user_integral_flag);
+            viewHolder.userIntegralItem = (RelativeLayout) convertView.findViewById(R.id.user_integral_item_layout);
             viewHolder.userIntegral = (TextView) convertView.findViewById(R.id.integral_user_count);
             convertView.setTag(viewHolder);
         }else{
@@ -90,6 +92,7 @@ public class UserIntegralAdapter extends BaseAdapter {
         private TextView userNickName;
         private ImageView userIntegralFlag;
         private TextView userIntegral;
+        private RelativeLayout userIntegralItem;
     }
 
 }

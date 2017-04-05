@@ -34,8 +34,6 @@
                     android:layout_height="280dp"
                     android:background="@mipmap/loginback"/>
 
-
-
                 <com.team.imagemarker.utils.PaperButton
                     android:layout_marginTop="100dp"
                     android:layout_gravity="center_horizontal"
