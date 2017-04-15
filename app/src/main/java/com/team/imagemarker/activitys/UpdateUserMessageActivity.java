@@ -25,6 +25,7 @@ import com.team.imagemarker.R;
 import com.team.imagemarker.bases.BaseListAdapter;
 import com.team.imagemarker.utils.CustomViewPager;
 import com.team.imagemarker.utils.MyGridView;
+import com.team.imagemarker.utils.PaperButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,21 +39,21 @@ import static com.team.imagemarker.R.id.tv_change_items;
 
 public class UpdateUserMessageActivity extends Activity implements View.OnClickListener{
     private TextView title;
-    private ImageView leftIcon;
-    private ImageView rightIcon;
-    private LinearLayout popupWindowLayout;
+    private ImageView leftIcon, rightIcon;
+    private LinearLayout popupWindowLayout;//弹窗视图。为了改变颜色
 
-    private TextView userHobby;
+    private TextView userHobby;//用户的兴趣爱好
 
-    private ImageView userHobbySelect;
-    private View contentView;
+    private RelativeLayout userHobbySelect;//用户兴趣爱好选择图标
+    private View contentView;//弹框视图
     private PopupWindow popupWindow;
 
-    private TextView userWaring;
-    private ViewPager vp_details;
+    private PaperButton hobbySubmit;
+    private TextView userWaring;//提示信息
+    private ViewPager vp_details;//兴趣爱好标签选择ViewPager
     private MyGridView grid_selected;
     private ParentIconAdapter parentIconAdapter = new ParentIconAdapter();
-    private ChildrenIconAdapter adapter_one, adapter_two, adapter_three;
+    private ChildrenIconAdapter adapter_one, adapter_two, adapter_three;//三页ViewPager中的数据适配器
     private List<String> parentList = new ArrayList<String>();//选中的标签
     final int length = 3;
     private MyGridView[] mGridView = new MyGridView[length];//对应于3个ViewPager
@@ -60,7 +61,7 @@ public class UpdateUserMessageActivity extends Activity implements View.OnClickL
     private List<View> listViews;
     private ArrayList<String> data_one, data_two, data_three;//各个ViewPager对应的GridView中的数据
     private int mSumOne = 1;//换一批数目调整
-    private TextView changeData;
+    private TextView changeData;//换一批
 
     //更新父表与子表中的数据
     private Handler mHandler = new Handler() {
@@ -91,7 +92,7 @@ public class UpdateUserMessageActivity extends Activity implements View.OnClickL
 
         userHobby = (TextView) findViewById(R.id.user_hobby);
 
-        userHobbySelect = (ImageView) findViewById(R.id.user_hobby_select);
+        userHobbySelect = (RelativeLayout) findViewById(R.id.user_hobby_select);
 
         title.setText("个人资料");
         title.setTextColor(Color.parseColor("#101010"));
@@ -109,25 +110,27 @@ public class UpdateUserMessageActivity extends Activity implements View.OnClickL
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.left_icon:{
+            case R.id.left_icon:{//返回
                 UpdateUserMessageActivity.this.finish();
+                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
             }
             break;
-            case R.id.user_hobby_select:{
-                parentList.clear();//清空上一次选中的数据
+            case R.id.user_hobby_select:{//用户兴趣爱好标签选择
                 showCenterPopupWindow(v);
+                parentList.clear();//清空上一次选中的数据
+                mHandler.sendEmptyMessage(2);//更新父GridView的数据
+                userWaring.setVisibility(View.VISIBLE);
             }
             break;
-            case tv_change_items:{
+            case tv_change_items:{//换一批
                 if (getDataOne().size() == 0) {
-                    Toast.makeText(getApplicationContext(), "无资讯标签数据", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "没有兴趣种类选择", Toast.LENGTH_LONG).show();
                     return;
                 } else {
                     if (getDataOne().size() <= 12) {
                         vp_details.setCurrentItem(0);
                         changeData.setVisibility(View.GONE);
-                    } else if (getDataOne().size() > 12
-                            && getDataOne().size() <= 24) {
+                    } else if (getDataOne().size() > 12 && getDataOne().size() <= 24) {
                         if (mSumOne < 2) {
                             vp_details.setCurrentItem(mSumOne);
                             mSumOne++;
@@ -147,6 +150,19 @@ public class UpdateUserMessageActivity extends Activity implements View.OnClickL
                 }
             }
             break;
+            case R.id.user_hobby_submit:{//确认用户兴趣标签
+                if(parentList.size() == 0){
+                    Toast.makeText(this, "请至少选择一种兴趣爱好", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                String userHobbyContent = "";
+                for (int i = 0; i < parentList.size(); i++) {
+                    userHobbyContent += parentList.get(i).toString().trim() + " ";
+                }
+                userHobby.setText(userHobbyContent);
+                popupWindow.dismiss();
+            }
+            break;
         }
     }
 
@@ -160,10 +176,12 @@ public class UpdateUserMessageActivity extends Activity implements View.OnClickL
     private void setPopupWindow() {
         contentView = LayoutInflater.from(this).inflate(R.layout.user_hobby_layout, null);
         popupWindowLayout = (LinearLayout) contentView.findViewById(R.id.popupwindow_layout);
+        hobbySubmit = (PaperButton) contentView.findViewById(R.id.user_hobby_submit);
         userWaring = (TextView) contentView.findViewById(R.id.waring_user);
         popupWindowLayout.setBackgroundColor(Color.parseColor("#e0e0e0"));
-        changeData = (TextView) contentView.findViewById(tv_change_items);
+        changeData = (TextView) contentView.findViewById(R.id.tv_change_items);
         changeData.setOnClickListener(this);
+        hobbySubmit.setOnClickListener(this);
 
         grid_selected = (MyGridView) contentView.findViewById(R.id.grid_selected);
         vp_details = (CustomViewPager) contentView.findViewById(R.id.vp_details);
@@ -187,43 +205,44 @@ public class UpdateUserMessageActivity extends Activity implements View.OnClickL
             mGridView[i] = (MyGridView) listViews.get(i).findViewById(R.id.gridview);
         }
 
-            if (getDataOne().size() <= 12) {
-                changeData.setVisibility(View.GONE);
-                for (int i = 0; i < getDataOne().size(); i++) {
-                    data_one.add(getDataOne().get(i).toString().trim());
-                }
-            } else if (getDataOne().size() > 12 && getDataOne().size() <= 24) {
-                for (int i = 0; i < 12; i++) {
-                    data_one.add(getDataOne().get(i).toString().trim());
-                }
-                for (int i = 12; i < getDataOne().size(); i++) {
-                    data_two.add(getDataOne().get(i).toString().trim());
-                }
-            } else if (getDataOne().size() > 24) {
-                for (int i = 0; i < 12; i++) {
-                    data_one.add(getDataOne().get(i).toString().trim());
-                }
-                for (int i = 12; i < 24; i++) {
-                    data_two.add(getDataOne().get(i).toString().trim());
-                }
-                for (int i = 24; i < 36 && i < getDataOne().size(); i++) {
-                    data_three.add(getDataOne().get(i).toString().trim());
-                }
+        //为各个ViewPager添加数据
+        if (getDataOne().size() <= 12) {
+            changeData.setVisibility(View.GONE);//将换一批标志隐藏
+            for (int i = 0; i < getDataOne().size(); i++) {
+                data_one.add(getDataOne().get(i).toString().trim());
             }
-
-            for (int i = 0; i < length; i++) {
-                if (i == 0) {
-                    mGridView[i].setAdapter(adapter_one);
-                }
-                if (i == 1) {
-                    mGridView[i].setAdapter(adapter_two);
-                }
-                if (i == 2) {
-                    mGridView[i].setAdapter(adapter_three);
-                }
+        } else if (getDataOne().size() > 12 && getDataOne().size() <= 24) {
+            for (int i = 0; i < 12; i++) {
+                data_one.add(getDataOne().get(i).toString().trim());
             }
-            grid_selected.setAdapter(parentIconAdapter);
+            for (int i = 12; i < getDataOne().size(); i++) {
+                data_two.add(getDataOne().get(i).toString().trim());
+            }
+        } else if (getDataOne().size() > 24) {
+            for (int i = 0; i < 12; i++) {
+                data_one.add(getDataOne().get(i).toString().trim());
+            }
+            for (int i = 12; i < 24; i++) {
+                data_two.add(getDataOne().get(i).toString().trim());
+            }
+            for (int i = 24; i < 36 && i < getDataOne().size(); i++) {
+                data_three.add(getDataOne().get(i).toString().trim());
+            }
         }
+
+        for (int i = 0; i < length; i++) {
+        if (i == 0) {
+            mGridView[i].setAdapter(adapter_one);
+        }
+        if (i == 1) {
+            mGridView[i].setAdapter(adapter_two);
+        }
+        if (i == 2) {
+            mGridView[i].setAdapter(adapter_three);
+        }
+        }
+        grid_selected.setAdapter(parentIconAdapter);
+    }
 
     public void showCenterPopupWindow(View view) {
         popupWindow = new PopupWindow(contentView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -290,7 +309,7 @@ public class UpdateUserMessageActivity extends Activity implements View.OnClickL
     }
 
     /**
-     * childgridview图片适配
+     * childgridview数据适配
      * 待选择数据
      */
     private class ChildrenIconAdapter extends BaseListAdapter<String> {
@@ -339,22 +358,24 @@ public class UpdateUserMessageActivity extends Activity implements View.OnClickL
                 holder.tv_iconname.setTextColor(Color.parseColor("#808080"));
             } else {
                 holder.tv_iconname.setEnabled(true);
+                holder.tv_iconname.setTextColor(Color.parseColor("#424242"));
             }
             holder.tv_iconname.setText(mData.get(position));
             holder.tv_iconname.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (parentList.size() >= 20) {
-                        Toast toast = Toast.makeText(getApplicationContext(), "最多可选择3个特色标签", Toast.LENGTH_LONG);
-                        toast.show();
+                        Toast.makeText(getApplicationContext(), "最多可选择3个特色标签", Toast.LENGTH_LONG).show();
                         return;
                     }
+
                     v.setEnabled(false);//将其设置为不能操作
                     parentList.add(mData.get(position));
                     if(parentList.size() > 0){
                         userWaring.setVisibility(View.GONE);
                     }
-                    mHandler.sendEmptyMessage(2);//更新父GridView的数据
+                    mHandler.sendEmptyMessage(1);//更新父GridView的数据
+//                    mHandler.sendEmptyMessage(2);//更新父GridView的数据
                 }
             });
             return convertView;
@@ -430,5 +451,4 @@ public class UpdateUserMessageActivity extends Activity implements View.OnClickL
             return convertView;
         }
     }
-
 }

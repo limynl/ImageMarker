@@ -10,7 +10,7 @@ import android.widget.ListView;
 
 import com.team.imagemarker.R;
 import com.team.imagemarker.adapters.UserIntegralAdapter;
-import com.team.imagemarker.entity.UserIntegralModel;
+import com.team.imagemarker.entitys.UserIntegralModel;
 
 import java.util.ArrayList;
 import java.util.List;

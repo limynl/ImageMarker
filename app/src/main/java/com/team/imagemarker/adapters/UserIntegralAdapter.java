@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.team.imagemarker.R;
-import com.team.imagemarker.entity.UserIntegralModel;
+import com.team.imagemarker.entitys.UserIntegralModel;
 import com.team.imagemarker.utils.CircleImageView;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.team.imagemarker.entity;
+package com.team.imagemarker.entitys;
 
 /**
  * Created by Lmy on 2017/4/1.

@@ -15,12 +15,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name=".activitys.HomeActivity" />
         <activity android:name=".activitys.UserCenterActivity" />
         <activity android:name=".activitys.UpdateUserMessageActivity" />
-        <activity android:name=".activitys.UserMissionActivity"/>
-
+        <activity android:name=".activitys.UserHistoryRecord"/>
+        <activity android:name=".activitys.UserMissionActivity" />
     </application>
 
 </manifest>

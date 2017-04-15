@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.team.imagemarker.R;
-import com.team.imagemarker.activitys.UserCenterActivity;
+import com.team.imagemarker.activitys.HomeActivity;
 import com.team.imagemarker.utils.PaperButton;
 
 
@@ -35,7 +35,7 @@ public class LoginFragment extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getActivity(), UserCenterActivity.class));
+                startActivity(new Intent(getActivity(), HomeActivity.class));
                 getActivity().overridePendingTransition(R.anim.slide_in_up,R.anim.slide_out_down);
             }
         });

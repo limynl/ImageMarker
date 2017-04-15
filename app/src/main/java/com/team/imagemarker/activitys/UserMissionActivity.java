@@ -20,7 +20,7 @@ import com.team.imagemarker.fragments.TaskFragment;
  * email 1434117404@qq.com
  */
 
-public class UserMissionActivity extends FragmentActivity implements TabLayout.OnTabSelectedListener{
+public class UserMissionActivity extends FragmentActivity implements TabLayout.OnTabSelectedListener, View.OnClickListener{
     private TabLayout tasksTabs;
     private ViewPager tasksViewPager;
     private TabViewPagerAdapter viewPagerAdapter;
@@ -45,6 +45,7 @@ public class UserMissionActivity extends FragmentActivity implements TabLayout.O
         title.setText("任务中心");
 //        title.setTextColor(Color.parseColor("#ffffff"));
         rightIcon.setVisibility(View.GONE);
+        leftIcon.setOnClickListener(this);
 
         setTabViewPager();
 
@@ -74,5 +75,13 @@ public class UserMissionActivity extends FragmentActivity implements TabLayout.O
     @Override
     public void onTabReselected(TabLayout.Tab tab) {
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        if(v.getId() == R.id.left_icon){
+            UserMissionActivity.this.finish();
+            overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+        }
     }
 }
