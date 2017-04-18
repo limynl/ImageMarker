@@ -23,6 +23,7 @@ import com.team.imagemarker.R;
 
 
 /**
+ * 自定义按钮点击效果
  * Created by Lmy on 2017/4/1.
  * email 1434117404@qq.com
  */

@@ -21,6 +21,7 @@ import com.team.imagemarker.R;
 
 
 /**
+ * 圆形图片
  * Created by Lmy on 2017/4/1.
  * email 1434117404@qq.com
  */

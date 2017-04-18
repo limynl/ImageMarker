@@ -2,12 +2,16 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.team.imagemarker">
 
+    <!-- 获取联网请求 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:exported="true">
         <activity android:name=".activitys.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -18,8 +22,9 @@
         <activity android:name=".activitys.HomeActivity" />
         <activity android:name=".activitys.UserCenterActivity" />
         <activity android:name=".activitys.UpdateUserMessageActivity" />
-        <activity android:name=".activitys.UserHistoryRecord"/>
+        <activity android:name=".activitys.UserHistoryRecord" />
         <activity android:name=".activitys.UserMissionActivity" />
+        <activity android:name=".activitys.PictureGroupScanActivity"/>
     </application>
 
 </manifest>

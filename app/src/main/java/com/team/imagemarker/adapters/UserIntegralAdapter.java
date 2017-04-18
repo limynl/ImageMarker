@@ -9,11 +9,11 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.team.imagemarker.R;
 import com.team.imagemarker.entitys.UserIntegralModel;
 import com.team.imagemarker.utils.CircleImageView;
+import com.team.imagemarker.utils.imageloder.ImageLoader;
+import com.team.imagemarker.utils.imageloder.ImageLoaderUtil;
 
 import java.util.List;
 
@@ -77,10 +77,14 @@ public class UserIntegralAdapter extends BaseAdapter {
 //            Log.d("UserIntegralAdapter", "其余名次");
 //        }
 
-        Glide.with(context)
-                .load(model.getUserHeadUrl())
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(viewHolder.headImageView);
+//        Glide.with(context)
+//                .load(model.getUserHeadUrl())
+//                .diskCacheStrategy(DiskCacheStrategy.ALL)
+//                .into(viewHolder.headImageView);
+
+        ImageLoader imageLoader = new ImageLoader.Builder().url(model.getUserHeadUrl()).imgView(viewHolder.headImageView).build();
+        ImageLoaderUtil.getInstance().loadImage(context, imageLoader);
+
         viewHolder.userNickName.setText(model.getUserNickName());
         viewHolder.userIntegral.setText(model.getUserIntegralCount() + "积分");
 

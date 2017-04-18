@@ -3,9 +3,14 @@ package com.team.imagemarker.activitys;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
+import android.util.TypedValue;
 import android.widget.Toast;
 
 import com.team.imagemarker.R;
+import com.team.imagemarker.entitys.CardItem;
+import com.team.imagemarker.adapters.CardPagerAdapter;
+import com.team.imagemarker.adapters.ShadowTransformer;
 import com.wangjie.androidbucket.utils.ABTextUtil;
 import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionButton;
 import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionHelper;
@@ -24,6 +29,10 @@ import java.util.List;
  */
 
 public class HomeActivity extends Activity implements RapidFloatingActionContentLabelList.OnRapidFloatingActionContentLabelListListener{
+    private ViewPager viewPager;
+    private CardPagerAdapter cardPagerAdapter;
+    private ShadowTransformer shadowTransformer;//ViewPager切换动画
+
     private RapidFloatingActionLayout rfaLayout;
     private RapidFloatingActionButton rfaButton;
     private RapidFloatingActionHelper rfaHelper;
@@ -33,6 +42,7 @@ public class HomeActivity extends Activity implements RapidFloatingActionContent
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         bindView();//初始化视图
+        setDataToViewPager();//为ViewPager设置数据
         setFlaotButton();//设置悬浮按钮
     }
 
@@ -40,8 +50,27 @@ public class HomeActivity extends Activity implements RapidFloatingActionContent
      * 初始化视图
      */
     private void bindView() {
+        viewPager = (ViewPager) findViewById(R.id.card_viewpager);
         rfaLayout = (RapidFloatingActionLayout) findViewById(R.id.rfa_layout);
         rfaButton = (RapidFloatingActionButton) findViewById(R.id.rfa_button);
+    }
+
+    /**
+     * 为ViewPager设置数据
+     */
+    private void setDataToViewPager() {
+        cardPagerAdapter = new CardPagerAdapter();
+        cardPagerAdapter.addCardItem(new CardItem(R.mipmap.image1, "这是一句说明性文字"));
+        cardPagerAdapter.addCardItem(new CardItem(R.mipmap.image2, "这是一句说明性文字"));
+        cardPagerAdapter.addCardItem(new CardItem(R.mipmap.image4, "这是一句说明性文字"));
+        cardPagerAdapter.addCardItem(new CardItem(R.mipmap.image1, "这是一句说明性文字"));
+
+        shadowTransformer = new ShadowTransformer(viewPager, cardPagerAdapter);
+        viewPager.setPageMargin((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 30, getResources().getDisplayMetrics()));
+        viewPager.setAdapter(cardPagerAdapter);
+        viewPager.setPageTransformer(false, shadowTransformer);
+        viewPager.setOffscreenPageLimit(3);
+        shadowTransformer.enableScaling(true);
     }
 
     /**
@@ -110,6 +139,8 @@ public class HomeActivity extends Activity implements RapidFloatingActionContent
             break;
             case 1:{//美图欣赏
                 Toast.makeText(this, "美图欣赏", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(HomeActivity.this, PictureGroupScanActivity.class));
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             }
             break;
             case 2:{//图组选择
@@ -138,6 +169,8 @@ public class HomeActivity extends Activity implements RapidFloatingActionContent
             break;
             case 1:{//美图欣赏
                 Toast.makeText(this, "美图欣赏", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(HomeActivity.this, PictureGroupScanActivity.class));
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             }
             break;
             case 2:{//图组选择

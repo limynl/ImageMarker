@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activity_picture_group_scan"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        layout="@layout/title_bar"
+        android:id="@+id/picture_group_title"
+        android:background="@color/titleBar"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/picture_group_recycle"
+        android:layout_below="@+id/picture_group_title"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"/>
+
+</RelativeLayout>

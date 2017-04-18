@@ -14,6 +14,18 @@
         rfal:rfal_frame_color="#fff"
         rfal:rfal_frame_alpha="0">
 
+        <android.support.v4.view.ViewPager
+            android:id="@+id/card_viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="170dp"
+            android:layout_marginTop="27dp"
+            android:clipToPadding="false"
+            android:overScrollMode="never"
+            android:paddingEnd="60dp"
+            android:paddingLeft="60dp"
+            android:paddingRight="60dp"
+            android:paddingStart="60dp" />
+
         <com.wangjie.rapidfloatingactionbutton.RapidFloatingActionButton
             android:id="@+id/rfa_button"
             android:layout_width="wrap_content"
@@ -22,7 +34,6 @@
             android:layout_alignParentBottom="true"
             android:layout_marginRight="25dp"
             android:layout_marginBottom="10dp"
-
             rfab:rfab_size="normal"
             rfab:rfab_drawable="@drawable/rfab__drawable_rfab_default"
             rfab:rfab_color_normal="#283593"

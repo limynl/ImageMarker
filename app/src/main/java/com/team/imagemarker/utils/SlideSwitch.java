@@ -9,6 +9,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 /**
+ * 滑动开关
  * Created by Lmy on 2017/4/1.
  * email 1434117404@qq.com
  */

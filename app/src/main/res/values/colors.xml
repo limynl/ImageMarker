@@ -7,4 +7,6 @@
     <color name="background">#f3f3f3</color><!--主题背景颜色-->
     <color name="write">#fff</color>
     <color name="gray1">#808080</color>
+
+    <color name="titleBar">#66ba8e</color>
 </resources>
