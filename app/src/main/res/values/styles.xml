@@ -14,4 +14,17 @@
         <item name="android:windowExitAnimation">@anim/popup_centerbar_out</item>
     </style>
 
+    <!--popupWindow显示动画-->
+    <!--<style name="mypopwindow_anim_style">-->
+        <!--<item name="android:windowEnterAnimation">@anim/popshow_anim</item>-->
+        <!--<item name="android:windowExitAnimation">@anim/pophidden_anim</item>-->
+    <!--</style>-->
+
+    <style name="transparentFrameWindowStyle" parent="android:style/Theme.Dialog">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowBackground">@drawable/photo_choose_bg</item>
+    </style>
+
 </resources>

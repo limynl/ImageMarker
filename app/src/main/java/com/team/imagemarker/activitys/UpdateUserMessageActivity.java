@@ -1,6 +1,7 @@
 package com.team.imagemarker.activitys;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -12,8 +13,10 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -23,7 +26,6 @@ import android.widget.Toast;
 
 import com.team.imagemarker.R;
 import com.team.imagemarker.bases.BaseListAdapter;
-import com.team.imagemarker.utils.CustomViewPager;
 import com.team.imagemarker.utils.MyGridView;
 import com.team.imagemarker.utils.PaperButton;
 
@@ -41,6 +43,14 @@ public class UpdateUserMessageActivity extends Activity implements View.OnClickL
     private TextView title;
     private ImageView leftIcon, rightIcon;
     private LinearLayout popupWindowLayout;//弹窗视图。为了改变颜色
+
+    private RelativeLayout selectHead;
+
+    private Dialog dialog;//弹框
+    private Button chooseFromCamera;//选择按钮一
+    private Button chooseFromPhoto;//选择按钮二
+    private Button cancelDialog;//取消按钮
+    private View viewDialog;//弹框视图
 
     private TextView userHobby;//用户的兴趣爱好
 
@@ -90,8 +100,9 @@ public class UpdateUserMessageActivity extends Activity implements View.OnClickL
         leftIcon = (ImageView) findViewById(R.id.left_icon);
         rightIcon = (ImageView) findViewById(R.id.right_icon);
 
-        userHobby = (TextView) findViewById(R.id.user_hobby);
+        selectHead = (RelativeLayout) findViewById(R.id.select_head);
 
+        userHobby = (TextView) findViewById(R.id.user_hobby);
         userHobbySelect = (RelativeLayout) findViewById(R.id.user_hobby_select);
 
         title.setText("个人资料");
@@ -99,6 +110,7 @@ public class UpdateUserMessageActivity extends Activity implements View.OnClickL
         leftIcon.setImageResource(R.drawable.back);
         rightIcon.setVisibility(View.GONE);
         leftIcon.setOnClickListener(this);
+        selectHead.setOnClickListener(this);
         userHobbySelect.setOnClickListener(this);
 
         initData();
@@ -113,6 +125,36 @@ public class UpdateUserMessageActivity extends Activity implements View.OnClickL
             case R.id.left_icon:{//返回
                 UpdateUserMessageActivity.this.finish();
                 overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+            }
+            break;
+            case R.id.select_head:{
+                showDialog("拍照", "从相册获取");
+                chooseFromCamera.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+//                        getIconFromCamera();//拍照获取图片
+                        Toast.makeText(UpdateUserMessageActivity.this, "拍照", Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                    }
+                });
+
+                chooseFromPhoto.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+//                        getIconFromPhoto();//从相册获取图片
+                        Toast.makeText(UpdateUserMessageActivity.this, "从相册获取", Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                    }
+                });
+
+                cancelDialog.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+//                        toastUtil.Long(UserMessageActivity.this, "取消干啥啊...").show();
+                        dialog.dismiss();
+                    }
+                });
+                dialog.show();//显示对话框主题
             }
             break;
             case R.id.user_hobby_select:{//用户兴趣爱好标签选择
@@ -166,6 +208,34 @@ public class UpdateUserMessageActivity extends Activity implements View.OnClickL
         }
     }
 
+    /**
+     * 弹框显示
+     */
+    private void showDialog(String value1, String value2) {
+        viewDialog = View.inflate(this,R.layout.photo_choose_dialog, null);
+        chooseFromCamera = (Button) viewDialog.findViewById(R.id.choose_one);
+        chooseFromCamera.setText(value1);
+        chooseFromPhoto = (Button) viewDialog.findViewById(R.id.choose_two);
+        chooseFromPhoto.setText(value2);
+        cancelDialog = (Button) viewDialog.findViewById(R.id.cancel);
+
+        dialog = new Dialog(this, R.style.transparentFrameWindowStyle);
+        dialog.setContentView(viewDialog, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        Window window = dialog.getWindow();
+        // 设置显示动画
+        window.setWindowAnimations(R.style.anim_popup_centerbar);
+        WindowManager.LayoutParams wl = window.getAttributes();
+        wl.x = 0;
+        wl.y = window.getWindowManager().getDefaultDisplay().getHeight();
+        // 以下这两句是为了保证按钮可以水平满屏
+        wl.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        wl.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        // 设置显示位置
+        dialog.onWindowAttributesChanged(wl);
+        // 设置点击外围解散
+        dialog.setCanceledOnTouchOutside(true);
+    }
+
     private void initData() {
         listViews = new ArrayList<View>();
         listViews.add(LayoutInflater.from(this).inflate(R.layout.purchase_gridview, null));
@@ -184,7 +254,7 @@ public class UpdateUserMessageActivity extends Activity implements View.OnClickL
         hobbySubmit.setOnClickListener(this);
 
         grid_selected = (MyGridView) contentView.findViewById(R.id.grid_selected);
-        vp_details = (CustomViewPager) contentView.findViewById(R.id.vp_details);
+        vp_details = (ViewPager) contentView.findViewById(R.id.vp_details);
 
         if(parentList.size() > 0){
             userWaring.setVisibility(View.GONE);

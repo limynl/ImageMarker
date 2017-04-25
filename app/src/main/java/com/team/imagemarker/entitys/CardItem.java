@@ -1,5 +1,9 @@
 package com.team.imagemarker.entitys;
 
+/**
+ * Created by Lmy on 2017/4/2.
+ * email 1434117404@qq.com
+ */
 
 public class CardItem {
 

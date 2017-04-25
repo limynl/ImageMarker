@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="400dp"
     android:orientation="vertical"
-    android:background="@drawable/radius_drawable_bg">
+    android:background="#ffffff">
+    <!--android:background="@drawable/radius_drawable_bg"-->
 
         <TextView
             android:layout_width="match_parent"
@@ -86,7 +87,7 @@
             android:layout_height="1px"
             android:background="#f5f5f5"/>
 
-        <com.team.imagemarker.utils.CustomViewPager
+        <android.support.v4.view.ViewPager
             android:id="@+id/vp_details"
             android:layout_width="match_parent"
             android:layout_height="150dp" />

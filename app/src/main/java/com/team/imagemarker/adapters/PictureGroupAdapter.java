@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -77,7 +78,9 @@ public class PictureGroupAdapter extends RecyclerView.Adapter<PictureGroupAdapte
                         Palette.from(resource).generate(new Palette.PaletteAsyncListener() {
                             public void onGenerated(Palette p) {
                                 int vibrant = p.getLightVibrantColor(0x000000);
-                                viewHolder.imgTitle.setBackgroundColor(vibrant);
+                                viewHolder.detailMessage.setBackgroundColor(vibrant);
+                                viewHolder.detailMessage.setAlpha((float) 0.8);
+//                                viewHolder.imgTitle.setAlpha((float) 0.8);
                             }
                         });
                     }
@@ -110,13 +113,13 @@ public class PictureGroupAdapter extends RecyclerView.Adapter<PictureGroupAdapte
     public class PictureViewHolder extends RecyclerView.ViewHolder {
         public TextView imgTitle;
         public ImageView firstImg;
+        public RelativeLayout detailMessage;
 
         public PictureViewHolder(View item) {
             super(item);
             imgTitle = (TextView) item.findViewById(R.id.picture_group_title);
             firstImg = (ImageView) item.findViewById(R.id.item_image);
+            detailMessage = (RelativeLayout) item.findViewById(R.id.detail_message);
         }
     }
 }
-
-

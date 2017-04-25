@@ -134,11 +134,11 @@ public class HomeActivity extends Activity implements RapidFloatingActionContent
     public void onRFACItemLabelClick(int position, RFACLabelItem item) {
         switch (position){
             case 0:{//发表心情
-                Toast.makeText(this, "发表心情", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(HomeActivity.this, SayingScanActivity.class));
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             }
             break;
             case 1:{//美图欣赏
-                Toast.makeText(this, "美图欣赏", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(HomeActivity.this, PictureGroupScanActivity.class));
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             }
@@ -168,7 +168,6 @@ public class HomeActivity extends Activity implements RapidFloatingActionContent
             }
             break;
             case 1:{//美图欣赏
-                Toast.makeText(this, "美图欣赏", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(HomeActivity.this, PictureGroupScanActivity.class));
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             }

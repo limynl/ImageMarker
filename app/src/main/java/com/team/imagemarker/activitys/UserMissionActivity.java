@@ -1,6 +1,5 @@
 package com.team.imagemarker.activitys;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentActivity;
@@ -27,8 +26,7 @@ public class UserMissionActivity extends FragmentActivity implements TabLayout.O
     private RelativeLayout titleBar;
 
     private TextView title;
-    private ImageView leftIcon;
-    private ImageView rightIcon;
+    private ImageView leftIcon,rightIcon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +36,7 @@ public class UserMissionActivity extends FragmentActivity implements TabLayout.O
         tasksViewPager = (ViewPager) findViewById(R.id.task_viewpager);
 
         titleBar = (RelativeLayout) findViewById(R.id.title_bar);
-        titleBar.setBackgroundColor(Color.parseColor("#66ba8e"));
+        titleBar.setBackgroundColor(getResources().getColor(R.color.titleBar));
         title = (TextView) findViewById(R.id.title);
         leftIcon = (ImageView) findViewById(R.id.left_icon);
         rightIcon = (ImageView) findViewById(R.id.right_icon);
