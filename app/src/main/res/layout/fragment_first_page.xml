@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:rfal="http://schemas.android.com/apk/res-auto"
+    xmlns:rfab="http://schemas.android.com/apk/res-auto"
+    xmlns:ec="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_fragment_two">
+
+    <com.wangjie.rapidfloatingactionbutton.RapidFloatingActionLayout
+        android:id="@+id/rfa_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        rfal:rfal_frame_color="#000"
+        rfal:rfal_frame_alpha="0.3">
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/first_page_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="10dp"
+                    android:clipChildren="false">
+
+                    <com.wangjie.rapidfloatingactionbutton.expandingcollection.ECBackgroundSwitcherView
+                        android:id="@+id/ec_bg_switcher_element"
+                        android:layout_alignParentTop="true"
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp"
+                        android:foreground="@drawable/background_gradient"/>
+
+                    <com.wangjie.rapidfloatingactionbutton.expandingcollection.ECPagerView
+                        android:id="@+id/ec_pager_element"
+                        android:layout_width="match_parent"
+                        android:layout_height="130dp"
+                        android:layout_marginTop="45dp"
+                        ec:cardHeaderHeightExpanded="50dp"
+                        ec:cardHeight="100dp"
+                        ec:cardWidth="320dp" />
+
+                </RelativeLayout>
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <RelativeLayout
+                        android:id="@+id/random_push_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp">
+
+                        <TextView
+                            android:layout_width="5dp"
+                            android:layout_height="match_parent"
+                            android:background="#464e76"
+                            android:layout_marginLeft="10dp"
+                            android:layout_centerVertical="true"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="随机推送"
+                            android:textColor="@color/font_light"
+                            android:textSize="16dp"
+                            android:layout_alignParentLeft="true"
+                            android:layout_marginLeft="22dp"
+                            android:layout_centerVertical="true"
+                            android:textAppearance="@style/cardHeadTitle"/>
+
+                        <Button
+                            android:layout_width="60dp"
+                            android:layout_height="25dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:background="@drawable/to_more"
+                            android:text="更多"
+                            android:textColor="#ffffff"
+                            android:textSize="14sp"
+                            android:layout_marginRight="5dp"
+                            android:paddingRight="5dp"
+                            android:drawableRight="@mipmap/reseat"/>
+
+                    </RelativeLayout>
+
+                    <com.team.imagemarker.utils.MyGridView
+                        android:id="@+id/system_push"
+                        android:layout_below="@+id/random_push_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="4dp"
+                        android:layout_marginRight="4dp"
+                        android:columnWidth="90dp"
+                        android:numColumns="2"
+                        android:verticalSpacing="2dp"
+                        android:horizontalSpacing="6dp"/>
+
+                </RelativeLayout>
+
+
+                <RelativeLayout
+                    android:layout_marginTop="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <RelativeLayout
+                        android:id="@+id/hobby_push_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp">
+
+                        <TextView
+                            android:layout_width="5dp"
+                            android:layout_height="match_parent"
+                            android:background="#464e76"
+                            android:layout_marginLeft="10dp"
+                            android:layout_centerVertical="true"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="兴趣推送"
+                            android:textColor="@color/font_light"
+                            android:textSize="16dp"
+                            android:layout_alignParentLeft="true"
+                            android:layout_marginLeft="22dp"
+                            android:layout_centerVertical="true"
+                            android:textAppearance="@style/cardHeadTitle"/>
+
+                        <Button
+                            android:layout_width="60dp"
+                            android:layout_height="25dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:background="@drawable/to_more"
+                            android:text="更多"
+                            android:textColor="#ffffff"
+                            android:textSize="14sp"
+                            android:layout_marginRight="5dp"
+                            android:paddingRight="5dp"
+                            android:drawableRight="@mipmap/reseat"/>
+
+                    </RelativeLayout>
+
+                    <com.team.imagemarker.utils.MyGridView
+                        android:id="@+id/hobby_push"
+                        android:layout_below="@+id/hobby_push_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:columnWidth="90dp"
+                        android:numColumns="2"
+                        android:verticalSpacing="2dp"
+                        android:horizontalSpacing="5dp"/>
+
+                    <!--<android.support.v7.widget.RecyclerView-->
+                        <!--android:id="@+id/hobby_push"-->
+                        <!--android:layout_below="@+id/hobby_push_title"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="wrap_content" />-->
+
+                </RelativeLayout>
+
+
+
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:background="@color/background_fragment"/>
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+        <!--<android.support.v4.view.ViewPager-->
+            <!--android:id="@+id/card_viewpager"-->
+            <!--android:layout_below="@+id/title_bar"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="150dp"-->
+            <!--android:layout_marginTop="5dp"-->
+            <!--android:clipToPadding="false"-->
+            <!--android:overScrollMode="never"-->
+            <!--android:paddingEnd="60dp"-->
+            <!--android:paddingLeft="60dp"-->
+            <!--android:paddingRight="60dp"-->
+            <!--android:paddingStart="60dp" />-->
+
+        <com.wangjie.rapidfloatingactionbutton.RapidFloatingActionButton
+            android:id="@+id/rfa_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="25dp"
+            android:layout_marginBottom="60dp"
+            rfab:rfab_size="normal"
+            rfab:rfab_drawable="@drawable/rfab__drawable_rfab_default"
+            rfab:rfab_color_normal="@color/button"
+            rfab:rfab_color_pressed="#0288d1"
+            rfab:rfab_shadow_radius="3dp"
+            rfab:rfab_shadow_color="#999999"
+            rfab:rfab_shadow_dx="0dp"
+            rfab:rfab_shadow_dy="5dp" />
+
+    </com.wangjie.rapidfloatingactionbutton.RapidFloatingActionLayout>
+
+</RelativeLayout>

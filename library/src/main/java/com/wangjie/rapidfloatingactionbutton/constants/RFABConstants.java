@@ -11,11 +11,11 @@ public class RFABConstants {
         /**
          * RFAB正常的尺寸
          */
-        public static final int RFAB_NORMAL_SIZE_DP = 60;
+        public static final int RFAB_NORMAL_SIZE_DP = 48;
         /**
          * RFAB mini版的尺寸
          */
-        public static final int RFAB_MINI_SIZE_DP = 60;
+        public static final int RFAB_MINI_SIZE_DP = 48;
         /**
          * RFAB或内容中间图片的大小
          */

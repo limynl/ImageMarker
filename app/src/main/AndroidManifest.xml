@@ -4,12 +4,13 @@
 
     <!-- 获取联网请求 -->
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
+        android:name=".app.MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -32,12 +33,13 @@
         </activity>
 
         <!-- 微信分享回调 -->
-        <!--<activity-->
-            <!--android:name="cn.sharesdk.wxapi.WXEntryActivity"-->
-            <!--android:configChanges="keyboardHidden|orientation|screenSize"-->
-            <!--android:exported="true"-->
-            <!--android:screenOrientation="portrait"-->
-            <!--android:theme="@android:style/Theme.Translucent.NoTitleBar" />-->
+        <!-- <activity -->
+        <!-- android:name="cn.sharesdk.wxapi.WXEntryActivity" -->
+        <!-- android:configChanges="keyboardHidden|orientation|screenSize" -->
+        <!-- android:exported="true" -->
+        <!-- android:screenOrientation="portrait" -->
+        <!-- android:theme="@android:style/Theme.Translucent.NoTitleBar" /> -->
+
 
         <!-- QQ第三方登录 -->
         <activity
@@ -53,30 +55,29 @@
                 <data android:scheme="tencent1105819277" />
             </intent-filter>
         </activity>
-
         <activity
             android:name="com.tencent.connect.common.AssistActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-
-        <activity android:name=".activitys.MainActivity">
+        <activity android:name=".activitys.user.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".activitys.HomeActivity" />
-        <activity android:name=".activitys.UserResetPassActivity"/>
-        <activity android:name=".activitys.UserCenterActivity" />
-        <activity android:name=".activitys.UpdateUserMessageActivity" />
-        <activity android:name=".activitys.UserHistoryRecordActivity" />
-        <activity android:name=".activitys.UserMissionActivity" />
-        <activity android:name=".activitys.PictureGroupScanActivity" />
-        <activity android:name=".activitys.DetailPictureActivity" />
-        <activity android:name=".activitys.SendMoodActivity" />
-        <activity android:name=".activitys.SayingScanActivity" />
-        <activity android:name=".activitys.FeedBackActivity" />
+        <activity android:name=".activitys.user.HomeActivity" />
+        <activity android:name=".activitys.user.UserResetPassActivity" />
+        <activity android:name=".activitys.user.UpdateUserMessageActivity" />
+        <activity android:name=".activitys.history.HistoryRecordActivity" />
+        <activity android:name=".activitys.user.UserMissionActivity" />
+        <activity android:name=".activitys.imagscan.PictureGroupScanActivity" />
+        <activity android:name=".activitys.imagscan.DetailPictureActivity" />
+        <activity android:name=".activitys.saying.SendMoodActivity" />
+        <activity android:name=".activitys.saying.SayingScanActivity" />
+        <activity android:name=".activitys.user.FeedBackActivity" />
+        <activity android:name=".activitys.user.UserSearchActivity" />
+        <activity android:name=".activitys.imagscan.LookPictureActivity"></activity>
     </application>
 
 </manifest>

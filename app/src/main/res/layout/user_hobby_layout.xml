@@ -17,7 +17,7 @@
             android:textSize="14sp"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
-            android:background="#66ba8e"/>
+            android:background="@color/systemBar"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -59,7 +59,7 @@
                 android:layout_height="wrap_content"
                 android:text="兴趣种类"
                 android:textSize="14sp"
-                android:textColor="#ff7043"
+                android:textColor="@color/theme"
                 android:gravity="center"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="20dp"/>
@@ -71,7 +71,7 @@
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp"
                 android:text="换一批"
-                android:textColor="#ff7043"
+                android:textColor="@color/theme"
                 android:textSize="14sp"
                 android:drawableLeft="@mipmap/change_data"
                 android:drawablePadding="5dp"
@@ -102,7 +102,7 @@
         widget:paper_corner_radius="19dp"
         widget:paper_text="确 定"
         widget:paper_text_size="16sp"
-        widget:paper_color="#66ba8e"
-        widget:paper_text_color="#ffffff" />
+        widget:paper_color="@color/button"
+        widget:paper_text_color="@color/write" />
 
 </LinearLayout>

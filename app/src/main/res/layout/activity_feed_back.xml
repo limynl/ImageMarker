@@ -42,7 +42,7 @@
         widget:paper_corner_radius="19dp"
         widget:paper_text="提 交"
         widget:paper_text_size="16sp"
-        widget:paper_color="#ff7474"
+        widget:paper_color="@color/button"
         widget:paper_text_color="#ffffff" />
 
 </LinearLayout>

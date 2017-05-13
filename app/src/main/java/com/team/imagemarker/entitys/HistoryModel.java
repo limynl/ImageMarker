@@ -6,6 +6,9 @@ package com.team.imagemarker.entitys;
  */
 
 public class HistoryModel {
+    private int userId;//用户ID
+    private int rdcordId;//历史记录ID
+    private String firstImg;//用户头像
     private String recordName;//记录名称
     private String operateType;//操作类型
     private String recordTime;//记录时间
@@ -14,11 +17,37 @@ public class HistoryModel {
     public HistoryModel() {
     }
 
-    public HistoryModel(String recordName, String operateType, String recordTime, int recordType) {
+    public HistoryModel(int userId, String firstImg, String recordName, String operateType, String recordTime, int recordType) {
+        this.userId = userId;
+        this.firstImg = firstImg;
         this.recordName = recordName;
         this.operateType = operateType;
         this.recordTime = recordTime;
         this.recordType = recordType;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public int getRdcordId() {
+        return rdcordId;
+    }
+
+    public void setRdcordId(int rdcordId) {
+        this.rdcordId = rdcordId;
+    }
+
+    public String getFirstImg() {
+        return firstImg;
+    }
+
+    public void setFirstImg(String firstImg) {
+        this.firstImg = firstImg;
     }
 
     public String getRecordName() {

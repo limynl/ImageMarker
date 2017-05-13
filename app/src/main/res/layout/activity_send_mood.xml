@@ -10,6 +10,7 @@
     <include layout="@layout/title_bar"/>
 
     <EditText
+        android:id="@+id/edit_saying_content"
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:background="@android:color/transparent"

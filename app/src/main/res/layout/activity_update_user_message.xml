@@ -23,13 +23,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="头像"
-            android:textColor="#808080"
+            android:textColor="#424242"
             android:textSize="15dp"
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="20dp"
             android:layout_centerVertical="true"/>
 
         <com.team.imagemarker.utils.CircleImageView
+            android:id="@+id/user_head_img"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:src="@mipmap/default_avatar"
@@ -66,10 +67,26 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="昵称"
-                android:textColor="#808080"
-                android:textSize="15dp"/>
+                android:textColor="#424242"
+                android:textSize="15dp"
+                android:layout_centerVertical="true"/>
 
-            <TextView
+            <EditText
+                android:id="@+id/user_nickname"
+                android:layout_width="190dp"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="85dp"
+                android:inputType="text"
+                android:singleLine="true"
+                android:maxLength="10"
+                android:hint="取一个好听的名字吧..."
+                android:textColor="#424242"
+                android:textSize="16sp"
+                android:background="@drawable/edit_text"/>
+
+            <!--<TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Limynl"
@@ -78,7 +95,7 @@
                 android:gravity="center"
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="85dp"
-                android:layout_centerVertical="true"/>
+                android:layout_centerVertical="true"/>-->
 
         </RelativeLayout>
 
@@ -99,19 +116,23 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="年龄"
-                android:textColor="#808080"
-                android:textSize="15dp"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="20"
-                android:textSize="16sp"
                 android:textColor="#424242"
-                android:gravity="center"
+                android:textSize="15dp"
+                android:layout_centerVertical="true"
+                android:id="@+id/textView" />
+
+            <EditText
+                android:id="@+id/user_age"
+                android:layout_width="190dp"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="85dp"
-                android:layout_centerVertical="true"/>
+                android:inputType="number"
+                android:hint="年龄不是秘密哟..."
+                android:textColor="#424242"
+                android:textSize="16sp"
+                android:background="@drawable/edit_text"/>
 
         </RelativeLayout>
 
@@ -121,6 +142,7 @@
             android:background="@color/background"/>
 
         <RelativeLayout
+            android:id="@+id/select_sex"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="17dp"
@@ -132,15 +154,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="性别"
-                android:textColor="#808080"
-                android:textSize="15dp"/>
+                android:textColor="#424242"
+                android:textSize="15dp"
+                android:layout_centerVertical="true"/>
 
             <TextView
+                android:id="@+id/user_sex"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="男"
                 android:textSize="16sp"
-                android:textColor="#424242"
+                android:textColor="@color/gray1"
                 android:gravity="center"
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="85dp"
@@ -181,19 +205,25 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="电话号码"
-                android:textColor="#808080"
-                android:textSize="15dp"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="17843128994"
-                android:textSize="16sp"
                 android:textColor="#424242"
-                android:gravity="center"
+                android:textSize="15dp"
+                android:layout_centerVertical="true"
+                android:id="@+id/textView2" />
+
+            <EditText
+                android:id="@+id/user_number_phone"
+                android:layout_width="190dp"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="85dp"
-                android:layout_centerVertical="true"/>
+                android:inputType="number"
+                android:singleLine="true"
+                android:maxLength="10"
+                android:hint="17843128994"
+                android:textColor="#424242"
+                android:textSize="16sp"
+                android:background="@drawable/edit_text"/>
 
         </RelativeLayout>
 
@@ -215,8 +245,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="兴趣爱好"
-                android:textColor="#808080"
-                android:textSize="15dp"/>
+                android:textColor="#424242"
+                android:textSize="15dp"
+                android:layout_centerVertical="true"/>
 
             <TextView
                 android:id="@+id/user_hobby"
@@ -224,7 +255,7 @@
                 android:layout_height="wrap_content"
                 android:text="请选择您的兴趣爱好"
                 android:textSize="16sp"
-                android:textColor="#424242"
+                android:textColor="@color/gray1"
                 android:gravity="center"
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="85dp"
@@ -243,6 +274,7 @@
     </LinearLayout>
 
     <com.team.imagemarker.utils.PaperButton
+        android:id="@+id/user_message_submit"
         android:layout_gravity="center_horizontal"
         android:layout_marginRight="40dp"
         android:layout_marginLeft="40dp"
@@ -253,7 +285,7 @@
         widget:paper_corner_radius="19dp"
         widget:paper_text="保 存"
         widget:paper_text_size="16sp"
-        widget:paper_color="#ff7474"
+        widget:paper_color="@color/button"
         widget:paper_text_color="#ffffff" />
 
 </LinearLayout>

@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_look_picture"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_fragment_two">
+
+    <include layout="@layout/title_bar"/>
+
+    <ScrollView
+        android:layout_below="@+id/title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="200dp">
+
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/detail_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:overScrollMode="never" />
+
+                <TextView
+                    android:id="@+id/image_indicator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginRight="15dp"
+                    android:text="1/6"
+                    android:textColor="@color/write"
+                    android:textSize="25sp"
+                    android:textStyle="italic|bold"/>
+
+            </RelativeLayout>
+
+            <com.team.imagemarker.utils.tag.TagGroup
+                android:id="@+id/image_tag"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                style="@style/TagGroup"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="测试数据"
+                android:textColor="@color/gray1"/>
+
+            <com.team.imagemarker.utils.WavyLineView
+                android:id="@+id/release_wavyLine"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:amplitude="8dp"
+                app:strokeColor="#f88f55"
+                app:strokeWidth="1dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="测试数据"
+                android:textColor="@color/gray1"/>
+
+            <ListView
+                android:id="@+id/detail_listview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fadingEdge="none"
+                android:layout_marginTop="5dp"/>
+
+        </LinearLayout>
+
+        </ScrollView>
+
+    <RelativeLayout
+        android:id="@+id/detail_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/write"
+        android:paddingTop="5dp">
+
+        <TextView
+            android:id="@+id/detail_send"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:gravity="center"
+            android:paddingTop="2dp"
+            android:text="发送"
+            android:layout_marginRight="6dp"
+            android:layout_marginEnd="6dp"
+            android:textColor="@color/gray1"
+            android:textSize="16sp"/>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="5dp"
+            android:layout_toLeftOf="@+id/detail_send"
+            android:layout_toStartOf="@+id/detail_send"
+            android:background="@drawable/circle_detial_edit_bg">
+
+            <EditText
+                android:id="@+id/detail_edit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#00000000"
+                android:hint="写评论..."
+                android:textSize="14sp"
+                android:textColorHint="#999999"
+                android:textColor="#4e5257"
+                android:paddingTop="5dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:textCursorDrawable="@null"
+                android:minHeight="40dp"
+                android:maxHeight="85dp"
+                android:gravity="center_vertical"/>
+
+            <TextView
+                android:id="@+id/detail_send_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/detail_edit"
+                android:gravity="top"
+                android:paddingBottom="5dp"
+                android:paddingRight="10dp"
+                android:textColor="#FFA500"
+                android:textSize="12sp"
+                android:visibility="gone"/>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>

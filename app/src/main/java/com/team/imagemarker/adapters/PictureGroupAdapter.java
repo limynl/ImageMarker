@@ -110,7 +110,7 @@ public class PictureGroupAdapter extends RecyclerView.Adapter<PictureGroupAdapte
     }
 
 
-    public class PictureViewHolder extends RecyclerView.ViewHolder {
+    class PictureViewHolder extends RecyclerView.ViewHolder {
         public TextView imgTitle;
         public ImageView firstImg;
         public RelativeLayout detailMessage;
