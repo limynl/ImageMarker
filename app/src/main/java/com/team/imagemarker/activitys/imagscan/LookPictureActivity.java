@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -14,22 +16,25 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.team.imagemarker.R;
+import com.team.imagemarker.adapters.imgscan.CommentAdapter;
+import com.team.imagemarker.entitys.image.CommentInfoModel;
 import com.team.imagemarker.entitys.image.LookDetailModel;
+import com.team.imagemarker.utils.SoftInputMethodUtil;
 import com.team.imagemarker.utils.WavyLineView;
 import com.team.imagemarker.utils.tag.TagColor;
 import com.team.imagemarker.utils.tag.TagGroup;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-
-
 
 /**
  * Created by Lmy on 2017/4/22.
  * email 1434117404@qq.com
  */
 
-public class LookPictureActivity extends Activity implements View.OnClickListener{
+public class LookPictureActivity extends Activity implements View.OnClickListener, View.OnTouchListener{
     private TextView title;
     private ImageView leftIcon, rightIcon;
     private RelativeLayout titleBar;
@@ -45,6 +50,11 @@ public class LookPictureActivity extends Activity implements View.OnClickListene
 
     private List<LookDetailModel> list = new ArrayList<LookDetailModel>();
     private String[] imgTag = {"鬼医嫡妃", "文艺大明星", "执掌龙宫", "大唐太子爷"};
+    private List<CommentInfoModel> commentList = new ArrayList<CommentInfoModel>();
+    private CommentAdapter commentAdapter;
+
+    SimpleDateFormat sdf=new SimpleDateFormat("yyyy年MM月dd日   HH:mm:ss");
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +62,8 @@ public class LookPictureActivity extends Activity implements View.OnClickListene
         setContentView(R.layout.activity_look_picture);
         bindView();
         setData();
+
+        SoftInputMethodUtil.HideSoftInput(editTextComment.getWindowToken());//隐藏软键盘
     }
 
     private void bindView() {
@@ -66,13 +78,14 @@ public class LookPictureActivity extends Activity implements View.OnClickListene
         imgComment = (ListView) findViewById(R.id.detail_listview);
         sendComment = (TextView) findViewById(R.id.detail_send);
         editTextComment = (EditText) findViewById(R.id.detail_edit);
-        mWavyLine = (WavyLineView) findViewById(R.id.release_wavyLine);
 
         titleBar.setBackgroundColor(getResources().getColor(R.color.theme));
         title.setText("图组详情");
         rightIcon.setImageResource(R.mipmap.three_more);
         leftIcon.setOnClickListener(this);
         rightIcon.setOnClickListener(this);
+        editTextComment.setOnTouchListener(this);
+        sendComment.setOnClickListener(this);
 
         // 波浪线设置
         mWavyLine = (WavyLineView) findViewById(R.id.release_wavyLine);
@@ -109,8 +122,18 @@ public class LookPictureActivity extends Activity implements View.OnClickListene
             }
         });
         updateIndicator(imgViewPager.getCurrentItem());//为第一张图片设置标签，并添加指示器
-    }
 
+        //设置评论数据
+        commentList.add(new CommentInfoModel("http://139.199.23.142:8080/TestShowMessage1/marker/test1.jpg", "Limynl", "2017-05-01 11:31:00", "用户评论测试"));
+        commentList.add(new CommentInfoModel("http://139.199.23.142:8080/TestShowMessage1/marker/test1.jpg", "Limynl", "2017-05-01 11:31:00", "用户评论测试"));
+        commentList.add(new CommentInfoModel("http://139.199.23.142:8080/TestShowMessage1/marker/test1.jpg", "Limynl", "2017-05-01 11:31:00", "用户评论测试"));
+        commentList.add(new CommentInfoModel("http://139.199.23.142:8080/TestShowMessage1/marker/test1.jpg", "Limynl", "2017-05-01 11:31:00", "用户评论测试"));
+        commentList.add(new CommentInfoModel("http://139.199.23.142:8080/TestShowMessage1/marker/test1.jpg", "Limynl", "2017-05-01 11:31:00", "用户评论测试"));
+        commentList.add(new CommentInfoModel("http://139.199.23.142:8080/TestShowMessage1/marker/test1.jpg", "Limynl", "2017-05-01 11:31:00", "用户评论测试"));
+
+        commentAdapter = new CommentAdapter(this, commentList);
+        imgComment.setAdapter(commentAdapter);
+    }
 
     private void updateIndicator(int position){
         int currentItem = imgViewPager.getCurrentItem() + 1;//得到当前ViewPager的位置
@@ -133,6 +156,14 @@ public class LookPictureActivity extends Activity implements View.OnClickListene
         imgTagGroup.setTags(colors, tags);
     }
 
+    /**
+     * 显示系统软键盘
+     */
+    private void showKeyboard() {
+        InputMethodManager inputManager = (InputMethodManager) editTextComment.getContext().getSystemService(INPUT_METHOD_SERVICE);
+        inputManager.showSoftInput(editTextComment, 0);
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()){
@@ -144,7 +175,24 @@ public class LookPictureActivity extends Activity implements View.OnClickListene
                 Toast.makeText(this, "更多", Toast.LENGTH_SHORT).show();
             }
             break;
+            case R.id.detail_send:{
+                Toast.makeText(this, "发送", Toast.LENGTH_SHORT).show();
+                String str=sdf.format(new Date());
+                String commentContent = editTextComment.getText().toString();
+            }
+            break;
         }
+    }
+
+    /**
+     *
+     */
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        if(v.getId() == R.id.detail_edit){
+            showKeyboard();//弹出软键盘
+        }
+        return false;
     }
 
     /**

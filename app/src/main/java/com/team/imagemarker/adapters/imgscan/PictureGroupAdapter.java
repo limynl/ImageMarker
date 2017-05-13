@@ -1,4 +1,4 @@
-package com.team.imagemarker.adapters;
+package com.team.imagemarker.adapters.imgscan;
 
 import android.content.Context;
 import android.graphics.Bitmap;

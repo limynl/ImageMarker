@@ -15,7 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.team.imagemarker.R;
-import com.team.imagemarker.adapters.PictureGroupAdapter;
+import com.team.imagemarker.adapters.imgscan.PictureGroupAdapter;
 import com.team.imagemarker.entitys.Constants;
 import com.team.imagemarker.entitys.PictureGroupModel;
 
