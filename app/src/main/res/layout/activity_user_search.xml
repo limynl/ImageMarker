@@ -3,9 +3,41 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_fragment_two">
+    android:background="@color/write">
 
-    <include layout="@layout/search_bar"/>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/theme"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="返回"
+            android:textColor="@color/write"
+            android:textSize="16sp"
+            android:layout_gravity="left|center_vertical"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"/>
+
+        <include layout="@layout/search_bar"
+            android:layout_width="250dp"
+            android:layout_height="36dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="搜索"
+            android:textColor="@color/write"
+            android:textSize="16sp"
+            android:layout_gravity="right|center_vertical"
+            android:layout_marginLeft="10dp"/>
+
+    </LinearLayout>
+
 
     <RelativeLayout
         android:id="@+id/layoutHotWord"
@@ -48,7 +80,7 @@
         android:layout_height="wrap_content"
         android:text="搜索历史"
         android:textColor="@color/font_light"
-        android:textSize="14dp" />
+        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/tvClear"
@@ -70,7 +102,9 @@
         android:layout_below="@+id/tvSearchHistory"
         android:layout_marginTop="5dp"
         android:divider="@null"
-        android:scrollbars="none" />
+        android:scrollbars="none"
+        android:visibility="gone"/>
+
 
     </RelativeLayout>
 

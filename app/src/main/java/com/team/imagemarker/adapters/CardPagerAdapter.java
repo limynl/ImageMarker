@@ -1,5 +1,6 @@
 package com.team.imagemarker.adapters;
 
+import android.content.Context;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
@@ -7,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.team.imagemarker.R;
 import com.team.imagemarker.entitys.CardItem;
 
@@ -23,10 +26,12 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
     private List<CardView> mViews;
     private List<CardItem> mData;
     private float mBaseElevation;
+    private Context context;
 
-    public CardPagerAdapter() {
+    public CardPagerAdapter(Context context) {
         mData = new ArrayList<>();
         mViews = new ArrayList<>();
+        this.context = context;
     }
 
     public void addCardItem(CardItem item) {
@@ -77,7 +82,13 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
 
     private void bind(CardItem item, View view) {
         ImageView imageView = (ImageView) view.findViewById(R.id.test_imageview);
-        imageView.setBackgroundResource(item.getImgId());
+//        imageView.setImageResource(item.getImgId());
+        Glide.with(context)
+                .load(item.getImgUrl())
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(imageView);
+
+
     }
 
 }

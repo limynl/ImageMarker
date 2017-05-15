@@ -14,17 +14,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
+import android.widget.ExpandableListView;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.team.imagemarker.R;
+import com.team.imagemarker.activitys.home.MoreCategoryActivity;
 import com.team.imagemarker.activitys.user.UserSearchActivity;
 import com.team.imagemarker.adapters.imgnav.GridViewLikeAdapter;
 import com.team.imagemarker.adapters.imgnav.HotCategroyAdapter;
 import com.team.imagemarker.adapters.imgnav.LikeViewPagerAdapter;
+import com.team.imagemarker.adapters.imgnav.SelectCategoryAdapter;
+import com.team.imagemarker.entitys.home.CateGoryInfo;
 import com.team.imagemarker.entitys.home.CategoryModel;
+import com.team.imagemarker.entitys.home.SelectCategoryModel;
 import com.team.imagemarker.utils.EditTextWithDel;
 import com.team.imagemarker.utils.MyGridView;
 import com.team.imagemarker.utils.MyScrollView;
@@ -66,6 +71,10 @@ public class ImageNavFragment extends Fragment implements View.OnClickListener, 
     private int pageSize = 4;//每页显示的条目数
     private int currentIndex = 0;//显示当前页数
 
+    //精选种类
+    private ExpandableListView selectCategory;
+    private List<SelectCategoryModel> selectList = new ArrayList<SelectCategoryModel>();
+    String[] tags = {"三国之超级召唤系统", "鬼医嫡妃", "文艺大明星", "鬼村扎纸人", "私密宝贝，帝少kissme", "执掌龙宫", "大唐太子爷", "重生之改天换地"};
 
 
     @Nullable
@@ -83,6 +92,8 @@ public class ImageNavFragment extends Fragment implements View.OnClickListener, 
 
         likeViewPager = (ViewPager) view.findViewById(R.id.like_viewpager);
         dot = (LinearLayout) view.findViewById(R.id.viewpager_indicator);
+
+        selectCategory = (ExpandableListView) view.findViewById(R.id.select_category);
         return view;
     }
 
@@ -98,9 +109,10 @@ public class ImageNavFragment extends Fragment implements View.OnClickListener, 
         titleBarRoot.setGravity(Gravity.CENTER);
         userSearch.setEnabled(false);
         titleBarRoot.setOnClickListener(this);
-        setTopBanner();
-        setHotCateGroy();
-        setLikeViewpager();
+        setTopBanner();//viewpager滚动
+        setHotCateGroy();//热门分类
+        setLikeViewpager();//猜你喜欢
+        setSelectCategory();//精选分类
     }
 
     /**
@@ -119,6 +131,9 @@ public class ImageNavFragment extends Fragment implements View.OnClickListener, 
             @Override
             public void onItemClick(int position) {
                 Toast.makeText(getActivity(), "这是第" + (position + 1) +"张图片", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getContext(), MoreCategoryActivity.class);
+                startActivity(intent);
+                getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             }
         });
 
@@ -182,6 +197,22 @@ public class ImageNavFragment extends Fragment implements View.OnClickListener, 
         setOvalLayout();
 
 
+    }
+
+    private void setSelectCategory() {
+        List<CateGoryInfo> list = new ArrayList<CateGoryInfo>();
+        list.add(new CateGoryInfo("种类一", "http://139.199.23.142:8080/TestShowMessage1/marker/navbanner/banner1.jpg"));
+        list.add(new CateGoryInfo("种类二", "http://139.199.23.142:8080/TestShowMessage1/marker/navbanner/banner2.jpg"));
+        list.add(new CateGoryInfo("种类三", "http://139.199.23.142:8080/TestShowMessage1/marker/navbanner/banner3.jpg"));
+        list.add(new CateGoryInfo("种类四", "http://139.199.23.142:8080/TestShowMessage1/marker/navbanner/banner4.jpg"));
+        list.add(new CateGoryInfo("种类五", "http://139.199.23.142:8080/TestShowMessage1/marker/navbanner/banner5.jpg"));
+        selectList.add(new SelectCategoryModel("标题一", tags, list));
+        selectList.add(new SelectCategoryModel("标题二", tags, list));
+        selectList.add(new SelectCategoryModel("标题三", tags, list));
+        selectList.add(new SelectCategoryModel("标题四", tags, list));
+        selectList.add(new SelectCategoryModel("标题五", tags, list));
+
+        selectCategory.setAdapter(new SelectCategoryAdapter(getContext(), selectCategory, selectList));
     }
 
     /**

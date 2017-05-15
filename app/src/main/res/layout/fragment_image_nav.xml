@@ -134,6 +134,36 @@
 
             </RelativeLayout>
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/select_category_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:text="精选种类"
+                    android:textColor="@color/font_light"
+                    android:textSize="14sp"
+                    android:layout_marginTop="5dp"
+                    android:drawableLeft="@mipmap/select_category"
+                    android:drawablePadding="5dp"/>
+
+                <ExpandableListView
+                    android:id="@+id/select_category"
+                    android:layout_below="@+id/select_category_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#eeeff3"
+                    android:divider="#eeeff3"
+                    android:dividerHeight="0dp"
+                    android:groupIndicator="@null"
+                    android:listSelector="@null" />
+
+                </RelativeLayout>
+
             <include layout="@layout/footer_common"/>
 
             </LinearLayout>
@@ -150,6 +180,6 @@
 
         <include layout="@layout/search_bar"/>
 
-        </RelativeLayout>
+    </RelativeLayout>
 
 </RelativeLayout>

@@ -19,16 +19,6 @@
         <attr name="paper_shadow_color" format="color"/>
     </declare-styleable>
 
-    <declare-styleable name="MultiShapeView">
-        <attr name="shape" format="enum">
-            <enum name="rect" value="1"/>
-            <enum name="circle" value="2"/>
-        </attr>
-        <attr name="border_width_one" format="dimension" />
-        <attr name="border_color_one" format="color" />
-        <attr name="cover_color" format="color" />
-        <attr name="round_radius" format="dimension"/>
-    </declare-styleable>
 
     <!--顶部banner-->
     <declare-styleable name="BannerLayoutStyle">
@@ -86,5 +76,12 @@
     <declare-styleable name="Themes">
         <attr name="tagGroupStyle" format="reference" />
     </declare-styleable>
+
+    <!--圆角图片-->
+    <declare-styleable name="RoundAngleImageView">
+        <attr name="roundWidth" format="dimension" />
+        <attr name="roundHeight" format="dimension" />
+    </declare-styleable>
+
 
 </resources>

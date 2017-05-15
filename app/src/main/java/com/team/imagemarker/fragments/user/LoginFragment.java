@@ -18,7 +18,7 @@ import android.widget.Toast;
 
 import com.mob.tools.utils.UIHandler;
 import com.team.imagemarker.R;
-import com.team.imagemarker.activitys.user.HomeActivity;
+import com.team.imagemarker.activitys.home.HomeActivity;
 import com.team.imagemarker.activitys.user.UserResetPassActivity;
 import com.team.imagemarker.utils.EditTextWithDel;
 import com.team.imagemarker.utils.PaperButton;

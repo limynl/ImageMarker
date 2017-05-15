@@ -84,6 +84,7 @@
                             android:textAppearance="@style/cardHeadTitle"/>
 
                         <Button
+                            android:id="@+id/system_push_more"
                             android:layout_width="60dp"
                             android:layout_height="25dp"
                             android:layout_alignParentRight="true"
@@ -144,6 +145,7 @@
                             android:textAppearance="@style/cardHeadTitle"/>
 
                         <Button
+                            android:id="@+id/hobby_push_more"
                             android:layout_width="60dp"
                             android:layout_height="25dp"
                             android:layout_alignParentRight="true"

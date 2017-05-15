@@ -16,6 +16,11 @@ public class CardItem {
         this.imgName = imgName;
     }
 
+    public CardItem(String imgUrl, String imgName){
+        this.imgUrl = imgUrl;
+        this.imgName = imgName;
+    }
+
     public int getImgId() {
         return imgId;
     }

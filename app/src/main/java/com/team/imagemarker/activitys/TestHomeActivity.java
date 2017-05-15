@@ -60,7 +60,7 @@ public class TestHomeActivity extends Activity implements RapidFloatingActionCon
      * 为ViewPager设置数据
      */
     private void setDataToViewPager() {
-        cardPagerAdapter = new CardPagerAdapter();
+        cardPagerAdapter = new CardPagerAdapter(this);
         cardPagerAdapter.addCardItem(new CardItem(R.mipmap.image1, "这是一句说明性文字"));
         cardPagerAdapter.addCardItem(new CardItem(R.mipmap.image2, "这是一句说明性文字"));
         cardPagerAdapter.addCardItem(new CardItem(R.mipmap.image4, "这是一句说明性文字"));

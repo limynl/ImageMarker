@@ -36,12 +36,6 @@
                     android:scaleType="centerCrop"
                     android:layout_centerVertical="true"/>
 
-                <!--<com.team.imagemarker.utils.MultiShapeView-->
-                    <!--android:id="@+id/user_img"-->
-                    <!--android:layout_centerVertical="true"-->
-                    <!--app:shape="circle"-->
-                    <!--android:layout_width="36dp"-->
-                    <!--android:layout_height="36dp"/>-->
 
                 <TextView
                     android:id="@+id/user_nick_name"

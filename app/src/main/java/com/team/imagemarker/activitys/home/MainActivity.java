@@ -1,4 +1,4 @@
-package com.team.imagemarker.activitys.user;
+package com.team.imagemarker.activitys.home;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;

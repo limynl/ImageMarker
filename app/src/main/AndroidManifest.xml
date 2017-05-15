@@ -59,14 +59,14 @@
             android:name="com.tencent.connect.common.AssistActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-        <activity android:name=".activitys.user.MainActivity">
+        <activity android:name=".activitys.home.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activitys.user.HomeActivity" />
+        <activity android:name=".activitys.home.HomeActivity" />
         <activity android:name=".activitys.user.UserResetPassActivity" />
         <activity android:name=".activitys.user.UpdateUserMessageActivity" />
         <activity android:name=".activitys.history.HistoryRecordActivity" />
@@ -77,7 +77,9 @@
         <activity android:name=".activitys.saying.SayingScanActivity" />
         <activity android:name=".activitys.user.FeedBackActivity" />
         <activity android:name=".activitys.user.UserSearchActivity" />
-        <activity android:name=".activitys.imagscan.LookPictureActivity"></activity>
+        <activity android:name=".activitys.imagscan.LookPictureActivity" />
+        <activity android:name=".activitys.home.MoreCategoryActivity" />
+        <activity android:name=".activitys.mark.MarkHomeActivity"/>
     </application>
 
 </manifest>
