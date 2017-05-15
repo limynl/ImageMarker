@@ -136,7 +136,7 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="640dp">
 
                 <TextView
                     android:id="@+id/select_category_title"
@@ -164,7 +164,7 @@
 
                 </RelativeLayout>
 
-            <include layout="@layout/footer_common"/>
+                <include layout="@layout/footer_common"/>
 
             </LinearLayout>
 

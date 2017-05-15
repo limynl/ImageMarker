@@ -20,8 +20,8 @@ import com.team.imagemarker.fragments.home.UserCenterFragment;
  */
 
 public class HomeActivity extends FragmentActivity{
-    private String[] tabNames = {"图组导航", "个人中心"};
-    private int[] tabIcons = {R.mipmap.weixiushang_icon, R.mipmap.peijianshang_icon};
+    private String[] tabNames = {"兴趣导航", "个人中心"};
+    private int[] tabIcons = {R.mipmap.hobby_nav_icon, R.mipmap.user_center_icon};
     private SpaceNavigationView tabs;
     private ImageNavFragment imageNavFragment;//图组导航
     private UserCenterFragment userCenterFragment;//个人中心
@@ -95,7 +95,7 @@ public class HomeActivity extends FragmentActivity{
     private void gotoOtherFragment(String itemName) {
         hideFragment();
         switch (itemName) {
-            case "图组导航":
+            case "兴趣导航":
                 if (imageNavFragment == null) {
                     imageNavFragment = new ImageNavFragment();
                     fragmentManager.beginTransaction().add(CONTENT_ID, imageNavFragment).commit();

@@ -2,6 +2,7 @@ package com.team.imagemarker.adapters.imgnav;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -101,7 +102,7 @@ public class SelectCategoryAdapter extends BaseExpandableListAdapter {
             //条目折叠显示种类
             showCategory(parentViewHolder, groupPosition);
         }
-
+        Log.e("父布局", "父布局显示了");
         return convertView;
     }
 
@@ -118,6 +119,7 @@ public class SelectCategoryAdapter extends BaseExpandableListAdapter {
         int tagSize = list.get(groupPosition).getCategoryTag().length;//每次显示8个
         List<TagColor> colors = TagColor.getRandomColors(tagSize);
         childViewHolder.tagGroup.setTags(colors, list.get(groupPosition).getCategoryTag());
+        Log.e("孩子列表", "孩子列表设置了...");
 
         return convertView;
     }

@@ -9,7 +9,6 @@
         android:id="@+id/main_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-    <!--android:layout_marginBottom="51dp"-->
 
     <com.luseen.spacenavigation.SpaceNavigationView
         android:id="@+id/main_tab"
@@ -19,6 +18,6 @@
         android:layout_alignParentBottom="true"
         app:space_item_icon_only_size="45dp"
         app:space_background_color="@color/theme1"
-        app:centre_button_color="@color/button" />
+        app:centre_button_color="@color/button"/>
 
 </RelativeLayout>

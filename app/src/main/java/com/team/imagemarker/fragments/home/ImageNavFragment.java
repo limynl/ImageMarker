@@ -37,6 +37,7 @@ import com.team.imagemarker.viewpager.navbanner.BannerLayout;
 import com.team.imagemarker.viewpager.navbanner.GlideImageLoader;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -74,7 +75,8 @@ public class ImageNavFragment extends Fragment implements View.OnClickListener, 
     //精选种类
     private ExpandableListView selectCategory;
     private List<SelectCategoryModel> selectList = new ArrayList<SelectCategoryModel>();
-    String[] tags = {"三国之超级召唤系统", "鬼医嫡妃", "文艺大明星", "鬼村扎纸人", "私密宝贝，帝少kissme", "执掌龙宫", "大唐太子爷", "重生之改天换地"};
+    private String[] tags = {"三国之超级召唤系统", "鬼医嫡妃", "文艺大明星", "鬼村扎纸人", "私密宝贝，帝少kissme", "执掌龙宫", "大唐太子爷", "重生之改天换地"};
+    private List<String> tagList = Arrays.asList(tags);
 
 
     @Nullable
@@ -206,11 +208,13 @@ public class ImageNavFragment extends Fragment implements View.OnClickListener, 
         list.add(new CateGoryInfo("种类三", "http://139.199.23.142:8080/TestShowMessage1/marker/navbanner/banner3.jpg"));
         list.add(new CateGoryInfo("种类四", "http://139.199.23.142:8080/TestShowMessage1/marker/navbanner/banner4.jpg"));
         list.add(new CateGoryInfo("种类五", "http://139.199.23.142:8080/TestShowMessage1/marker/navbanner/banner5.jpg"));
+        list.add(new CateGoryInfo("种类一", "http://139.199.23.142:8080/TestShowMessage1/marker/navbanner/banner1.jpg"));
+        list.add(new CateGoryInfo("种类二", "http://139.199.23.142:8080/TestShowMessage1/marker/navbanner/banner2.jpg"));
+        list.add(new CateGoryInfo("种类三", "http://139.199.23.142:8080/TestShowMessage1/marker/navbanner/banner3.jpg"));
         selectList.add(new SelectCategoryModel("标题一", tags, list));
         selectList.add(new SelectCategoryModel("标题二", tags, list));
         selectList.add(new SelectCategoryModel("标题三", tags, list));
         selectList.add(new SelectCategoryModel("标题四", tags, list));
-        selectList.add(new SelectCategoryModel("标题五", tags, list));
 
         selectCategory.setAdapter(new SelectCategoryAdapter(getContext(), selectCategory, selectList));
     }
@@ -295,5 +299,4 @@ public class ImageNavFragment extends Fragment implements View.OnClickListener, 
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
     }
-
 }
