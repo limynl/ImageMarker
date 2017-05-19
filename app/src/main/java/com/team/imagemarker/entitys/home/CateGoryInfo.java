@@ -6,12 +6,27 @@ package com.team.imagemarker.entitys.home;
  */
 
 public class CateGoryInfo {
+    private String mainTitle;
     private String name;
     private String imgUrl;
 
     public CateGoryInfo(String name, String imgUrl) {
         this.name = name;
         this.imgUrl = imgUrl;
+    }
+
+    public CateGoryInfo(String mainTitle, String name, String imgUrl) {
+        this.mainTitle = mainTitle;
+        this.name = name;
+        this.imgUrl = imgUrl;
+    }
+
+    public String getMainTitle() {
+        return mainTitle;
+    }
+
+    public void setMainTitle(String mainTitle) {
+        this.mainTitle = mainTitle;
     }
 
     public String getName() {

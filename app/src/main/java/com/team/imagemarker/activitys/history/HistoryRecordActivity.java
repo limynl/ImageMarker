@@ -81,7 +81,7 @@ public class HistoryRecordActivity extends FragmentActivity implements View.OnCl
         line_length = this.getWindowManager().getDefaultDisplay().getWidth() / fragmentList.size();
         line.getLayoutParams().width = line_length;
         line.requestLayout();
-        
+        historyViewPager.setOffscreenPageLimit(2);
         historyViewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
@@ -157,7 +157,7 @@ public class HistoryRecordActivity extends FragmentActivity implements View.OnCl
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.left_icon:{//返回
-                this.finish();
+                onBackPressed();
             }
             break;
             case R.id.all_history:{//所有历史记录
@@ -173,5 +173,12 @@ public class HistoryRecordActivity extends FragmentActivity implements View.OnCl
             }
             break;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        this.finish();
+        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
     }
 }

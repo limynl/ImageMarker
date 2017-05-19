@@ -54,15 +54,13 @@ public class FeedBackActivity extends Activity implements View.OnClickListener{
         mWavyLine.setPeriod((float) (2 * Math.PI / 60));
         mWavyLine.setAmplitude(5);
         mWavyLine.setStrokeWidth(2);//ScreenUtil.dp2px(initStrokeWidth)
-
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.left_icon:{
-                FeedBackActivity.this.finish();
-                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+                onBackPressed();
             }
             break;
             case R.id.submit_feed_back:{
@@ -70,5 +68,12 @@ public class FeedBackActivity extends Activity implements View.OnClickListener{
             }
             break;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        FeedBackActivity.this.finish();
+        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
     }
 }

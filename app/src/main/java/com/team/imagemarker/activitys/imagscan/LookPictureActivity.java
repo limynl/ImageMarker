@@ -1,7 +1,8 @@
 package com.team.imagemarker.activitys.imagscan;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.MotionEvent;
@@ -23,6 +24,10 @@ import com.team.imagemarker.utils.SoftInputMethodUtil;
 import com.team.imagemarker.utils.WavyLineView;
 import com.team.imagemarker.utils.tag.TagColor;
 import com.team.imagemarker.utils.tag.TagGroup;
+import com.yalantis.contextmenu.lib.ContextMenuDialogFragment;
+import com.yalantis.contextmenu.lib.MenuObject;
+import com.yalantis.contextmenu.lib.MenuParams;
+import com.yalantis.contextmenu.lib.interfaces.OnMenuItemClickListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -34,7 +39,7 @@ import java.util.List;
  * email 1434117404@qq.com
  */
 
-public class LookPictureActivity extends Activity implements View.OnClickListener, View.OnTouchListener{
+public class LookPictureActivity extends FragmentActivity implements View.OnClickListener, View.OnTouchListener, OnMenuItemClickListener {
     private TextView title;
     private ImageView leftIcon, rightIcon;
     private RelativeLayout titleBar;
@@ -49,20 +54,24 @@ public class LookPictureActivity extends Activity implements View.OnClickListene
     private WavyLineView mWavyLine;
 
     private List<LookDetailModel> list = new ArrayList<LookDetailModel>();
-    private String[] imgTag = {"鬼医嫡妃", "文艺大明星", "执掌龙宫", "大唐太子爷"};
+    private String[] imgTag = {"测试标签", "图片标签描述", "图片描述", "测试美图浏览"};
     private List<CommentInfoModel> commentList = new ArrayList<CommentInfoModel>();
     private CommentAdapter commentAdapter;
 
     SimpleDateFormat sdf=new SimpleDateFormat("yyyy年MM月dd日   HH:mm:ss");
+
+    private FragmentManager fragmentManager;
+    private ContextMenuDialogFragment menuDialogFragment;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_look_picture);
-        bindView();
-        setData();
-
+        fragmentManager = getSupportFragmentManager();
+        bindView();//初始化视图
+        setData();//加载数据
+        setFloatMenu();//设置悬浮菜单
         SoftInputMethodUtil.HideSoftInput(editTextComment.getWindowToken());//隐藏软键盘
     }
 
@@ -133,8 +142,41 @@ public class LookPictureActivity extends Activity implements View.OnClickListene
 
         commentAdapter = new CommentAdapter(this, commentList);
         imgComment.setAdapter(commentAdapter);
+
     }
 
+    /**
+     * 设置悬浮菜单
+     */
+    private void setFloatMenu() {
+        MenuParams menuParams = new MenuParams();
+        menuParams.setActionBarSize((int) getResources().getDimension(R.dimen.tool_bar_height));
+        menuParams.setMenuObjects(getMenuObjects());
+        menuParams.setClosableOutside(true);
+        menuDialogFragment = ContextMenuDialogFragment.newInstance(menuParams);
+        menuDialogFragment.setItemClickListener(this);
+    }
+
+    private List<MenuObject> getMenuObjects(){
+        List<MenuObject> menuObjects = new ArrayList<>();
+        MenuObject close = new MenuObject();
+        close.setResource(R.mipmap.ic_close);
+        menuObjects.add(close);
+
+        MenuObject share = new MenuObject("一键分享");
+        share.setResource(R.mipmap.ic_close);
+        menuObjects.add(share);
+
+        MenuObject change = new MenuObject("换壁纸");
+        change.setResource(R.mipmap.ic_close);
+        menuObjects.add(change);
+        return menuObjects;
+    }
+
+    /**
+     * 图片浏览的指示器
+     * @param position
+     */
     private void updateIndicator(int position){
         int currentItem = imgViewPager.getCurrentItem() + 1;//得到当前ViewPager的位置
         int totalNum = imgViewPager.getAdapter().getCount();//得到总数
@@ -168,11 +210,13 @@ public class LookPictureActivity extends Activity implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.left_icon:{
-                this.finish();
+                onBackPressed();
             }
             break;
             case R.id.right_icon:{
-                Toast.makeText(this, "更多", Toast.LENGTH_SHORT).show();
+                if(fragmentManager.findFragmentByTag(ContextMenuDialogFragment.TAG) == null){
+                    menuDialogFragment.show(fragmentManager, ContextMenuDialogFragment.TAG);
+                }
             }
             break;
             case R.id.detail_send:{
@@ -185,7 +229,7 @@ public class LookPictureActivity extends Activity implements View.OnClickListene
     }
 
     /**
-     *
+     *触摸编辑框弹出软键盘
      */
     @Override
     public boolean onTouch(View v, MotionEvent event) {
@@ -193,6 +237,26 @@ public class LookPictureActivity extends Activity implements View.OnClickListene
             showKeyboard();//弹出软键盘
         }
         return false;
+    }
+
+    /**
+     * 浮动按钮点击
+     * @param clickedView
+     * @param position
+     */
+    @Override
+    public void onMenuItemClick(View clickedView, int position) {
+        Toast.makeText(this, "您点击的是第" + position + "个", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(menuDialogFragment != null && menuDialogFragment.isAdded()){
+            menuDialogFragment.dismiss();
+        }else{
+            this.finish();
+            overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+        }
     }
 
     /**

@@ -97,8 +97,7 @@ public class SayingScanActivity extends Activity implements View.OnClickListener
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.left_icon:{
-                SayingScanActivity.this.finish();
-                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+                onBackPressed();
             }
             break;
             case R.id.right_icon:{
@@ -121,5 +120,12 @@ public class SayingScanActivity extends Activity implements View.OnClickListener
                 refreshLayout.setRefreshing(false);//刷新完成
             }
         }, 3000);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        this.finish();
+        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
     }
 }

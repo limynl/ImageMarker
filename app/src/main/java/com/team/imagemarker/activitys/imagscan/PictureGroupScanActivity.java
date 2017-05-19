@@ -100,8 +100,7 @@ public class PictureGroupScanActivity extends Activity implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.left_icon:{//返回
-                PictureGroupScanActivity.this.finish();
-                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+                onBackPressed();
             }
             break;
             case R.id.to_top:{//回到顶部
@@ -146,5 +145,12 @@ public class PictureGroupScanActivity extends Activity implements View.OnClickLi
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        PictureGroupScanActivity.this.finish();
+        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
     }
 }

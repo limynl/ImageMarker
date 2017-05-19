@@ -136,7 +136,7 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="640dp">
+                android:layout_height="420dp">
 
                 <TextView
                     android:id="@+id/select_category_title"
@@ -151,16 +151,16 @@
                     android:drawableLeft="@mipmap/select_category"
                     android:drawablePadding="5dp"/>
 
-                <ExpandableListView
+                <ListView
                     android:id="@+id/select_category"
                     android:layout_below="@+id/select_category_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="#eeeff3"
-                    android:divider="#eeeff3"
-                    android:dividerHeight="0dp"
-                    android:groupIndicator="@null"
-                    android:listSelector="@null" />
+                    android:layout_marginTop="3dp"
+                    android:divider="@null"
+                    android:scrollbars="none"
+                    android:cacheColorHint="#fafafa"/>
 
                 </RelativeLayout>
 

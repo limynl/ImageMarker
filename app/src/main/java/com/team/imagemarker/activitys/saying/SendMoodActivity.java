@@ -110,8 +110,7 @@ public class SendMoodActivity extends Activity implements View.OnClickListener, 
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.left_icon:{
-                SendMoodActivity.this.finish();
-                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+                onBackPressed();
             }
             break;
             case R.id.right_icon:{
@@ -252,5 +251,12 @@ public class SendMoodActivity extends Activity implements View.OnClickListener, 
             mSmallUrls.clear();
             mSmallUrls = null;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        SendMoodActivity.this.finish();
+        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
     }
 }

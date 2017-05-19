@@ -26,6 +26,11 @@ public class SelectCategoryModel {
         this.cateGoryInfos = cateGoryInfos;
     }
 
+    public SelectCategoryModel(String categoryTitle, List<CateGoryInfo> cateGoryInfos) {
+        this.categoryTitle = categoryTitle;
+        this.cateGoryInfos = cateGoryInfos;
+    }
+
     public String getCategoryTitle() {
         return categoryTitle;
     }

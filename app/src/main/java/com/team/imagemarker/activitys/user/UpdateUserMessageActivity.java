@@ -158,8 +158,7 @@ public class UpdateUserMessageActivity extends Activity implements View.OnClickL
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.left_icon:{//返回
-                UpdateUserMessageActivity.this.finish();
-                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+                onBackPressed();
             }
             break;
             case R.id.select_head:{//设置头像
@@ -717,4 +716,10 @@ public class UpdateUserMessageActivity extends Activity implements View.OnClickL
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        UpdateUserMessageActivity.this.finish();
+        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+    }
 }

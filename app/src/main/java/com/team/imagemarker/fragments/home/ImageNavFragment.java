@@ -14,9 +14,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
-import android.widget.ExpandableListView;
 import android.widget.GridView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -26,7 +26,7 @@ import com.team.imagemarker.activitys.user.UserSearchActivity;
 import com.team.imagemarker.adapters.imgnav.GridViewLikeAdapter;
 import com.team.imagemarker.adapters.imgnav.HotCategroyAdapter;
 import com.team.imagemarker.adapters.imgnav.LikeViewPagerAdapter;
-import com.team.imagemarker.adapters.imgnav.SelectCategoryAdapter;
+import com.team.imagemarker.adapters.imgnav.SelectCateGoryAdapter;
 import com.team.imagemarker.entitys.home.CateGoryInfo;
 import com.team.imagemarker.entitys.home.CategoryModel;
 import com.team.imagemarker.entitys.home.SelectCategoryModel;
@@ -37,7 +37,6 @@ import com.team.imagemarker.viewpager.navbanner.BannerLayout;
 import com.team.imagemarker.viewpager.navbanner.GlideImageLoader;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -73,11 +72,9 @@ public class ImageNavFragment extends Fragment implements View.OnClickListener, 
     private int currentIndex = 0;//显示当前页数
 
     //精选种类
-    private ExpandableListView selectCategory;
-    private List<SelectCategoryModel> selectList = new ArrayList<SelectCategoryModel>();
-    private String[] tags = {"三国之超级召唤系统", "鬼医嫡妃", "文艺大明星", "鬼村扎纸人", "私密宝贝，帝少kissme", "执掌龙宫", "大唐太子爷", "重生之改天换地"};
-    private List<String> tagList = Arrays.asList(tags);
-
+    private ListView selectListView;
+    private List<SelectCategoryModel> selectCategoryList;
+    private SelectCateGoryAdapter selectCateGoryAdapter;
 
     @Nullable
     @Override
@@ -95,7 +92,7 @@ public class ImageNavFragment extends Fragment implements View.OnClickListener, 
         likeViewPager = (ViewPager) view.findViewById(R.id.like_viewpager);
         dot = (LinearLayout) view.findViewById(R.id.viewpager_indicator);
 
-        selectCategory = (ExpandableListView) view.findViewById(R.id.select_category);
+        selectListView = (ListView) view.findViewById(R.id.select_category);
         return view;
     }
 
@@ -197,26 +194,23 @@ public class ImageNavFragment extends Fragment implements View.OnClickListener, 
         likeViewPager.setAdapter(new LikeViewPagerAdapter(pagerList));
         //设置指示器
         setOvalLayout();
-
-
     }
 
     private void setSelectCategory() {
-        List<CateGoryInfo> list = new ArrayList<CateGoryInfo>();
-        list.add(new CateGoryInfo("种类一", "http://139.199.23.142:8080/TestShowMessage1/marker/navbanner/banner1.jpg"));
-        list.add(new CateGoryInfo("种类二", "http://139.199.23.142:8080/TestShowMessage1/marker/navbanner/banner2.jpg"));
-        list.add(new CateGoryInfo("种类三", "http://139.199.23.142:8080/TestShowMessage1/marker/navbanner/banner3.jpg"));
-        list.add(new CateGoryInfo("种类四", "http://139.199.23.142:8080/TestShowMessage1/marker/navbanner/banner4.jpg"));
-        list.add(new CateGoryInfo("种类五", "http://139.199.23.142:8080/TestShowMessage1/marker/navbanner/banner5.jpg"));
-        list.add(new CateGoryInfo("种类一", "http://139.199.23.142:8080/TestShowMessage1/marker/navbanner/banner1.jpg"));
-        list.add(new CateGoryInfo("种类二", "http://139.199.23.142:8080/TestShowMessage1/marker/navbanner/banner2.jpg"));
-        list.add(new CateGoryInfo("种类三", "http://139.199.23.142:8080/TestShowMessage1/marker/navbanner/banner3.jpg"));
-        selectList.add(new SelectCategoryModel("标题一", tags, list));
-        selectList.add(new SelectCategoryModel("标题二", tags, list));
-        selectList.add(new SelectCategoryModel("标题三", tags, list));
-        selectList.add(new SelectCategoryModel("标题四", tags, list));
-
-        selectCategory.setAdapter(new SelectCategoryAdapter(getContext(), selectCategory, selectList));
+        selectCategoryList = new ArrayList<SelectCategoryModel>();
+        List<CateGoryInfo> itemList = new ArrayList<>();
+        itemList.add(new CateGoryInfo("标题一", "http://139.199.23.142:8080/TestShowMessage1/marker/navbanner/banner1.jpg"));
+        itemList.add(new CateGoryInfo("标题二", "http://139.199.23.142:8080/TestShowMessage1/marker/navbanner/banner2.jpg"));
+        itemList.add(new CateGoryInfo("标题三", "http://139.199.23.142:8080/TestShowMessage1/marker/navbanner/banner3.jpg"));
+        itemList.add(new CateGoryInfo("标题四", "http://139.199.23.142:8080/TestShowMessage1/marker/navbanner/banner4.jpg"));
+        itemList.add(new CateGoryInfo("标题五", "http://139.199.23.142:8080/TestShowMessage1/marker/navbanner/banner5.jpg"));
+        itemList.add(new CateGoryInfo("标题六", "http://139.199.23.142:8080/TestShowMessage1/marker/navbanner/banner1.jpg"));
+        itemList.add(new CateGoryInfo("标题七", "http://139.199.23.142:8080/TestShowMessage1/marker/navbanner/banner2.jpg"));
+        selectCategoryList.add(new SelectCategoryModel("主标题一", itemList));
+        selectCategoryList.add(new SelectCategoryModel("主标题二", itemList));
+        selectCategoryList.add(new SelectCategoryModel("主标题三", itemList));
+        selectCateGoryAdapter = new SelectCateGoryAdapter(getContext(), selectCategoryList);
+        selectListView.setAdapter(selectCateGoryAdapter);
     }
 
     /**
@@ -285,7 +279,6 @@ public class ImageNavFragment extends Fragment implements View.OnClickListener, 
                 refreshLayout.setRefreshing(false);
             }
         }, 3000);
-
     }
 
     /**
