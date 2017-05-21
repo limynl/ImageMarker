@@ -160,15 +160,15 @@ public class LookPictureActivity extends FragmentActivity implements View.OnClic
     private List<MenuObject> getMenuObjects(){
         List<MenuObject> menuObjects = new ArrayList<>();
         MenuObject close = new MenuObject();
-        close.setResource(R.mipmap.ic_close);
+        close.setResource(R.mipmap.back);
         menuObjects.add(close);
 
         MenuObject share = new MenuObject("一键分享");
-        share.setResource(R.mipmap.ic_close);
+        share.setResource(R.mipmap.back);
         menuObjects.add(share);
 
         MenuObject change = new MenuObject("换壁纸");
-        change.setResource(R.mipmap.ic_close);
+        change.setResource(R.mipmap.back);
         menuObjects.add(change);
         return menuObjects;
     }

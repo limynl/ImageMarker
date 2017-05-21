@@ -27,11 +27,11 @@ public class UserSearchActivity extends Activity {
         tagGroup = (TagGroup) findViewById(R.id.tag_group);
 
         tagList.add("三国之超级召唤系统");
-        tagList.add("鬼医嫡妃");
-        tagList.add("文艺大明星");
-        tagList.add("鬼村扎纸人");
-        tagList.add("私密宝贝，帝少kissme");
-        tagList.add("执掌龙宫");
+        tagList.add("清新花园派对");
+        tagList.add("防晒衣外套");
+        tagList.add("情路装短袖");
+        tagList.add("小白鞋");
+        tagList.add("吊带背心");
         tagList.add("大唐太子爷");
         tagList.add("重生之改天换地");
 
@@ -47,7 +47,4 @@ public class UserSearchActivity extends Activity {
         List<TagColor> colors = TagColor.getRandomColors(tagSize);
         tagGroup.setTags(colors, tags);
     }
-
-
-
 }
