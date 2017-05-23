@@ -29,6 +29,7 @@ import android.view.inputmethod.InputConnectionWrapper;
 import android.widget.TextView;
 
 import com.team.imagemarker.R;
+import com.team.imagemarker.constants.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +55,13 @@ public class TagGroup extends ViewGroup {
 
     /** Indicates whether this TagGroup is set up to APPEND mode or DISPLAY mode. Default is false. */
     private boolean isAppendMode;
+
+    /**
+     * 添加set方法用户外部对其进行操作
+     */
+    public void setAppendMode(boolean appendMode) {
+        isAppendMode = appendMode;
+    }
 
     /** The text to be displayed when the text of the INPUT tag is empty. */
     private CharSequence inputHint;
@@ -135,7 +143,7 @@ public class TagGroup extends ViewGroup {
         default_horizontal_padding = dp2px(12.0f);
         default_vertical_padding = dp2px(3.0f);
 
-        // Load styled attributes.
+        // 记载样式属性
         final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.TagGroup, defStyleAttr, R.style.TagGroup);
         try {
             isAppendMode = a.getBoolean(R.styleable.TagGroup_atg_isAppendMode, false);
@@ -391,7 +399,7 @@ public class TagGroup extends ViewGroup {
         for (final String tag : tags) {
             TagColor color = null;
             if(colors != null) {
-                color = colors.get(i++);
+                    color = colors.get(i++);
             }
             appendTag(color, tag);
         }
@@ -463,7 +471,9 @@ public class TagGroup extends ViewGroup {
      * @param tag the tag text.
      */
     protected void appendInputTag(String tag) {
-        appendInputTag(null, tag);
+        TagColor color = new TagColor();
+        color.borderColor = color.backgroundColor = Constants.tagColors[(int)(Math.random() * 7 + 1) % Constants.tagColors.length];
+        appendInputTag(color, tag);
     }
 
     protected void appendInputTag(TagColor color, String tag) {
@@ -860,11 +870,11 @@ public class TagGroup extends ViewGroup {
         private void invalidatePaint() {
             if (isAppendMode) {
                 if (mState == STATE_INPUT) {
-                    mBorderPaint.setColor(dashBorderColor);
                     mBorderPaint.setPathEffect(mPathEffect);
-                    mBackgroundPaint.setColor(backgroundColor);
                     setHintTextColor(inputHintColor);
-                    setTextColor(inputTextColor);
+                    mBorderPaint.setColor(color.borderColor);
+                    mBackgroundPaint.setColor(color.backgroundColor);
+                    setTextColor(color.textColor);
                 } else {
                     mBorderPaint.setPathEffect(null);
                     if (isChecked) {
@@ -872,9 +882,12 @@ public class TagGroup extends ViewGroup {
                         mBackgroundPaint.setColor(checkedBackgroundColor);
                         setTextColor(checkedTextColor);
                     } else {
-                        mBorderPaint.setColor(borderColor);
-                        mBackgroundPaint.setColor(backgroundColor);
-                        setTextColor(textColor);
+//                        mBorderPaint.setColor(borderColor);
+//                        mBackgroundPaint.setColor(backgroundColor);
+//                        setTextColor(textColor);
+                        mBorderPaint.setColor(color.borderColor);
+                        mBackgroundPaint.setColor(color.backgroundColor);
+                        setTextColor(color.textColor);
                     }
                 }
             } else {

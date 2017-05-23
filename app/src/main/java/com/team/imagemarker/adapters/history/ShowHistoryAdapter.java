@@ -12,7 +12,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.team.imagemarker.R;
 import com.team.imagemarker.bases.btnClickListener;
-import com.team.imagemarker.entitys.HistoryModel;
+import com.team.imagemarker.entitys.history.HistoryModel;
 import com.team.imagemarker.utils.CircleImageView;
 
 import java.util.List;
@@ -77,7 +77,7 @@ public class ShowHistoryAdapter extends BaseAdapter {
 
         HistoryModel model = list.get(position);
         if (model != null) {
-            if (type == ALL){//全部订单
+            if (type == ALL){//全部记录
                 Glide.with(context)
                         .load(model.getFirstImg())
                         .diskCacheStrategy(DiskCacheStrategy.ALL)

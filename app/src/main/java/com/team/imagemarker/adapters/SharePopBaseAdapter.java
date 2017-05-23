@@ -8,7 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.team.imagemarker.R;
-import com.team.imagemarker.entitys.SharePopBean;
+import com.team.imagemarker.entitys.share.SharePopBean;
 
 import java.util.List;
 

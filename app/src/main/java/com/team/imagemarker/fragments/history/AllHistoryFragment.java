@@ -19,7 +19,7 @@ import android.widget.Toast;
 import com.team.imagemarker.R;
 import com.team.imagemarker.adapters.history.ShowHistoryAdapter;
 import com.team.imagemarker.bases.btnClickListener;
-import com.team.imagemarker.entitys.HistoryModel;
+import com.team.imagemarker.entitys.history.HistoryModel;
 
 import java.util.ArrayList;
 import java.util.List;

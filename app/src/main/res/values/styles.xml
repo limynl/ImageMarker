@@ -78,6 +78,31 @@
         <item name="atg_verticalPadding">6dp</item>
     </style>
 
+    <!--图片标注界面-->
+    <style name="Mark">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="atg_isAppendMode">true</item>
+        <item name="atg_inputHint">请输入标签</item>
+        <item name="atg_borderColor">@color/theme</item>
+        <item name="atg_textColor">@color/theme</item>
+        <item name="atg_backgroundColor">#FFFFFF</item>
+        <item name="atg_dashBorderColor">#AAAAAA</item>
+        <item name="atg_inputHintColor">#80000000</item>
+        <item name="atg_inputTextColor">#DE000000</item>
+        <item name="atg_checkedBorderColor">@color/theme</item>
+        <item name="atg_checkedTextColor">#FFFFFF</item>
+        <item name="atg_checkedMarkerColor">#FFFFFF</item>
+        <item name="atg_checkedBackgroundColor">@color/theme</item>
+        <item name="atg_pressedBackgroundColor">#EDEDED</item>
+        <item name="atg_borderStrokeWidth">0.5dp</item>
+        <item name="atg_textSize">14sp</item>
+        <item name="atg_horizontalSpacing">10dp</item>
+        <item name="atg_verticalSpacing">6dp</item>
+        <item name="atg_horizontalPadding">10dp</item>
+        <item name="atg_verticalPadding">6dp</item>
+    </style>
+
 
 
 

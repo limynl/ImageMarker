@@ -10,9 +10,10 @@ import android.graphics.Color;
 public class Constants {
     public static int USER_ID = 1;//用户id
 
+    /**
+     * 测试图片
+     */
     public static String User_Head = "http://139.199.23.142:8080/TestShowMessage1/marker/head.jpg";
-
-
     public static String User_Head1 = "http:139.199.23.142:8080/TestShowMessage1/marker/head/user_head1.jpg";
     public static String User_Head2 = "http:139.199.23.142:8080/TestShowMessage1/marker/head/user_head2.jpg";
     public static String User_Head3 = "http:139.199.23.142:8080/TestShowMessage1/marker/head/user_head3.jpg";
@@ -25,6 +26,9 @@ public class Constants {
     public static String Test_Img5 = "http://139.199.23.142:8080/TestShowMessage1/marker/saying/img5.jpg";
     public static String Test_Img6 = "http://139.199.23.142:8080/TestShowMessage1/marker/saying/img6.jpg";
 
+    /**
+     * App中标签的颜色
+     */
     public static final int[] tagColors = new int[]{
             Color.parseColor("#90C5F0"),
             Color.parseColor("#91CED5"),

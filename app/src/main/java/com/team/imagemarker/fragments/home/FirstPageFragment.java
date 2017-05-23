@@ -328,6 +328,9 @@ public class FirstPageFragment extends Fragment implements RapidFloatingActionCo
         switch (v.getId()){
             case R.id.system_push_more:{
                 Intent intent = new Intent(getContext(), MarkHomeActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("pageTag", "firstPage");
+                intent.putExtras(bundle);
                 startActivity(intent);
                 getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             }

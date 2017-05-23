@@ -23,12 +23,12 @@ import android.widget.Toast;
 import com.gitonway.lee.niftynotification.lib.Effects;
 import com.gitonway.lee.niftynotification.lib.NiftyNotificationView;
 import com.team.imagemarker.R;
+import com.team.imagemarker.activitys.history.HistoryRecordActivity;
 import com.team.imagemarker.activitys.user.FeedBackActivity;
 import com.team.imagemarker.activitys.user.UpdateUserMessageActivity;
-import com.team.imagemarker.activitys.history.HistoryRecordActivity;
-import com.team.imagemarker.activitys.user.UserMissionActivity;
+import com.team.imagemarker.activitys.user.UserTaskActivity;
 import com.team.imagemarker.adapters.SharePopBaseAdapter;
-import com.team.imagemarker.entitys.SharePopBean;
+import com.team.imagemarker.entitys.share.SharePopBean;
 import com.team.imagemarker.utils.PaperButton;
 import com.team.imagemarker.utils.SlideSwitch;
 
@@ -134,7 +134,9 @@ public class UserCenterFragment extends Fragment implements View.OnClickListener
             }
             break;
             case R.id.to_tasks_achievement:{//任务完成情况
-                startActivity(new Intent(getActivity(), UserMissionActivity.class));
+//                startActivity(new Intent(getActivity(), UserMissionActivity.class));
+//                getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                startActivity(new Intent(getContext(), UserTaskActivity.class));
                 getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             }
             break;

@@ -1,4 +1,4 @@
-package com.team.imagemarker.entitys;
+package com.team.imagemarker.entitys.share;
 
 /**
  * 分享的PopupWindow的bean

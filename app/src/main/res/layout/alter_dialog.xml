@@ -10,10 +10,11 @@
         android:background="#F88F55" />
 
     <TextView
+        android:id="@+id/operate_message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="记录删除成功"
+        android:text="操作成功"
         android:textColor="@color/font_light"
         android:textSize="18sp"
         android:paddingTop="50dp"

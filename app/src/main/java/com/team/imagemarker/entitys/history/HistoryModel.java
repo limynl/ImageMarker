@@ -1,4 +1,4 @@
-package com.team.imagemarker.entitys;
+package com.team.imagemarker.entitys.history;
 
 /**
  * Created by Lmy on 2017/4/22.

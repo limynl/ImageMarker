@@ -2,6 +2,7 @@ package com.team.imagemarker.fragments.history;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -14,13 +15,19 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.team.imagemarker.R;
+import com.team.imagemarker.activitys.mark.MarkHomeActivity;
 import com.team.imagemarker.adapters.history.ShowHistoryAdapter;
 import com.team.imagemarker.bases.btnClickListener;
-import com.team.imagemarker.entitys.HistoryModel;
+import com.team.imagemarker.entitys.history.HistoryModel;
+import com.team.imagemarker.entitys.marker.ItemEntity;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.InputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -94,15 +101,21 @@ public class NoCompleteFragment extends Fragment implements btnClickListener, Sw
         delete.setText("继续");
         cancel = (Button) customDialog.findViewById(R.id.record_cancel);
         dialogOne = new Dialog(getContext());
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setView(customDialog);
         dialogOne = builder.create();
         dialogOne.show();
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "继续操作", Toast.LENGTH_SHORT).show();
                 dialogOne.dismiss();
+                Intent intent = new Intent(getContext(), MarkHomeActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("pageTag", "noCompleteHistory");
+                bundle.putSerializable("noCompleteData", (Serializable) getDataFromNet());
+                intent.putExtras(bundle);
+                startActivity(intent);
+                getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             }
         });
         cancel.setOnClickListener(new View.OnClickListener() {
@@ -178,5 +191,29 @@ public class NoCompleteFragment extends Fragment implements btnClickListener, Sw
             dialogTwo.dismiss();
 
         }
+    }
+
+    private List<ItemEntity> getDataFromNet(){
+        List<ItemEntity> list = new ArrayList<>();
+        try {
+            InputStream in = getContext().getAssets().open("history.json");
+            int size = in.available();
+            byte[] buffer = new byte[size];
+            in.read(buffer);
+            String jsonStr = new String(buffer, "UTF-8");
+            JSONObject jsonObject = new JSONObject(jsonStr);
+            JSONArray jsonArray = jsonObject.optJSONArray("result");
+            if (null != jsonArray) {
+                int len = jsonArray.length();
+                for (int i = 0; i < len; i++) {
+                    JSONObject itemJsonObject = jsonArray.getJSONObject(i);
+                    ItemEntity itemEntity = new ItemEntity(itemJsonObject);
+                    list.add(itemEntity);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 }

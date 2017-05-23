@@ -18,33 +18,29 @@ import com.team.imagemarker.utils.GlideImageLoader;
 public class MyApplication extends Application{
     private static MyApplication myApplication;
     public static RequestQueue requestQueue;
-//    public static int memoryCacheSize;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        //初始化全局对象
+        /**
+         * 初始化全局对象
+         */
          myApplication = this;
 
-        // 在使用 SDK 各组之前初始化 context 信息，传入 ApplicationContext
-//        SDKInitializer.initialize(this);
-
-        //建立Volley请求队列
+        /**
+         * 建立Volley请求队列
+         */
         requestQueue = Volley.newRequestQueue(getApplicationContext());
 
-//        memoryCacheSize = getMemoryCacheSize();
-
-//        // 九宫格图片展示及加载方式初始化
-//        NineGridView.setImageLoader(new PicassoImageLoader());
-
-        //系统图片多选ImagePicker初始化
+        /**
+         * 系统图片多选ImagePicker初始化
+         */
         initImagePicker();
 
     }
 
     /**
-     *
-     * @return 得到需要分配的缓存大小，这里用八分之一的大小来做
+     * 得到需要分配的缓存大小，此处设置为1/8
      */
     public int getMemoryCacheSize() {
         int maxMemory = (int) Runtime.getRuntime().maxMemory();
@@ -60,7 +56,6 @@ public class MyApplication extends Application{
 
     /**
      * 设置Volley网络请求队列接口
-     * @return
      */
     public static RequestQueue getRequestQueue(){
         return requestQueue;
