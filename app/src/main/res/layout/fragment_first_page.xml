@@ -32,15 +32,33 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="10dp"
-                    android:clipChildren="false">
+                    android:layout_marginBottom="10dp">
+                    <!--android:clipChildren="false"-->
+
+                    <com.team.imagemarker.utils.marker.FadeTransitionImageView
+                        android:id="@+id/viewPager_background"
+                        android:layout_width="match_parent"
+                        android:layout_height="160dp" />
+
+                    <android.support.v4.view.ViewPager
+                        android:id="@+id/card_viewpager"
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp"
+                        android:layout_marginTop="50dp"
+                        android:clipToPadding="false"
+                        android:overScrollMode="never"
+                        android:paddingEnd="60dp"
+                        android:paddingLeft="60dp"
+                        android:paddingRight="60dp"
+                        android:paddingStart="60dp" />
 
                     <com.wangjie.rapidfloatingactionbutton.expandingcollection.ECBackgroundSwitcherView
                         android:id="@+id/ec_bg_switcher_element"
                         android:layout_alignParentTop="true"
                         android:layout_width="match_parent"
                         android:layout_height="150dp"
-                        android:foreground="@drawable/background_gradient"/>
+                        android:foreground="@drawable/background_gradient"
+                        android:visibility="gone"/>
 
                     <com.wangjie.rapidfloatingactionbutton.expandingcollection.ECPagerView
                         android:id="@+id/ec_pager_element"
@@ -49,7 +67,8 @@
                         android:layout_marginTop="45dp"
                         ec:cardHeaderHeightExpanded="50dp"
                         ec:cardHeight="100dp"
-                        ec:cardWidth="320dp" />
+                        ec:cardWidth="320dp"
+                        android:visibility="gone"/>
 
                 </RelativeLayout>
 

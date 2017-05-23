@@ -87,8 +87,5 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
                 .load(item.getImgUrl())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(imageView);
-
-
     }
-
 }

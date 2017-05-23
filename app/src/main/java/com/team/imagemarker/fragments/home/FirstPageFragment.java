@@ -1,11 +1,15 @@
 package com.team.imagemarker.fragments.home;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,10 +27,14 @@ import com.team.imagemarker.activitys.home.MoreCategoryActivity;
 import com.team.imagemarker.activitys.imagscan.PictureGroupScanActivity;
 import com.team.imagemarker.activitys.mark.MarkHomeActivity;
 import com.team.imagemarker.activitys.saying.SayingScanActivity;
+import com.team.imagemarker.adapters.CardPagerAdapter;
+import com.team.imagemarker.adapters.ShadowTransformer;
 import com.team.imagemarker.adapters.home.HobbyPushAdapter;
 import com.team.imagemarker.adapters.home.SystemPushAdapter;
+import com.team.imagemarker.entitys.CardItem;
 import com.team.imagemarker.entitys.home.CategoryModel;
 import com.team.imagemarker.utils.MyGridView;
+import com.team.imagemarker.utils.marker.FadeTransitionImageView;
 import com.team.imagemarker.viewpager.firstpager.CardData;
 import com.team.imagemarker.viewpager.firstpager.CommentArrayAdapter;
 import com.team.imagemarker.viewpager.firstpager.ExampleDataset;
@@ -60,9 +68,16 @@ public class FirstPageFragment extends Fragment implements RapidFloatingActionCo
 //    private TextView title;
 //    private ImageView leftIcon, rightIcon;
 
-//    private ViewPager viewPager;
-//    private CardPagerAdapter cardPagerAdapter;
-//    private ShadowTransformer shadowTransformer;//ViewPager切换动画
+    private ViewPager viewPager;
+    private CardPagerAdapter cardPagerAdapter;
+    private ShadowTransformer shadowTransformer;//ViewPager切换动画
+    private List<String> backgroundList = new ArrayList<>();
+    private float transitionValue;
+
+    private ObjectAnimator transitionAnimator;
+    private Animator.AnimatorListener animatorListener;
+    private FadeTransitionImageView viewPagerBackground;
+    private int lastDisplay = -1;
 
     private RapidFloatingActionLayout rfaLayout;
     private RapidFloatingActionButton rfaButton;
@@ -78,7 +93,6 @@ public class FirstPageFragment extends Fragment implements RapidFloatingActionCo
     private List<CategoryModel> hobbyPushList = new ArrayList<>();
     private SystemPushAdapter hobbyAdapter;
 
-
     private HobbyPushAdapter adapterHobby;
 
     private Button systemPushMore, hobbyPushMore;
@@ -93,7 +107,9 @@ public class FirstPageFragment extends Fragment implements RapidFloatingActionCo
 //        title = (TextView) view.findViewById(R.id.title);
 //        leftIcon = (ImageView) view.findViewById(R.id.left_icon);
 //        rightIcon = (ImageView) view.findViewById(R.id.right_icon);
-//        viewPager = (ViewPager) view.findViewById(R.id.card_viewpager);
+        viewPager = (ViewPager) view.findViewById(R.id.card_viewpager);
+        viewPagerBackground = (FadeTransitionImageView) view.findViewById(R.id.viewPager_background);
+
 
         rfaLayout = (RapidFloatingActionLayout) view.findViewById(R.id.rfa_layout);
         rfaButton = (RapidFloatingActionButton) view.findViewById(R.id.rfa_button);
@@ -115,7 +131,8 @@ public class FirstPageFragment extends Fragment implements RapidFloatingActionCo
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-//        setDataToViewPager();//为ViewPager设置数据
+        setDataToViewPager();//为ViewPager设置数据
+        initAnimationListener();
 
         //初始化刷新控件
         refreshLayout.setColorSchemeResources(R.color.colorAccent, R.color.write, R.color.yellow);
@@ -208,26 +225,84 @@ public class FirstPageFragment extends Fragment implements RapidFloatingActionCo
 //        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
 //        recyclerView.setLayoutManager(layoutManager);
 //        recyclerView.setAdapter(adapterHobby);
-
     }
 
     /**
      * 为ViewPager设置数据
      */
-//    private void setDataToViewPager() {
-//        cardPagerAdapter = new CardPagerAdapter();
-//        cardPagerAdapter.addCardItem(new CardItem(R.mipmap.image1, "这是一句说明性文字"));
-//        cardPagerAdapter.addCardItem(new CardItem(R.mipmap.image2, "这是一句说明性文字"));
-//        cardPagerAdapter.addCardItem(new CardItem(R.mipmap.image4, "这是一句说明性文字"));
-//        cardPagerAdapter.addCardItem(new CardItem(R.mipmap.image1, "这是一句说明性文字"));
-//
-//        shadowTransformer = new ShadowTransformer(viewPager, cardPagerAdapter);
-//        viewPager.setPageMargin((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 30, getResources().getDisplayMetrics()));
-//        viewPager.setAdapter(cardPagerAdapter);
-//        viewPager.setPageTransformer(false, shadowTransformer);
-//        viewPager.setOffscreenPageLimit(3);
-//        shadowTransformer.enableScaling(true);
-//    }
+    private void setDataToViewPager() {
+        cardPagerAdapter = new CardPagerAdapter(getContext());
+        cardPagerAdapter.addCardItem(new CardItem("http://img.hb.aicdn.com/5342e50c6b6876b7cfde7dcdc3f89b290997624f37c56-qoOZli_fw658", "这是一句说明性文字"));
+        cardPagerAdapter.addCardItem(new CardItem("http://img.hb.aicdn.com/04e84f35444738307f4acf872138daca92e4c4bb2abe0-KB7srY_fw658", "这是一句说明性文字"));
+        cardPagerAdapter.addCardItem(new CardItem("http://attachments.gfan.com/forum/attachments2/day_110422/1104222243bffe391469c3bee4.jpg", "这是一句说明性文字"));
+        cardPagerAdapter.addCardItem(new CardItem("http://img.hb.aicdn.com/226ce6243ae187c107e1a22cfa7cc0763fe2bda9908c4-8foxjv_fw658", "这是一句说明性文字"));
+        cardPagerAdapter.addCardItem(new CardItem("http://img.hb.aicdn.com/3c515a7e4fac799d7f62bf6be045d8a287cb16f214b91-Y8N5wB_fw658", "这是一句说明性文字"));
+
+        backgroundList.add("http://img.hb.aicdn.com/5342e50c6b6876b7cfde7dcdc3f89b290997624f37c56-qoOZli_fw658");
+        backgroundList.add("http://img.hb.aicdn.com/04e84f35444738307f4acf872138daca92e4c4bb2abe0-KB7srY_fw658");
+        backgroundList.add("http://attachments.gfan.com/forum/attachments2/day_110422/1104222243bffe391469c3bee4.jpg");
+        backgroundList.add("http://img.hb.aicdn.com/226ce6243ae187c107e1a22cfa7cc0763fe2bda9908c4-8foxjv_fw658");
+        backgroundList.add("http://img.hb.aicdn.com/3c515a7e4fac799d7f62bf6be045d8a287cb16f214b91-Y8N5wB_fw658");
+
+        shadowTransformer = new ShadowTransformer(viewPager, cardPagerAdapter);
+        viewPager.setPageMargin((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 30, getResources().getDisplayMetrics()));
+        viewPager.setAdapter(cardPagerAdapter);
+        viewPager.setPageTransformer(false, shadowTransformer);
+        viewPager.setOffscreenPageLimit(3);
+        shadowTransformer.enableScaling(true);
+        viewPager.setCurrentItem(1);
+
+        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                if (lastDisplay < 0) {
+                    viewPagerBackground.firstInit(backgroundList.get(position));
+                    lastDisplay = 0;
+                } else if (lastDisplay != position) {
+                    if (transitionAnimator != null) {
+                        transitionAnimator.cancel();
+                    }
+                    viewPagerBackground.saveNextPosition(position, backgroundList.get(position));
+                    transitionAnimator = ObjectAnimator.ofFloat(this, "transitionValue", 0.0f, 1.0f);
+                    transitionAnimator.setDuration(300);
+                    transitionAnimator.start();
+                    transitionAnimator.addListener(animatorListener);
+                    lastDisplay = position;
+                }
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+    }
+
+    /**
+     * 初始化动画属性
+     */
+    private void initAnimationListener() {
+        animatorListener = new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {}
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                viewPagerBackground.onAnimationEnd();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {}
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {}
+        };
+    }
 
     /**
      * 设置悬浮按钮
@@ -272,16 +347,15 @@ public class FirstPageFragment extends Fragment implements RapidFloatingActionCo
     public void onRFACItemLabelClick(int position, RFACLabelItem item) {
         switch (position){
             case 0:{//美图欣赏
-                Toast.makeText(getActivity(), "美图欣赏", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(getActivity(), PictureGroupScanActivity.class));
                 getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             }
             break;
             case 1:{//发表心情
-                Toast.makeText(getActivity(), "发表心情", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(getActivity(), SayingScanActivity.class));
                 getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             }
+            break;
         }
         rfaHelper.toggleContent();
     }
@@ -295,13 +369,11 @@ public class FirstPageFragment extends Fragment implements RapidFloatingActionCo
     public void onRFACItemIconClick(int position, RFACLabelItem item) {
         switch (position){
             case 0:{//美图欣赏
-                Toast.makeText(getActivity(), "美图欣赏", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(getActivity(), PictureGroupScanActivity.class));
                 getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             }
             break;
             case 1:{//发表心情
-                Toast.makeText(getActivity(), "发表心情", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(getActivity(), SayingScanActivity.class));
                 getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             }
@@ -343,4 +415,14 @@ public class FirstPageFragment extends Fragment implements RapidFloatingActionCo
             break;
         }
     }
+
+//    public void setTransitionValue(float transitionValue) {
+//        this.transitionValue = transitionValue;
+//        viewPagerBackground.duringAnimation(transitionValue);
+//    }
+//
+//    public float getTransitionValue() {
+//        return transitionValue;
+//    }
+
 }
