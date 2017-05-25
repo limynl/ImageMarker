@@ -47,7 +47,7 @@ public class SystemPushAdapter extends BaseAdapter {
         ViewHolder viewHolder = null;
         if (convertView == null) {
             viewHolder = new ViewHolder();
-            convertView = LayoutInflater.from(context).inflate(R.layout.category_item, null);
+            convertView = LayoutInflater.from(context).inflate(R.layout.item_category, null);
             viewHolder.categoryImg = (ImageView) convertView.findViewById(R.id.category_img);
             viewHolder.categoryName = (TextView) convertView.findViewById(R.id.category_name);
             viewHolder.categorySimapleMessage = (TextView) convertView.findViewById(R.id.category_simple_message);

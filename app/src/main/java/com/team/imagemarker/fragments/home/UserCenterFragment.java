@@ -24,13 +24,14 @@ import com.gitonway.lee.niftynotification.lib.Effects;
 import com.gitonway.lee.niftynotification.lib.NiftyNotificationView;
 import com.team.imagemarker.R;
 import com.team.imagemarker.activitys.history.HistoryRecordActivity;
+import com.team.imagemarker.activitys.tasks.UserTaskActivity;
 import com.team.imagemarker.activitys.user.FeedBackActivity;
 import com.team.imagemarker.activitys.user.UpdateUserMessageActivity;
-import com.team.imagemarker.activitys.user.UserTaskActivity;
 import com.team.imagemarker.adapters.SharePopBaseAdapter;
 import com.team.imagemarker.entitys.share.SharePopBean;
 import com.team.imagemarker.utils.PaperButton;
 import com.team.imagemarker.utils.SlideSwitch;
+import com.team.imagemarker.utils.actionbar.TranslucentScrollView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,10 +44,8 @@ import java.util.List;
 public class UserCenterFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener, SlideSwitch.OnStateChangedListener{
     private View view;
 
-    private LinearLayout rootView;
-    private RelativeLayout titleBar;
-    private TextView title;
-    private ImageView leftIcon, rightIcon;
+    private TranslucentScrollView translucentScrollView;
+    private View zoomView;
 
     private RelativeLayout updateUserMessage, historyRecord, tasksAchieve, feedBack, shareApp;
 
@@ -72,11 +71,8 @@ public class UserCenterFragment extends Fragment implements View.OnClickListener
         view = inflater.inflate(R.layout.fragment_user_center, null);
         popView=LayoutInflater.from(getActivity()).inflate(R.layout.share_grid,null);
 
-        rootView = (LinearLayout) view.findViewById(R.id.activity_user_message);
-        titleBar = (RelativeLayout) view.findViewById(R.id.title_bar);
-        title = (TextView) view.findViewById(R.id.title);
-        leftIcon = (ImageView) view.findViewById(R.id.left_icon);
-        rightIcon = (ImageView) view.findViewById(R.id.right_icon);
+        translucentScrollView = (TranslucentScrollView) view.findViewById(R.id.pullzoom_scrollview);
+        zoomView = view.findViewById(R.id.lay_header);
 
         updateUserMessage = (RelativeLayout) view.findViewById(R.id.to_update_user_message);
         historyRecord = (RelativeLayout) view.findViewById(R.id.to_history_record);
@@ -96,10 +92,7 @@ public class UserCenterFragment extends Fragment implements View.OnClickListener
     }
 
     private void setData() {
-        titleBar.setBackgroundColor(getResources().getColor(R.color.theme));
-        title.setText("个人中心");
-        leftIcon.setVisibility(View.GONE);
-        rightIcon.setVisibility(View.GONE);
+        translucentScrollView.setPullZoomView(zoomView);//关联需要伸缩的视图
 
         updateUserMessage.setOnClickListener(this);
         historyRecord.setOnClickListener(this);
@@ -210,4 +203,5 @@ public class UserCenterFragment extends Fragment implements View.OnClickListener
         lp.alpha = bgAlpha; //0.0-1.0
         getActivity().getWindow().setAttributes(lp);
     }
+
 }

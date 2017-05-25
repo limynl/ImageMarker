@@ -62,7 +62,7 @@ public class SayingAdapter extends BaseAdapter {
 
         if (convertView == null) {
             viewHolder = new ViewHolder();
-            convertView = LayoutInflater.from(context).inflate(R.layout.saying_scan_item, parent, false);
+            convertView = LayoutInflater.from(context).inflate(R.layout.item_saying_scan, parent, false);
             viewHolder.userHeadImg = (CircleImageView) convertView.findViewById(R.id.user_img);
             viewHolder.userNickName = (TextView) convertView.findViewById(R.id.user_nick_name);
             viewHolder.sendTime = (TextView) convertView.findViewById(R.id.send_time);

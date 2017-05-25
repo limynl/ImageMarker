@@ -96,7 +96,7 @@ public class CompletFragment extends Fragment implements btnClickListener, Swipe
      */
     @Override
     public void btnEditClick(int position) {
-        customDialog = LayoutInflater.from(getContext()).inflate(R.layout.delete_dialog, null);
+        customDialog = LayoutInflater.from(getContext()).inflate(R.layout.dialog_delete, null);
         showMessage = (TextView) customDialog.findViewById(R.id.show_message);
         showMessage.setText("是否想要查看这次操作?");
         delete = (Button) customDialog.findViewById(R.id.record_delete);
@@ -134,7 +134,7 @@ public class CompletFragment extends Fragment implements btnClickListener, Swipe
      */
     @Override
     public void btnDeleteClick(final int position) {
-        customDialog = LayoutInflater.from(getContext()).inflate(R.layout.delete_dialog, null);
+        customDialog = LayoutInflater.from(getContext()).inflate(R.layout.dialog_delete, null);
         showMessage = (TextView) customDialog.findViewById(R.id.show_message);
         showMessage.setText("是否要删除该条记录?");
         delete = (Button) customDialog.findViewById(R.id.record_delete);
@@ -149,7 +149,7 @@ public class CompletFragment extends Fragment implements btnClickListener, Swipe
             public void onClick(View v) {
                 dialogTwo = new Dialog(getContext());
                 AlertDialog.Builder builder1 = new AlertDialog.Builder(getContext());
-                builder1.setView(LayoutInflater.from(getContext()).inflate(R.layout.alter_dialog, null));
+                builder1.setView(LayoutInflater.from(getContext()).inflate(R.layout.dialog_alter, null));
                 dialogTwo = builder1.create();
                 dialogTwo.show();
                 Timer timer = new Timer();

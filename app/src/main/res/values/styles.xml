@@ -8,6 +8,13 @@
         <item name="colorAccent">@color/systemBar</item>
     </style>
 
+    <!--AppCompatActivity中取消titleBar-->
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+
     <!--PopupWindow弹出动画-->
     <style name="anim_popup_centerbar">
         <item name="android:windowEnterAnimation">@anim/popup_centerbar_in</item>
@@ -103,6 +110,12 @@
         <item name="atg_verticalPadding">6dp</item>
     </style>
 
+    <style name="user_center">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">#3c3c3c</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
 
 
 

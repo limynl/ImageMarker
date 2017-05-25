@@ -24,6 +24,7 @@
     <color name="theme">#333850</color><!--主题颜色 #333850-->
     <color name="theme1">#ff252e39</color><!--主题颜色 3a376e-->
     <color name="button">#01a2eb</color><!--按钮颜色-->
+    <color name="button1">#009bdb</color><!--按钮颜色-->
 
     <color name="button_two">#7ADFB8</color>
     <color name="font_light">#464e76</color>
@@ -36,4 +37,6 @@
     <color name="bgSolidDark">#55000000</color>
     <color name="bgGradientStart">#000000</color>
     <color name="bgGradientEnd">#d8000000</color>
+
+    <color name="translate">#00000000</color>
 </resources>

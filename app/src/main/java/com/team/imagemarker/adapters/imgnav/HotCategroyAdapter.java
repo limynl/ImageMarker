@@ -48,7 +48,7 @@ public class HotCategroyAdapter extends BaseAdapter {
         ViewHolder viewHolder = null;
         if (convertView == null) {
             viewHolder = new ViewHolder();
-            convertView = LayoutInflater.from(context).inflate(R.layout.hot_categroy_item, parent, false);
+            convertView = LayoutInflater.from(context).inflate(R.layout.item_hot_categroy, parent, false);
             viewHolder.background = (RelativeLayout) convertView.findViewById(R.id.root_background);
             viewHolder.categroyBackground = (ImageView) convertView.findViewById(R.id.background);
             viewHolder.categroyName = (TextView) convertView.findViewById(R.id.hot_category_name);

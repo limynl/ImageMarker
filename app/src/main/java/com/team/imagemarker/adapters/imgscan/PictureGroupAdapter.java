@@ -50,7 +50,7 @@ public class PictureGroupAdapter extends RecyclerView.Adapter<PictureGroupAdapte
 
     @Override
     public PictureViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.picture_group_item, parent, false);
+        View view = inflater.inflate(R.layout.item_picture_group, parent, false);
         PictureViewHolder viewHolder = new PictureViewHolder(view);
 //        viewHolder.setIsRecyclable(true);
         return viewHolder;

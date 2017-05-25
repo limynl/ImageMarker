@@ -107,4 +107,27 @@
         <attr name="displayCount" format="float" />
     </declare-styleable>
 
+    <!--圆形饼图-->
+    <declare-styleable name="SlimChart">
+        <attr name="defaultColor" format="color"/>
+        <attr name="strokeWidthChart" format="dimension"/>
+        <attr name="roundedEdges" format="boolean"/>
+        <attr name="text" format="string"/>
+        <attr name="textColorChart" format="color"/>
+    </declare-styleable>
+
+    <!--任务情况概览 时间轴-->
+    <declare-styleable name="timeline_style" >
+        <attr name="marker" format="color|reference"/>
+        <attr name="line" format="color|reference"/>
+        <attr name="markerSize" format="dimension"/>
+        <attr name="lineSize" format="dimension"/>
+        <attr name="lineOrientation" format="enum">
+            <enum name="horizontal" value="0"/>
+            <enum name="vertical" value="1"/>
+        </attr>
+        <attr name="linePadding" format="dimension"/>
+        <attr name="markerInCenter" format="boolean"/>
+    </declare-styleable>
+
 </resources>

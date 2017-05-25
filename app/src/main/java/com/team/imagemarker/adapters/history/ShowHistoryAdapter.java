@@ -63,7 +63,7 @@ public class ShowHistoryAdapter extends BaseAdapter {
         ViewHolder viewHolder = null;
         if (convertView == null) {
             viewHolder = new ViewHolder();
-            convertView = LayoutInflater.from(context).inflate(R.layout.show_history_item, null);
+            convertView = LayoutInflater.from(context).inflate(R.layout.item_show_history, null);
             viewHolder.firstImg = (CircleImageView) convertView.findViewById(R.id.first_img);
             viewHolder.recordName = (TextView) convertView.findViewById(R.id.record_name);
             viewHolder.operateType = (TextView) convertView.findViewById(R.id.operate_type);

@@ -80,10 +80,13 @@
         <activity android:name=".activitys.saying.SayingScanActivity" />
         <activity android:name=".activitys.user.FeedBackActivity" />
         <activity android:name=".activitys.user.UserSearchActivity" />
-        <activity android:name=".activitys.user.UserTaskActivity"/>
+        <activity
+            android:name=".activitys.tasks.UserTaskActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activitys.imagscan.LookPictureActivity" />
         <activity android:name=".activitys.home.MoreCategoryActivity" />
         <activity android:name=".activitys.mark.MarkHomeActivity" />
+        <activity android:name=".activitys.tasks.UserTaskOverViewActivity"/>
     </application>
 
 </manifest>

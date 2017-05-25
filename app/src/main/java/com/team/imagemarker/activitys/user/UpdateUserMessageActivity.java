@@ -479,7 +479,7 @@ public class UpdateUserMessageActivity extends Activity implements View.OnClickL
             ViewHolder holder;
             if (convertView == null) {
                 holder = new ViewHolder();
-                convertView = LayoutInflater.from(mContext).inflate(R.layout.home_custom_grid_item, null);
+                convertView = LayoutInflater.from(mContext).inflate(R.layout.item_home_custom_grid, null);
                 holder.tv_iconname = (TextView) convertView.findViewById(R.id.tv_intent_iconname);
                 holder.iv_delete = (ImageView) convertView.findViewById(R.id.iv_delete_item);
                 convertView.setTag(holder);
@@ -559,7 +559,7 @@ public class UpdateUserMessageActivity extends Activity implements View.OnClickL
             ViewHolder holder;
             if (convertView == null) {
                 holder = new ViewHolder();
-                convertView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.home_custom_grid_item, null);
+                convertView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.item_home_custom_grid, null);
                 holder.tv_iconname = (TextView) convertView.findViewById(R.id.tv_intent_iconname);
                 holder.iv_delete = (ImageView) convertView.findViewById(R.id.iv_delete_item);
                 holder.rl_item = (RelativeLayout) convertView.findViewById(R.id.rl_item);

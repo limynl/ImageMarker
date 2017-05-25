@@ -161,7 +161,7 @@ public class DetailPictureActivity extends Activity implements View.OnClickListe
             ViewHolder viewHolder;
             if (convertView == null) {
                 viewHolder = new ViewHolder();
-                convertView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.home_custom_grid_item, null);
+                convertView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.item_home_custom_grid, null);
                 viewHolder.markerName = (TextView) convertView.findViewById(R.id.tv_intent_iconname);
                 viewHolder.deleteMarker = (ImageView) convertView.findViewById(R.id.iv_delete_item);
                 convertView.setTag(viewHolder);

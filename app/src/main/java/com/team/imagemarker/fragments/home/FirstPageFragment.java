@@ -4,11 +4,9 @@ import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,9 +56,9 @@ import java.util.List;
  */
 
 // implements RapidFloatingActionContentLabelList.OnRapidFloatingActionContentLabelListListener
-public class FirstPageFragment extends Fragment implements RapidFloatingActionContentLabelList.OnRapidFloatingActionContentLabelListListener, SwipeRefreshLayout.OnRefreshListener, View.OnClickListener{
+public class FirstPageFragment extends Fragment implements RapidFloatingActionContentLabelList.OnRapidFloatingActionContentLabelListListener, View.OnClickListener{
     private View view;
-    private SwipeRefreshLayout refreshLayout;
+//    private SwipeRefreshLayout refreshLayout;
 
     private ECPagerView ecPagerView;
 
@@ -101,7 +99,7 @@ public class FirstPageFragment extends Fragment implements RapidFloatingActionCo
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_first_page, null);
-        refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.first_page_refresh);
+//        refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.first_page_refresh);
 
 //        titleBar = (RelativeLayout) view.findViewById(R.id.title_bar);
 //        title = (TextView) view.findViewById(R.id.title);
@@ -135,9 +133,9 @@ public class FirstPageFragment extends Fragment implements RapidFloatingActionCo
         initAnimationListener();
 
         //初始化刷新控件
-        refreshLayout.setColorSchemeResources(R.color.colorAccent, R.color.write, R.color.yellow);
-        refreshLayout.setProgressBackgroundColor(R.color.theme);
-        refreshLayout.setOnRefreshListener(this);
+//        refreshLayout.setColorSchemeResources(R.color.colorAccent, R.color.write, R.color.yellow);
+//        refreshLayout.setProgressBackgroundColor(R.color.theme);
+//        refreshLayout.setOnRefreshListener(this);
 
         systemPushMore.setOnClickListener(this);
         hobbyPushMore.setOnClickListener(this);
@@ -385,15 +383,15 @@ public class FirstPageFragment extends Fragment implements RapidFloatingActionCo
     /**
      * 下拉刷新
      */
-    @Override
-    public void onRefresh() {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-               refreshLayout.setRefreshing(false);
-            }
-        }, 3000);
-    }
+//    @Override
+//    public void onRefresh() {
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//               refreshLayout.setRefreshing(false);
+//            }
+//        }, 3000);
+//    }
 
     @Override
     public void onClick(View v) {

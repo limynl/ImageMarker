@@ -52,7 +52,7 @@ public class UserIntegralAdapter extends BaseAdapter {
         ViewHolder viewHolder;
         if (convertView == null) {
             viewHolder = new ViewHolder();
-            convertView = LayoutInflater.from(context).inflate(R.layout.integral_list_item, null);
+            convertView = LayoutInflater.from(context).inflate(R.layout.item_integral_list, null);
             viewHolder.headImageView = (CircleImageView) convertView.findViewById(R.id.integral_user_header);
             viewHolder.userNickName = (TextView) convertView.findViewById(R.id.integral_user_nick_name);
 //            viewHolder.userIntegralFlag = (ImageView) convertView.findViewById(R.id.user_integral_flag);

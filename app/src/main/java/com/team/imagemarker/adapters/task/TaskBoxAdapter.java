@@ -1,4 +1,4 @@
-package com.team.imagemarker.adapters.imgnav;
+package com.team.imagemarker.adapters.task;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -13,51 +13,41 @@ import com.team.imagemarker.entitys.home.CategoryModel;
 
 import java.util.List;
 
-
 /**
- * Created by Lmy on 2017/5/7.
+ * Created by Lmy on 2017/5/1.
  * email 1434117404@qq.com
  */
 
-public class GridViewLikeAdapter extends BaseAdapter {
-    private List<CategoryModel> datas;
-    private LayoutInflater inflater;
-    private int currentindex;//当前页数
-    private int pageSize;//每一页显示的个数
+public class TaskBoxAdapter extends BaseAdapter {
+    private Context context;
+    private List<CategoryModel> list;
 
-    public GridViewLikeAdapter(Context context, List<CategoryModel> datas, int currentindex, int pageSize){
-        inflater = LayoutInflater.from(context);
-        this.datas = datas;
-        this.currentindex = currentindex;
-        this.pageSize = pageSize;
+    public TaskBoxAdapter(Context context, List<CategoryModel> list) {
+        this.context = context;
+        this.list = list;
     }
 
-    /**
-     * 先判断数据集的大小是否足够显示满本页？mDatas.size() > (curIndex+1)*pageSize,
-     * 如果够，则直接返回每一页显示的最大条目个数pageSize,
-     * 如果不够，则有几项返回几,(mDatas.size() - curIndex * pageSize);(也就是最后一页的时候就显示剩余item)
-     */
     @Override
     public int getCount() {
-        return datas.size() > (currentindex + 1) * pageSize ? pageSize : (datas.size() - currentindex * pageSize);
+        return list.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return datas.get(position + currentindex * pageSize);
+        return list.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        return position + currentindex * pageSize;
+        return position;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-       ViewHolder viewHolder = null;
+        ViewHolder viewHolder = null;
         if (convertView == null) {
             viewHolder = new ViewHolder();
-            convertView = inflater.inflate(R.layout.item_category, null);
+            convertView = LayoutInflater.from(context).inflate(R.layout.item_task_box, null);
             viewHolder.categoryImg = (ImageView) convertView.findViewById(R.id.category_img);
             viewHolder.categoryName = (TextView) convertView.findViewById(R.id.category_name);
             viewHolder.categorySimapleMessage = (TextView) convertView.findViewById(R.id.category_simple_message);
@@ -66,7 +56,7 @@ public class GridViewLikeAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        CategoryModel model = datas.get(position + currentindex * pageSize);
+        CategoryModel model = list.get(position);
         viewHolder.categoryImg.setImageResource(model.getImgId());
         viewHolder.categoryName.setText(model.getName());
         viewHolder.categorySimapleMessage.setText(model.getSimpleMessage());

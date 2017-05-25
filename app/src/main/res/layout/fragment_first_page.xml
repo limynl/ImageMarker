@@ -14,10 +14,10 @@
         rfal:rfal_frame_color="#000"
         rfal:rfal_frame_alpha="0.3">
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/first_page_refresh"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <!--<android.support.v4.widget.SwipeRefreshLayout-->
+        <!--android:id="@+id/first_page_refresh"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent">-->
 
         <ScrollView
             android:layout_width="match_parent"
@@ -205,7 +205,7 @@
 
         </ScrollView>
 
-    </android.support.v4.widget.SwipeRefreshLayout>
+    <!--</android.support.v4.widget.SwipeRefreshLayout>-->
 
         <!--<android.support.v4.view.ViewPager-->
             <!--android:id="@+id/card_viewpager"-->

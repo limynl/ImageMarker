@@ -48,7 +48,7 @@ public class SharePopBaseAdapter extends BaseAdapter {
         ViewHolder viewHolder;
         if (convertView == null) {
             viewHolder = new ViewHolder();
-            convertView  = View.inflate(context, R.layout.grid_item, null);
+            convertView  = View.inflate(context, R.layout.item_share_grid, null);
             viewHolder.shareIcon = (ImageView) convertView.findViewById(R.id.share_icon);
             viewHolder.shareName = (TextView) convertView.findViewById(R.id.share_name);
             convertView.setTag(viewHolder);

@@ -264,7 +264,7 @@ public class MarkHomeActivity extends Activity implements View.OnClickListener{
             }
             break;
             case R.id.sub_title:{
-                customDialog = LayoutInflater.from(this).inflate(R.layout.delete_dialog, null);
+                customDialog = LayoutInflater.from(this).inflate(R.layout.dialog_delete, null);
                 showMessage = (TextView) customDialog.findViewById(R.id.show_message);
                 dialogTitle = (TextView) customDialog.findViewById(R.id.dialog_title);
                 showMessage.setText("请选择操作类型");
@@ -283,7 +283,7 @@ public class MarkHomeActivity extends Activity implements View.OnClickListener{
                     public void onClick(View v) {
                         dialogTwo = new Dialog(MarkHomeActivity.this);
                         AlertDialog.Builder builder1 = new AlertDialog.Builder(MarkHomeActivity.this);
-                        dialogMessage = LayoutInflater.from(MarkHomeActivity.this).inflate(R.layout.alter_dialog, null);
+                        dialogMessage = LayoutInflater.from(MarkHomeActivity.this).inflate(R.layout.dialog_alter, null);
                         operateMessage = (TextView) dialogMessage.findViewById(R.id.operate_message);
                         operateMessage.setText("提交成功");
                         builder1.setView(dialogMessage);
@@ -302,7 +302,7 @@ public class MarkHomeActivity extends Activity implements View.OnClickListener{
                     public void onClick(View v) {
                         dialogTwo = new Dialog(MarkHomeActivity.this);
                         AlertDialog.Builder builder1 = new AlertDialog.Builder(MarkHomeActivity.this);
-                        dialogMessage = LayoutInflater.from(MarkHomeActivity.this).inflate(R.layout.alter_dialog, null);
+                        dialogMessage = LayoutInflater.from(MarkHomeActivity.this).inflate(R.layout.dialog_alter, null);
                         operateMessage = (TextView) dialogMessage.findViewById(R.id.operate_message);
                         operateMessage.setText("保存成功");
                         builder1.setView(dialogMessage);

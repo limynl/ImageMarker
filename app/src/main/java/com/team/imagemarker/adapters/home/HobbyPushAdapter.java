@@ -32,7 +32,7 @@ public class HobbyPushAdapter extends RecyclerView.Adapter<HobbyPushAdapter.Hobb
 
     @Override
     public HobbyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.category_item_two, parent, false);
+        View view = inflater.inflate(R.layout.item_category_two, parent, false);
         HobbyViewHolder viewHolder = new HobbyViewHolder(view);
         return viewHolder;
     }
