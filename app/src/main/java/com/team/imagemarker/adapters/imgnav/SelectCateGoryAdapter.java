@@ -13,7 +13,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.team.imagemarker.R;
 import com.team.imagemarker.entitys.home.SelectCategoryModel;
-import com.team.imagemarker.utils.MyHorizontalScrollView;
+import com.team.imagemarker.utils.scrollview.MyHorizontalScrollView;
 
 import java.util.List;
 

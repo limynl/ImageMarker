@@ -1,4 +1,4 @@
-package com.team.imagemarker.utils.common;
+package com.team.imagemarker.utils.scrollview;
 
 import android.annotation.TargetApi;
 import android.content.Context;

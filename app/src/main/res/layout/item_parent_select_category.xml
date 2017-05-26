@@ -33,7 +33,7 @@
 
     </RelativeLayout>
 
-    <com.team.imagemarker.utils.MyHorizontalScrollView
+    <com.team.imagemarker.utils.scrollview.MyHorizontalScrollView
         android:id="@+id/hsv_goods_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

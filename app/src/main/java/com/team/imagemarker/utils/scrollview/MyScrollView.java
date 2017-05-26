@@ -1,4 +1,4 @@
-package com.team.imagemarker.utils;
+package com.team.imagemarker.utils.scrollview;
 
 import android.content.Context;
 import android.util.AttributeSet;

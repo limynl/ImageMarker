@@ -10,7 +10,7 @@
 
     <include layout="@layout/title_bar" />
 
-    <com.team.imagemarker.utils.common.BounceScrollView
+    <com.team.imagemarker.utils.scrollview.BounceScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="none">
@@ -220,6 +220,6 @@
 
         </LinearLayout>
 
-    </com.team.imagemarker.utils.common.BounceScrollView>
+    </com.team.imagemarker.utils.scrollview.BounceScrollView>
 
 </LinearLayout>

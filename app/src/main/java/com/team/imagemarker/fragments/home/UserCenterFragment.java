@@ -31,7 +31,7 @@ import com.team.imagemarker.adapters.SharePopBaseAdapter;
 import com.team.imagemarker.entitys.share.SharePopBean;
 import com.team.imagemarker.utils.PaperButton;
 import com.team.imagemarker.utils.SlideSwitch;
-import com.team.imagemarker.utils.actionbar.TranslucentScrollView;
+import com.team.imagemarker.utils.scrollview.TranslucentScrollView;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -32,7 +32,7 @@ import com.team.imagemarker.entitys.home.CategoryModel;
 import com.team.imagemarker.entitys.home.SelectCategoryModel;
 import com.team.imagemarker.utils.EditTextWithDel;
 import com.team.imagemarker.utils.MyGridView;
-import com.team.imagemarker.utils.MyScrollView;
+import com.team.imagemarker.utils.scrollview.MyScrollView;
 import com.team.imagemarker.viewpager.navbanner.BannerLayout;
 import com.team.imagemarker.viewpager.navbanner.GlideImageLoader;
 

@@ -1,4 +1,4 @@
-package com.team.imagemarker.utils.actionbar;
+package com.team.imagemarker.utils.scrollview;
 
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;

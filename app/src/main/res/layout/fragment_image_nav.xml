@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <com.team.imagemarker.utils.MyScrollView
+    <com.team.imagemarker.utils.scrollview.MyScrollView
         android:id="@+id/nav_scrollview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -168,7 +168,7 @@
 
             </LinearLayout>
 
-        </com.team.imagemarker.utils.MyScrollView>
+        </com.team.imagemarker.utils.scrollview.MyScrollView>
 
     </android.support.v4.widget.SwipeRefreshLayout>
 

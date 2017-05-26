@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.team.imagemarker.utils.actionbar.TranslucentScrollView
+    <com.team.imagemarker.utils.scrollview.TranslucentScrollView
         android:id="@+id/pullzoom_scrollview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -451,7 +451,7 @@
 
         </LinearLayout>
 
-    </com.team.imagemarker.utils.actionbar.TranslucentScrollView>
+    </com.team.imagemarker.utils.scrollview.TranslucentScrollView>
 
     <!--<com.team.imagemarker.utils.actionbar.TranslucentActionBar-->
     <!--android:id="@+id/actionbar"-->
