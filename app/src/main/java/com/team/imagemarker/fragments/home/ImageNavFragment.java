@@ -119,11 +119,11 @@ public class ImageNavFragment extends Fragment implements View.OnClickListener, 
      */
     private void setTopBanner() {
         List<String> bannerList = new ArrayList<>();
-        bannerList.add("http://139.199.23.142:8080/TestShowMessage1/marker/navbanner/banner1.jpg");
-        bannerList.add("http://139.199.23.142:8080/TestShowMessage1/marker/navbanner/banner2.jpg");
-        bannerList.add("http://139.199.23.142:8080/TestShowMessage1/marker/navbanner/banner3.jpg");
-        bannerList.add("http://139.199.23.142:8080/TestShowMessage1/marker/navbanner/banner4.jpg");
-        bannerList.add("http://139.199.23.142:8080/TestShowMessage1/marker/navbanner/banner5.jpg");
+        bannerList.add("http://139.199.23.142:8080/TestShowMessage1/marker/banner/img1.jpg");
+        bannerList.add("http://139.199.23.142:8080/TestShowMessage1/marker/banner/img2.jpg");
+        bannerList.add("http://139.199.23.142:8080/TestShowMessage1/marker/banner/img3.jpg");
+        bannerList.add("http://139.199.23.142:8080/TestShowMessage1/marker/banner/img4.jpg");
+        bannerList.add("http://139.199.23.142:8080/TestShowMessage1/marker/banner/img5.jpg");
         topBanner.setImageLoader(new GlideImageLoader());
         topBanner.setViewUrls(bannerList);
         topBanner.setOnBannerItemClickListener(new BannerLayout.OnBannerItemClickListener() {

@@ -2,7 +2,6 @@ package com.team.imagemarker.activitys.imagscan;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.MotionEvent;
@@ -24,10 +23,6 @@ import com.team.imagemarker.utils.SoftInputMethodUtil;
 import com.team.imagemarker.utils.WavyLineView;
 import com.team.imagemarker.utils.tag.TagColor;
 import com.team.imagemarker.utils.tag.TagGroup;
-import com.yalantis.contextmenu.lib.ContextMenuDialogFragment;
-import com.yalantis.contextmenu.lib.MenuObject;
-import com.yalantis.contextmenu.lib.MenuParams;
-import com.yalantis.contextmenu.lib.interfaces.OnMenuItemClickListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -39,7 +34,7 @@ import java.util.List;
  * email 1434117404@qq.com
  */
 
-public class LookPictureActivity extends FragmentActivity implements View.OnClickListener, View.OnTouchListener, OnMenuItemClickListener {
+public class LookPictureActivity extends FragmentActivity implements View.OnClickListener, View.OnTouchListener{
     private TextView title;
     private ImageView leftIcon, rightIcon;
     private RelativeLayout titleBar;
@@ -59,19 +54,15 @@ public class LookPictureActivity extends FragmentActivity implements View.OnClic
     private CommentAdapter commentAdapter;
 
     SimpleDateFormat sdf=new SimpleDateFormat("yyyy年MM月dd日   HH:mm:ss");
-
-    private FragmentManager fragmentManager;
-    private ContextMenuDialogFragment menuDialogFragment;
-
+    private PopupMenu popupMenu;
+    private String[] tabs = {"一键分享", "设为壁纸", "关闭"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_look_picture);
-        fragmentManager = getSupportFragmentManager();
         bindView();//初始化视图
         setData();//加载数据
-        setFloatMenu();//设置悬浮菜单
         SoftInputMethodUtil.HideSoftInput(editTextComment.getWindowToken());//隐藏软键盘
     }
 
@@ -101,6 +92,8 @@ public class LookPictureActivity extends FragmentActivity implements View.OnClic
         mWavyLine.setPeriod((float) (2 * Math.PI / 60));
         mWavyLine.setAmplitude(5);
         mWavyLine.setStrokeWidth(2);
+
+        popupMenu = new PopupMenu(this, tabs);
 
     }
 
@@ -146,34 +139,6 @@ public class LookPictureActivity extends FragmentActivity implements View.OnClic
     }
 
     /**
-     * 设置悬浮菜单
-     */
-    private void setFloatMenu() {
-        MenuParams menuParams = new MenuParams();
-        menuParams.setActionBarSize((int) getResources().getDimension(R.dimen.tool_bar_height));
-        menuParams.setMenuObjects(getMenuObjects());
-        menuParams.setClosableOutside(true);
-        menuDialogFragment = ContextMenuDialogFragment.newInstance(menuParams);
-        menuDialogFragment.setItemClickListener(this);
-    }
-
-    private List<MenuObject> getMenuObjects(){
-        List<MenuObject> menuObjects = new ArrayList<>();
-        MenuObject close = new MenuObject();
-        close.setResource(R.mipmap.back);
-        menuObjects.add(close);
-
-        MenuObject share = new MenuObject("一键分享");
-        share.setResource(R.mipmap.back);
-        menuObjects.add(share);
-
-        MenuObject change = new MenuObject("换壁纸");
-        change.setResource(R.mipmap.back);
-        menuObjects.add(change);
-        return menuObjects;
-    }
-
-    /**
      * 图片浏览的指示器
      * @param position
      */
@@ -214,9 +179,17 @@ public class LookPictureActivity extends FragmentActivity implements View.OnClic
             }
             break;
             case R.id.right_icon:{
-                if(fragmentManager.findFragmentByTag(ContextMenuDialogFragment.TAG) == null){
-                    menuDialogFragment.show(fragmentManager, ContextMenuDialogFragment.TAG);
-                }
+                popupMenu.showLocation(R.id.right_icon);
+                popupMenu.setOnItemClickListener(new PopupMenu.OnItemClickListener() {
+                    @Override
+                    public void onClick(PopupMenu.MENUITEM item, String str) {
+                        if(str.equals("一键分享")){
+                            Toast.makeText(LookPictureActivity.this, "一键分享", Toast.LENGTH_SHORT).show();
+                        }else if(str.equals("设为壁纸")){
+                            Toast.makeText(LookPictureActivity.this, "设为壁纸", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
             }
             break;
             case R.id.detail_send:{
@@ -239,24 +212,11 @@ public class LookPictureActivity extends FragmentActivity implements View.OnClic
         return false;
     }
 
-    /**
-     * 浮动按钮点击
-     * @param clickedView
-     * @param position
-     */
-    @Override
-    public void onMenuItemClick(View clickedView, int position) {
-        Toast.makeText(this, "您点击的是第" + position + "个", Toast.LENGTH_SHORT).show();
-    }
 
     @Override
     public void onBackPressed() {
-        if(menuDialogFragment != null && menuDialogFragment.isAdded()){
-            menuDialogFragment.dismiss();
-        }else{
             this.finish();
             overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-        }
     }
 
     /**

@@ -74,8 +74,7 @@
         <activity android:name=".activitys.user.UpdateUserMessageActivity" />
         <activity android:name=".activitys.history.HistoryRecordActivity" />
         <activity android:name=".activitys.user.UserMissionActivity" />
-        <activity android:name=".activitys.imagscan.PictureGroupScanActivity" />
-        <activity android:name=".activitys.imagscan.DetailPictureActivity" />
+        <activity android:name=".activitys.imagscan.PictureGroupScanFragment" />
         <activity android:name=".activitys.saying.SendMoodActivity" />
         <activity android:name=".activitys.saying.SayingScanActivity" />
         <activity android:name=".activitys.user.FeedBackActivity" />
@@ -86,7 +85,11 @@
         <activity android:name=".activitys.imagscan.LookPictureActivity" />
         <activity android:name=".activitys.home.MoreCategoryActivity" />
         <activity android:name=".activitys.mark.MarkHomeActivity" />
-        <activity android:name=".activitys.tasks.UserTaskOverViewActivity"/>
+        <activity android:name=".activitys.tasks.UserTaskOverViewActivity" />
+        <activity
+            android:name=".activitys.imagscan.ImgScanMainActivity"
+            android:theme="@style/UserCoordinatorLayout" />
+        <activity android:name=".activitys.home.SplashActivity"></activity>
     </application>
 
 </manifest>

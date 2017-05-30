@@ -22,7 +22,8 @@ import android.widget.Toast;
 
 import com.team.imagemarker.R;
 import com.team.imagemarker.activitys.home.MoreCategoryActivity;
-import com.team.imagemarker.activitys.imagscan.PictureGroupScanActivity;
+import com.team.imagemarker.activitys.imagscan.ImgScanMainActivity;
+import com.team.imagemarker.activitys.imagscan.PictureGroupScanFragment;
 import com.team.imagemarker.activitys.mark.MarkHomeActivity;
 import com.team.imagemarker.activitys.saying.SayingScanActivity;
 import com.team.imagemarker.adapters.CardPagerAdapter;
@@ -49,6 +50,8 @@ import com.wangjie.rapidfloatingactionbutton.expandingcollection.ECPagerViewAdap
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.team.imagemarker.R.id.hobby_push;
 
 /**
  * Created by Lmy on 2017/4/28.
@@ -108,7 +111,6 @@ public class FirstPageFragment extends Fragment implements RapidFloatingActionCo
         viewPager = (ViewPager) view.findViewById(R.id.card_viewpager);
         viewPagerBackground = (FadeTransitionImageView) view.findViewById(R.id.viewPager_background);
 
-
         rfaLayout = (RapidFloatingActionLayout) view.findViewById(R.id.rfa_layout);
         rfaButton = (RapidFloatingActionButton) view.findViewById(R.id.rfa_button);
 
@@ -119,7 +121,7 @@ public class FirstPageFragment extends Fragment implements RapidFloatingActionCo
 //        rightIcon.setVisibility(View.GONE);
 
         SystemgridView = (MyGridView) view.findViewById(R.id.system_push);
-        hobbyGridView = (MyGridView) view.findViewById(R.id.hobby_push);
+        hobbyGridView = (MyGridView) view.findViewById(hobby_push);
 //        recyclerView = (RecyclerView) view.findViewById(R.id.hobby_push);
         systemPushMore = (Button) view.findViewById(R.id.system_push_more);
         hobbyPushMore = (Button) view.findViewById(R.id.hobby_push_more);
@@ -136,9 +138,6 @@ public class FirstPageFragment extends Fragment implements RapidFloatingActionCo
 //        refreshLayout.setColorSchemeResources(R.color.colorAccent, R.color.write, R.color.yellow);
 //        refreshLayout.setProgressBackgroundColor(R.color.theme);
 //        refreshLayout.setOnRefreshListener(this);
-
-        systemPushMore.setOnClickListener(this);
-        hobbyPushMore.setOnClickListener(this);
 
         setTopViewPager();
         setFlaotButton();//设置悬浮按钮
@@ -199,10 +198,14 @@ public class FirstPageFragment extends Fragment implements RapidFloatingActionCo
         systemPushList.add(new CategoryModel(R.mipmap.system_push4, "这是标题", "这是简要信息"));
         adapterSystem = new SystemPushAdapter(getActivity(), systemPushList);
         SystemgridView.setAdapter(adapterSystem);
+
         SystemgridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getContext(), MarkHomeActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("pageTag", "firstPage");
+                intent.putExtras(bundle);
                 startActivity(intent);
                 getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             }
@@ -345,7 +348,7 @@ public class FirstPageFragment extends Fragment implements RapidFloatingActionCo
     public void onRFACItemLabelClick(int position, RFACLabelItem item) {
         switch (position){
             case 0:{//美图欣赏
-                startActivity(new Intent(getActivity(), PictureGroupScanActivity.class));
+                startActivity(new Intent(getActivity(), ImgScanMainActivity.class));
                 getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             }
             break;
@@ -367,7 +370,7 @@ public class FirstPageFragment extends Fragment implements RapidFloatingActionCo
     public void onRFACItemIconClick(int position, RFACLabelItem item) {
         switch (position){
             case 0:{//美图欣赏
-                startActivity(new Intent(getActivity(), PictureGroupScanActivity.class));
+                startActivity(new Intent(getActivity(), PictureGroupScanFragment.class));
                 getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             }
             break;

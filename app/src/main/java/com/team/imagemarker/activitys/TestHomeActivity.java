@@ -8,7 +8,7 @@ import android.util.TypedValue;
 import android.widget.Toast;
 
 import com.team.imagemarker.R;
-import com.team.imagemarker.activitys.imagscan.PictureGroupScanActivity;
+import com.team.imagemarker.activitys.imagscan.PictureGroupScanFragment;
 import com.team.imagemarker.adapters.CardPagerAdapter;
 import com.team.imagemarker.adapters.ShadowTransformer;
 import com.team.imagemarker.entitys.CardItem;
@@ -169,7 +169,7 @@ public class TestHomeActivity extends Activity implements RapidFloatingActionCon
             }
             break;
             case 1:{//美图欣赏
-                startActivity(new Intent(TestHomeActivity.this, PictureGroupScanActivity.class));
+                startActivity(new Intent(TestHomeActivity.this, PictureGroupScanFragment.class));
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             }
             break;

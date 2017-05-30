@@ -1,17 +1,17 @@
 package com.team.imagemarker.activitys.imagscan;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.team.imagemarker.R;
@@ -27,10 +27,13 @@ import java.util.List;
  * email 1434117404@qq.com
  */
 
-public class PictureGroupScanActivity extends Activity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, PictureGroupAdapter.OnItemActionListener{
-    private TextView title;
-    private ImageView leftIcon, rightIcon;
-    private RelativeLayout titleBar;
+public class PictureGroupScanFragment extends Fragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, PictureGroupAdapter.OnItemActionListener{
+    private View view;
+    private static final String ARG_TITLE = "title";
+    private String mTitle;
+//    private TextView title;
+//    private ImageView leftIcon, rightIcon;
+//    private RelativeLayout titleBar;
 
     private SwipeRefreshLayout refreshLayout;
     private FloatingActionButton toTop;
@@ -39,35 +42,49 @@ public class PictureGroupScanActivity extends Activity implements View.OnClickLi
     private List<PictureGroupModel> list = new ArrayList<PictureGroupModel>();
     private PictureGroupAdapter adapter;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_picture_group_scan);
-        bindView();//初始化控件
-        setData();//设置数据
+    public static PictureGroupScanFragment getInstance(String title){
+        PictureGroupScanFragment fragment = new PictureGroupScanFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(ARG_TITLE, title);
+        fragment.setArguments(bundle);
+        return fragment;
     }
 
-    /**
-     * 初始化控件
-     */
-    private void bindView() {
-        titleBar = (RelativeLayout) findViewById(R.id.title_bar);
-        title = (TextView) findViewById(R.id.title);
-        leftIcon = (ImageView) findViewById(R.id.left_icon);
-        rightIcon = (ImageView) findViewById(R.id.right_icon);
-        refreshLayout = (SwipeRefreshLayout) findViewById(R.id.picture_group_refreshlayout);
-        recyclerView = (RecyclerView) findViewById(R.id.picture_group_recycle);
-        toTop = (FloatingActionButton) findViewById(R.id.to_top);
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Bundle bundle = getArguments();
+        mTitle = bundle.getString(ARG_TITLE);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.fragment_picture_group_scan, null);
+//        titleBar = (RelativeLayout) view.findViewById(R.id.title_bar);
+//        title = (TextView) view.findViewById(R.id.title);
+//        leftIcon = (ImageView) view.findViewById(R.id.left_icon);
+//        rightIcon = (ImageView) view.findViewById(R.id.right_icon);
+        refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.picture_group_refreshlayout);
+        recyclerView = (RecyclerView) view.findViewById(R.id.picture_group_recycle);
+        toTop = (FloatingActionButton) view.findViewById(R.id.to_top);
+        return view;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setData();//设置数据
     }
 
     /**
      * 设置数据
      */
     private void setData() {
-        titleBar.setBackgroundColor(getResources().getColor(R.color.theme));
-        title.setText("图组选择");
-        rightIcon.setVisibility(View.GONE);
-        leftIcon.setOnClickListener(this);
+//        titleBar.setBackgroundColor(getResources().getColor(R.color.theme));
+//        title.setText("图组选择");
+//        rightIcon.setVisibility(View.GONE);
+//        leftIcon.setOnClickListener(this);
 
         refreshLayout.setColorSchemeResources(R.color.colorAccent, R.color.write, R.color.yellow);
         refreshLayout.setProgressBackgroundColor(R.color.theme);
@@ -84,7 +101,7 @@ public class PictureGroupScanActivity extends Activity implements View.OnClickLi
             list.add(new PictureGroupModel(Constants.imageURL[i], Constants.name[i]));
         }
 
-        adapter = new PictureGroupAdapter(this, list);
+        adapter = new PictureGroupAdapter(getContext(), list);
         recyclerView.setHasFixedSize(true);//当确定数据的变化不会影响RecycleView布局的大小时，设置该属性提高性能
         recyclerView.setAdapter(adapter);
         StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
@@ -99,10 +116,6 @@ public class PictureGroupScanActivity extends Activity implements View.OnClickLi
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.left_icon:{//返回
-                onBackPressed();
-            }
-            break;
             case R.id.to_top:{//回到顶部
                 recyclerView.smoothScrollToPosition(0);
             }
@@ -136,21 +149,10 @@ public class PictureGroupScanActivity extends Activity implements View.OnClickLi
      */
     @Override
     public void OnItemClickListener(View view, int position) {
-        Toast.makeText(PictureGroupScanActivity.this, "这是第" + position + "组图片", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(PictureGroupScanActivity.this, LookPictureActivity.class);
+        Toast.makeText(getContext(), "这是第" + position + "组图片", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(getContext(), LookPictureActivity.class);
         startActivity(intent);
-        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        PictureGroupScanActivity.this.finish();
-        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-    }
 }

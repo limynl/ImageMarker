@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.team.imagemarker.R;
@@ -57,8 +58,11 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineAdapter.TimeLi
         else{
             holder.mDate.setVisibility(View.GONE);
         }
+//        TaskHistoryAdapter adapter = new TaskHistoryAdapter(mContext, timeLineModel.getHistories());
+//        holder.history.setAdapter(adapter);
 
         holder.mMessage.setText(timeLineModel.getMessage());
+        holder.type.setText(timeLineModel.getmType());
     }
 
     @Override
@@ -70,13 +74,17 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineAdapter.TimeLi
 
         public TextView mDate;
         public TextView mMessage;
+        public TextView type;
         public TimelineView mTimelineView;
+        public ListView history;
 
         public TimeLineViewHolder(View itemView, int viewType) {
             super(itemView);
             mDate = (TextView) itemView.findViewById(R.id.text_timeline_date);
             mMessage = (TextView) itemView.findViewById(R.id.text_timeline_title);
             mTimelineView = (TimelineView) itemView.findViewById(R.id.time_marker);
+            type = (TextView) itemView.findViewById(R.id.text_timeline_type);
+            history = (ListView) itemView.findViewById(R.id.task_history);
             mTimelineView.initLine(viewType);
         }
     }

@@ -130,4 +130,11 @@
         <attr name="markerInCenter" format="boolean"/>
     </declare-styleable>
 
+    <!--美图浏览中的CollapsingToolbarLayout-->
+    <declare-styleable name="CoordinatorTabLayout">
+        <attr name="contentScrim" format="color" />
+        <attr name="tabIndicatorColor" format="color" />
+        <attr name="tabTextColor" format="color" />
+    </declare-styleable>
+
 </resources>

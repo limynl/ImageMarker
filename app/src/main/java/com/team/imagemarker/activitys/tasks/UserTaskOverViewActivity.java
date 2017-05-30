@@ -11,8 +11,13 @@ import android.widget.TextView;
 
 import com.team.imagemarker.R;
 import com.team.imagemarker.adapters.task.TimeLineAdapter;
+import com.team.imagemarker.entitys.task.TaskHistory;
 import com.team.imagemarker.entitys.task.TimeLineModel;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,15 +64,47 @@ public class UserTaskOverViewActivity extends Activity implements View.OnClickLi
      * 设置数据
      */
     private void setDataListItems(){
-        mDataList.add(new TimeLineModel("历史记录列表", "", "INACTIVE"));
-        mDataList.add(new TimeLineModel("历史记录列表", "2017-02-12 08:00", "ACTIVE"));
-        mDataList.add(new TimeLineModel("历史记录列表", "2017-02-11 21:00", "COMPLETED"));
-        mDataList.add(new TimeLineModel("历史记录列表", "2017-02-11 18:00", "COMPLETED"));
-        mDataList.add(new TimeLineModel("历史记录列表", "2017-02-11 09:30", "COMPLETED"));
-        mDataList.add(new TimeLineModel("历史记录列表", "2017-02-11 08:00", "COMPLETED"));
-        mDataList.add(new TimeLineModel("历史记录列表", "2017-02-10 15:00", "COMPLETED"));
-        mDataList.add(new TimeLineModel("历史记录列表", "2017-02-10 14:30", "COMPLETED"));
-        mDataList.add(new TimeLineModel("历史记录列表", "2017-02-10 14:00", "COMPLETED"));
+
+        mDataList.add(new TimeLineModel("图组列表名称", "2017-02-11 19:13", "INACTIVE", "系统推送"));
+        mDataList.add(new TimeLineModel("图组列表名称", "2017-02-11 19:13", "ACTIVE", "兴趣选择"));
+        mDataList.add(new TimeLineModel("图组列表名称", "2017-02-11 19:13", "COMPLETED", "系统推送"));
+        mDataList.add(new TimeLineModel("图组列表名称", "2017-02-11 19:13", "COMPLETED", "系统推送"));
+        mDataList.add(new TimeLineModel("图组列表名称", "2017-02-11 19:13", "COMPLETED", "兴趣选择"));
+        mDataList.add(new TimeLineModel("图组列表名称", "2017-02-11 19:13", "COMPLETED", "系统推送"));
+        mDataList.add(new TimeLineModel("图组列表名称", "2017-02-11 19:13", "COMPLETED", "系统推送"));
+        mDataList.add(new TimeLineModel("图组列表名称", "2017-02-11 19:13", "COMPLETED", "兴趣选择"));
+        mDataList.add(new TimeLineModel("图组列表名称", "2017-02-11 19:13", "COMPLETED", "兴趣选择"));
+        mDataList.add(new TimeLineModel("图组列表名称", "2017-02-11 19:13", "COMPLETED", "系统推送"));
+    }
+
+    private void getDataFromNet() {
+        try {
+            InputStream in = getAssets().open("taskHistory.json");
+            byte[] buffer = new byte[in.available()];
+            in.read(buffer);
+            String jsonStr = new String(buffer, "UTF-8");
+            JSONObject jsonObject = new JSONObject(jsonStr);
+            JSONArray jsonArray = jsonObject.optJSONArray("result");
+            for (int i = 0; i < jsonArray.length(); i++) {
+                jsonObject = jsonArray.optJSONObject(i);
+                TimeLineModel timeLineModel = new TimeLineModel();
+                timeLineModel.setDate(jsonObject.optString("mData"));
+                timeLineModel.setStatus("ACTIVE");
+                JSONArray jsonArray1 = jsonObject.optJSONArray("historyRecord");
+                List<TaskHistory> histories = new ArrayList<>();
+                for (int j = 0; j < jsonArray1.length(); j++) {
+                    JSONObject jsonObject1 = jsonArray1.optJSONObject(j);
+                    TaskHistory taskHistory = new TaskHistory();
+                    taskHistory.setTitle(jsonObject1.optString("title"));
+                    taskHistory.setOperatorType(jsonObject1.optString("operatorType"));
+                    histories.add(taskHistory);
+                }
+                timeLineModel.setHistories(histories);
+                mDataList.add(timeLineModel);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

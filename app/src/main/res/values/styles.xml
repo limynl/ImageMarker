@@ -14,6 +14,11 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="UserCoordinatorLayout" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
 
     <!--PopupWindow弹出动画-->
     <style name="anim_popup_centerbar">
@@ -117,6 +122,13 @@
         <item name="android:layout_height">wrap_content</item>
     </style>
 
+    <!--美图浏览指示器设置-->
+    <style name="TabLayoutStyle" parent="Widget.Design.TabLayout">
+        <item name="tabTextAppearance">@style/TabTextAppearence</item>
+    </style>
+    <style name="TabTextAppearence" parent="TextAppearance.Design.Tab">
+        <item name="textAllCaps">false</item>
+    </style>
 
 
 

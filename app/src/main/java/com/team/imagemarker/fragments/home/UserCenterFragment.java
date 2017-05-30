@@ -24,6 +24,7 @@ import com.gitonway.lee.niftynotification.lib.Effects;
 import com.gitonway.lee.niftynotification.lib.NiftyNotificationView;
 import com.team.imagemarker.R;
 import com.team.imagemarker.activitys.history.HistoryRecordActivity;
+import com.team.imagemarker.activitys.imagscan.ImgScanMainActivity;
 import com.team.imagemarker.activitys.tasks.UserTaskActivity;
 import com.team.imagemarker.activitys.user.FeedBackActivity;
 import com.team.imagemarker.activitys.user.UpdateUserMessageActivity;
@@ -55,6 +56,8 @@ public class UserCenterFragment extends Fragment implements View.OnClickListener
     private PaperButton test;
     private ImageView imageView;
 
+    private LinearLayout imgScan, hobbyForum, integralMall;
+
     //分享App
     private PopupWindow pw;
     private View popView;
@@ -73,6 +76,10 @@ public class UserCenterFragment extends Fragment implements View.OnClickListener
 
         translucentScrollView = (TranslucentScrollView) view.findViewById(R.id.pullzoom_scrollview);
         zoomView = view.findViewById(R.id.lay_header);
+
+        imgScan = (LinearLayout) view.findViewById(R.id.img_scan);
+        hobbyForum = (LinearLayout) view.findViewById(R.id.hobby_forum);
+        integralMall = (LinearLayout) view.findViewById(R.id.integral_mall);
 
         updateUserMessage = (RelativeLayout) view.findViewById(R.id.to_update_user_message);
         historyRecord = (RelativeLayout) view.findViewById(R.id.to_history_record);
@@ -94,6 +101,9 @@ public class UserCenterFragment extends Fragment implements View.OnClickListener
     private void setData() {
         translucentScrollView.setPullZoomView(zoomView);//关联需要伸缩的视图
 
+        imgScan.setOnClickListener(this);
+        hobbyForum.setOnClickListener(this);
+        integralMall.setOnClickListener(this);
         updateUserMessage.setOnClickListener(this);
         historyRecord.setOnClickListener(this);
         tasksAchieve.setOnClickListener(this);
@@ -119,6 +129,19 @@ public class UserCenterFragment extends Fragment implements View.OnClickListener
             case R.id.to_update_user_message:{//用户信息修改
                 startActivity(new Intent(getActivity(), UpdateUserMessageActivity.class));
                 getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+            }
+            break;
+            case R.id.img_scan:{//美图浏览
+                startActivity(new Intent(getActivity(), ImgScanMainActivity.class));
+                getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+            }
+            break;
+            case R.id.hobby_forum:{//兴趣论坛
+                Toast.makeText(getContext(), "兴趣论坛", Toast.LENGTH_SHORT).show();
+            }
+            break;
+            case R.id.integral_mall:{
+                Toast.makeText(getContext(), "积分商城", Toast.LENGTH_SHORT).show();
             }
             break;
             case R.id.to_history_record:{//历史记录
