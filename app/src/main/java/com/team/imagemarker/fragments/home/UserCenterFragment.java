@@ -20,11 +20,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.gitonway.lee.niftynotification.lib.Effects;
-import com.gitonway.lee.niftynotification.lib.NiftyNotificationView;
 import com.team.imagemarker.R;
 import com.team.imagemarker.activitys.history.HistoryRecordActivity;
 import com.team.imagemarker.activitys.imagscan.ImgScanMainActivity;
+import com.team.imagemarker.activitys.integral.IntegralActivity;
 import com.team.imagemarker.activitys.tasks.UserTaskActivity;
 import com.team.imagemarker.activitys.user.FeedBackActivity;
 import com.team.imagemarker.activitys.user.UpdateUserMessageActivity;
@@ -36,6 +35,11 @@ import com.team.imagemarker.utils.scrollview.TranslucentScrollView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import cn.sharesdk.framework.Platform;
+import cn.sharesdk.framework.ShareSDK;
+import cn.sharesdk.sina.weibo.SinaWeibo;
+import cn.sharesdk.tencent.qq.QQ;
 
 /**
  * Created by Lmy on 2017/4/28.
@@ -51,7 +55,6 @@ public class UserCenterFragment extends Fragment implements View.OnClickListener
     private RelativeLayout updateUserMessage, historyRecord, tasksAchieve, feedBack, shareApp;
 
     private SlideSwitch systemPush;
-    private Effects effect;
 
     private PaperButton test;
     private ImageView imageView;
@@ -142,6 +145,8 @@ public class UserCenterFragment extends Fragment implements View.OnClickListener
             break;
             case R.id.integral_mall:{
                 Toast.makeText(getContext(), "积分商城", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(getContext(), IntegralActivity.class));
+                getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             }
             break;
             case R.id.to_history_record:{//历史记录
@@ -172,10 +177,19 @@ public class UserCenterFragment extends Fragment implements View.OnClickListener
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         String name = shareBeanList.get(position).getName();
         if(TextUtils.equals(name, "QQ")){
-            Toast.makeText(getActivity(), "QQ分享", Toast.LENGTH_SHORT).show();
+            Platform qq = ShareSDK.getPlatform(getContext(), QQ.NAME);
+            QQ.ShareParams sp = new QQ.ShareParams();
+            sp.setShareType(Platform.SHARE_WEBPAGE);
+            sp.setTitle("快来使用图片分类App吧！");
+            sp.setTitleUrl("http://139.199.23.142:8080/TestShowMessage1/car.apk");
+            qq.share(sp);
             pw.dismiss();
         }else if (TextUtils.equals(name, "新浪")){
-            Toast.makeText(getActivity(), "新浪微博分享", Toast.LENGTH_SHORT).show();
+            SinaWeibo.ShareParams sp = new SinaWeibo.ShareParams();
+            sp.setText("测试分享的文本");
+            sp.setImagePath("http://139.199.23.142:8080/TestShowMessage1/logo.png");
+            Platform weibo = ShareSDK.getPlatform(SinaWeibo.NAME);
+            weibo.share(sp);
             pw.dismiss();
         }else if(TextUtils.equals(name, "微信")){
             Toast.makeText(getActivity(), "微信分享", Toast.LENGTH_SHORT).show();
@@ -186,13 +200,9 @@ public class UserCenterFragment extends Fragment implements View.OnClickListener
     @Override
     public void onStateChanged(boolean state) {
         if (state == true) {
-            effect=Effects.slideIn;
-            NiftyNotificationView
-                    .build(getActivity(),"系统推送已打开", effect,R.id.notification)
-                    .setIcon(R.drawable.head)
-                    .show();
+            Toast.makeText(getContext(), "系统推送已打开", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(getActivity(), "系统推送已关闭", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "系统推送已关闭", Toast.LENGTH_SHORT).show();
         }
     }
 

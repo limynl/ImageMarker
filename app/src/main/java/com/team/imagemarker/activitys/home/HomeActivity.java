@@ -1,8 +1,12 @@
 package com.team.imagemarker.activitys.home;
 
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.view.KeyEvent;
+import android.widget.Toast;
 
 import com.luseen.spacenavigation.SpaceItem;
 import com.luseen.spacenavigation.SpaceNavigationView;
@@ -11,6 +15,10 @@ import com.team.imagemarker.R;
 import com.team.imagemarker.fragments.home.FirstPageFragment;
 import com.team.imagemarker.fragments.home.ImageNavFragment;
 import com.team.imagemarker.fragments.home.UserCenterFragment;
+import com.team.imagemarker.utils.common.NetReceiver;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 /**
@@ -23,17 +31,26 @@ public class HomeActivity extends FragmentActivity{
     private String[] tabNames = {"兴趣导航", "个人中心"};
     private int[] tabIcons = {R.mipmap.hobby_nav_icon, R.mipmap.user_center_icon};
     private SpaceNavigationView tabs;
-    private ImageNavFragment imageNavFragment;//图组导航
-    private UserCenterFragment userCenterFragment;//个人中心
-    private FirstPageFragment firstPageFragment;//首页
+    private ImageNavFragment imageNavFragment;
+    private UserCenterFragment userCenterFragment;
+    private FirstPageFragment firstPageFragment;
     private FragmentManager fragmentManager;
     private final int CONTENT_ID = R.id.main_content;
+    private static Boolean isExit = false;
+    private NetReceiver mReceiver;
+    private IntentFilter mFilter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         setTabs();
+
+        //网络判断
+        mReceiver = new NetReceiver();
+        mFilter = new IntentFilter();
+        mFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        this.registerReceiver(mReceiver, mFilter);
     }
 
     @Override
@@ -132,8 +149,32 @@ public class HomeActivity extends FragmentActivity{
     }
 
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        HomeActivity.this.finish();
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK){
+            Timer timer = null;
+            if(isExit == false){
+                isExit = true;
+                Toast.makeText(this, "再按一次退出应用", Toast.LENGTH_SHORT).show();
+                timer = new Timer();
+                timer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                       isExit = false;
+                    }
+                }, 2000);
+            }else{
+                HomeActivity.this.finish();
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                System.exit(0);
+            }
+        }
+        return false;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //广播解除绑定
+        this.unregisterReceiver(mReceiver);
     }
 }

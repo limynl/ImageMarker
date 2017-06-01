@@ -11,6 +11,9 @@ public class CategoryModel {
     private String name;
     private String simpleMessage;
 
+    private String imgUrl;
+    private String headUrl;
+
     public CategoryModel() {
     }
 
@@ -24,6 +27,13 @@ public class CategoryModel {
         this.imgId = imgId;
         this.imgId1 = imgId1;
         this.name = name;
+    }
+
+    public CategoryModel(String name, String simpleMessage, String imgUrl, String headUrl) {
+        this.name = name;
+        this.simpleMessage = simpleMessage;
+        this.imgUrl = imgUrl;
+        this.headUrl = headUrl;
     }
 
     public int getImgId() {
@@ -56,5 +66,21 @@ public class CategoryModel {
 
     public void setSimpleMessage(String simpleMessage) {
         this.simpleMessage = simpleMessage;
+    }
+
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
+    }
+
+    public String getHeadUrl() {
+        return headUrl;
+    }
+
+    public void setHeadUrl(String headUrl) {
+        this.headUrl = headUrl;
     }
 }

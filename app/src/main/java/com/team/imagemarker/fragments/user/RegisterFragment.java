@@ -11,9 +11,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.android.volley.VolleyError;
 import com.team.imagemarker.R;
 import com.team.imagemarker.utils.EditTextWithDel;
 import com.team.imagemarker.utils.PaperButton;
+import com.team.imagemarker.utils.volley.VolleyListenerInterface;
+import com.team.imagemarker.utils.volley.VolleyRequestUtil;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
@@ -74,7 +83,6 @@ public class RegisterFragment extends Fragment implements View.OnClickListener{
         SMSSDK.registerEventHandler(eh);
     }
 
-
     @Override
     public void onClick(View v) {
         switch (v.getId()){
@@ -82,9 +90,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener{
                 if(!TextUtils.isEmpty(userPhone.getText().toString().trim())){
                     if(!TextUtils.isEmpty(userPassword.getText().toString().trim())){
                         if(userPhone.getText().toString().trim().length() == 11){
-                            iPhone = userPhone.getText().toString().trim();
-                            SMSSDK.getVerificationCode("86", iPhone);//向服务器请求发送验证码
-                            userCode.requestFocus();
+                            isRegister(userPhone.getText().toString().trim());
                         }else{
                             Toast.makeText(getActivity(), "电话号码的位数不对", Toast.LENGTH_SHORT).show();
                             userPhone.requestFocus();
@@ -176,7 +182,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener{
                 if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {//提交验证码成功,验证通过
 //                    handlerText.sendEmptyMessage(2);
                     Toast.makeText(getActivity(), "注册成功", Toast.LENGTH_SHORT).show();
-//                    registerUser();//将用户的注册信息传至后台进行保存
+                    registerUser();//将用户的注册信息传至后台进行保存
                 } else if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE){//服务器验证码发送成功
                     reminderText();
                     Toast.makeText(getActivity(), "验证码已经发送", Toast.LENGTH_SHORT).show();
@@ -199,6 +205,73 @@ public class RegisterFragment extends Fragment implements View.OnClickListener{
             }
         }
     };
+
+    /**
+     * 判断该号码是否已经注册过
+     */
+    private void isRegister(String phoneNumber){
+        String url = "";
+        Map<String, String> map = new HashMap<>();
+        map.put("phoneNumber", phoneNumber);
+
+        VolleyRequestUtil.RequestPost(getContext(), url, "isRegister", map, new VolleyListenerInterface() {
+            @Override
+            public void onSuccess(String result) {
+                JSONObject object = null;
+                try {
+                    object = new JSONObject(result);
+                    String tag = object.optString("tag");
+                    if(tag.equals("success")){
+                        iPhone = userPhone.getText().toString().trim();
+                        SMSSDK.getVerificationCode("86", iPhone);//向服务器请求发送验证码
+                        userCode.requestFocus();
+                    }else{
+                        Toast.makeText(getContext(), "该号码已经被成册了", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(VolleyError error) {
+                Toast.makeText(getContext(), "服务器连接错误", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    /**
+     * 注册用户的信息
+     */
+    private void registerUser(){
+        String url = "";
+        Toast.makeText(getContext(), "用户的信息注册成功", Toast.LENGTH_SHORT).show();
+        Map<String, String> map = new HashMap<>();
+        map.put("phoneNumber", userPhone.getText().toString().trim());
+        map.put("passWord", userPassword.getText().toString().trim());
+        VolleyRequestUtil.RequestPost(getContext(), url, "register", map, new VolleyListenerInterface() {
+            @Override
+            public void onSuccess(String result) {
+                try {
+                    JSONObject object = new JSONObject(result);
+                    String tag = object.optString("tag");
+                    if(tag.equals("success")){
+                        Toast.makeText(getContext(), "注册成功", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(getContext(), "注册失败", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getContext(), "服务器连接错误", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onError(VolleyError error) {
+
+            }
+        });
+    }
 
     /**
      * 注销短信验证，实现反注册，防止内存泄漏
