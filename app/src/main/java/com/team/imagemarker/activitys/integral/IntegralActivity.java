@@ -5,13 +5,17 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.team.imagemarker.R;
 import com.team.imagemarker.adapters.ShoppingAdapter;
+import com.team.imagemarker.adapters.task.TaskBoxAdapter;
 import com.team.imagemarker.entitys.home.CategoryModel;
+import com.team.imagemarker.utils.MyGridView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +34,10 @@ public class IntegralActivity extends Activity implements View.OnClickListener{
     private RecyclerView shopping;
     private List<CategoryModel> list;
 
+    private MyGridView taskBox;
+    private List<CategoryModel> systemPushList = new ArrayList<>();
+    private TaskBoxAdapter adapterSystem;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +54,10 @@ public class IntegralActivity extends Activity implements View.OnClickListener{
         rightIcon.setVisibility(View.GONE);
         leftIcon.setOnClickListener(this);
 
+        taskBox = (MyGridView) findViewById(R.id.task_box);
+        taskBox = (MyGridView) findViewById(R.id.task_box);
+        setTaskBox();
+
     }
 
     private void bindView() {
@@ -54,6 +66,20 @@ public class IntegralActivity extends Activity implements View.OnClickListener{
         shopping = (RecyclerView) findViewById(R.id.shopping);
         shopping.setLayoutManager(new GridLayoutManager(this,2));
         shopping.setAdapter(shoppingAdapter);
+    }
+
+    private void setTaskBox() {
+        systemPushList.add(new CategoryModel(R.mipmap.task1, "这是标题", "这是简要信息"));
+        systemPushList.add(new CategoryModel(R.mipmap.task2, "这是标题", "这是简要信息"));
+        systemPushList.add(new CategoryModel(R.mipmap.task3, "这是标题", "这是简要信息"));
+        adapterSystem = new TaskBoxAdapter(this, systemPushList);
+        taskBox.setAdapter(adapterSystem);
+        taskBox.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(IntegralActivity.this, "position:" + (position + 1), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
