@@ -66,9 +66,11 @@
                         android:layout_toEndOf="@+id/slimChart"
                         android:layout_toRightOf="@+id/slimChart"
                         android:gravity="center"
-                        android:text="简要提示信息"
+                        android:text="当前完成的很棒！\n继续加油吧(*￣ω￣)"
+                        android:lineSpacingExtra="6dp"
                         android:textAppearance="@style/TextAppearance.AppCompat.Title.Inverse"
-                        android:textColor="@color/gray2"
+                        android:textColor="@color/font_light"
+                        android:textStyle="italic"
                         android:textSize="16sp" />
 
                     <LinearLayout
@@ -158,17 +160,42 @@
 
             </android.support.v7.widget.CardView>
 
-            <com.team.imagemarker.utils.MyGridView
-                android:id="@+id/task_box"
+            <RelativeLayout
+                android:id="@+id/random_push_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingTop="3dp"
+                android:paddingBottom="3dp">
+
+                <TextView
+                    android:layout_width="5dp"
+                    android:layout_height="match_parent"
+                    android:background="#464e76"
+                    android:layout_marginLeft="10dp"
+                    android:layout_centerVertical="true"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="近七天详细情况"
+                    android:textColor="@color/font_light"
+                    android:textSize="16dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="22dp"
+                    android:layout_centerVertical="true"
+                    android:textAppearance="@style/cardHeadTitle"/>
+
+            </RelativeLayout>
+
+            <com.team.imagemarker.utils.scrollview.MyHorizontalScrollView
+                android:id="@+id/recent_task"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none"
                 android:layout_marginBottom="3dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
-                android:layout_marginTop="3dp"
-                android:horizontalSpacing="3dp"
-                android:numColumns="3"
-                android:verticalSpacing="2dp" />
+                android:layout_marginTop="3dp"/>
 
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
@@ -194,7 +221,7 @@
                         android:layout_marginTop="10dp"
                         android:gravity="right"
                         android:paddingRight="5dp"
-                        android:text="近七天图片标记情况"
+                        android:text="近七天图片标记数量分布"
                         android:textColor="#707070"
                         android:textSize="13sp" />
 

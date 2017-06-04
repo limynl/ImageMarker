@@ -6,10 +6,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.team.imagemarker.R;
 import com.team.imagemarker.entitys.home.CategoryModel;
+import com.team.imagemarker.utils.CircleImageView;
+import com.wangjie.rapidfloatingactionbutton.textlabel.LabelView;
 
 import java.util.List;
 
@@ -21,6 +22,7 @@ import java.util.List;
 public class TaskBoxAdapter extends BaseAdapter {
     private Context context;
     private List<CategoryModel> list;
+    private ViewHolder viewHolder = null;
 
     public TaskBoxAdapter(Context context, List<CategoryModel> list) {
         this.context = context;
@@ -44,28 +46,51 @@ public class TaskBoxAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder viewHolder = null;
+//        ViewHolder viewHolder = null;
         if (convertView == null) {
             viewHolder = new ViewHolder();
             convertView = LayoutInflater.from(context).inflate(R.layout.item_task_box, null);
             viewHolder.categoryImg = (ImageView) convertView.findViewById(R.id.category_img);
-            viewHolder.categoryName = (TextView) convertView.findViewById(R.id.category_name);
-            viewHolder.categorySimapleMessage = (TextView) convertView.findViewById(R.id.category_simple_message);
+//            viewHolder.categoryName = (TextView) convertView.findViewById(R.id.category_name);
+//            viewHolder.categorySimapleMessage = (TextView) convertView.findViewById(R.id.category_simple_message);
+            viewHolder.userHead = (CircleImageView) convertView.findViewById(R.id.user_head);
+            viewHolder.userRanking = (LabelView) convertView.findViewById(R.id.user_ranking);
             convertView.setTag(viewHolder);
         }else{
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
         CategoryModel model = list.get(position);
+
+//        Glide.with(context).load("http://139.199.23.142:8080/TestShowMessage1/marker/test.jpg").asBitmap().into(new SimpleTarget<Bitmap>() {
+//            @Override
+//            public void onResourceReady(final Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+//                BitmapBlurUtil.addTask(resource, new Handler(){
+//                    @Override
+//                    public void handleMessage(Message msg) {
+//                        super.handleMessage(msg);
+//                        Drawable drawable = (Drawable) msg.obj;
+//                        viewHolder.categoryImg.setImageDrawable(drawable);
+//                        resource.recycle();
+//                    }
+//                });
+//            }
+//        });
+
         viewHolder.categoryImg.setImageResource(model.getImgId());
-        viewHolder.categoryName.setText(model.getName());
-        viewHolder.categorySimapleMessage.setText(model.getSimpleMessage());
+//        viewHolder.categoryName.setText(model.getName());
+//        viewHolder.categorySimapleMessage.setText("");
+        viewHolder.userHead.setImageResource(model.getImgId1());
+        viewHolder.userRanking.setText(model.getName());
+
         return convertView;
     }
 
     class ViewHolder{
         public ImageView categoryImg;
-        public TextView categoryName;
-        public TextView categorySimapleMessage;
+//        public TextView categoryName;
+//        public TextView categorySimapleMessage;
+        public CircleImageView userHead;
+        public LabelView userRanking;
     }
 }

@@ -53,4 +53,8 @@ public class SizeUtils {
         return (int) (spValue * fontScale + 0.5f);
     }
 
+    public static double change(double a){
+        return a * Math.PI  / 180;
+    }
+
 }

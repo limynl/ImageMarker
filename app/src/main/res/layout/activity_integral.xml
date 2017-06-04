@@ -48,14 +48,14 @@
                                 android:layout_marginBottom="5dp"
                                 android:text="积分总数"
                                 android:textColor="@android:color/white"
-                                android:textSize="15sp" />
+                                android:textSize="16sp" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="30"
                                 android:textColor="@android:color/white"
-                                android:textSize="15sp" />
+                                android:textSize="16sp" />
 
                         </LinearLayout>
 
@@ -72,17 +72,16 @@
                                 android:layout_marginBottom="5dp"
                                 android:text="我的排名"
                                 android:textColor="@android:color/white"
-                                android:textSize="15sp" />
+                                android:textSize="16sp" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="1"
                                 android:textColor="@android:color/white"
-                                android:textSize="15sp" />
+                                android:textSize="16sp" />
 
                         </LinearLayout>
-
 
                     </LinearLayout>
 
@@ -105,6 +104,7 @@
                     android:layout_marginTop="10dp">
 
                     <ImageView
+                        android:id="@+id/luck_draw"
                         android:layout_width="75dp"
                         android:layout_height="38dp"
                         android:layout_alignParentRight="true"
@@ -150,6 +150,7 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/text_background"
                     android:text="2016-08-18 14:30:30 Limynl iPhone6s puls  2016-08-14 15:41:28 Limynl macbook 2016-08-18 16:22:45 Limynl 魅族手机"
+                    android:textColor="@color/font_light"
                     android:padding="10dp"
                     android:layout_centerVertical="true"
                     android:gravity="center"
@@ -157,7 +158,7 @@
                     android:ellipsize="marquee"
                     android:marqueeRepeatLimit="marquee_forever"
                     android:layout_marginTop="20dp"
-                    android:layout_marginLeft="20dp"
+                    android:layout_marginLeft="10dp"
                     android:focusable="true"
                     android:focusableInTouchMode="true">
 
@@ -213,8 +214,62 @@
                 android:layout_marginLeft="3dp"
                 android:layout_marginRight="3dp" />
 
+            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:background="@android:color/transparent">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:background="@drawable/text_background"
+                    android:orientation="vertical">
+
+                    <View
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/huodong_rule"
+                        android:padding="10dp"
+                        android:lineSpacingExtra="10dp"
+                        android:text="1、用户可以使用积分兑换相应的礼品，兑换的礼品以实物为准;\n2、用户也可以使用幸运大抽奖，并且将消耗一定的积分，获得一定奖品后，我们将与您联系;\n3、用户的积分可以通过打标签功能获取，每完成一次图片标注，将获取一定的积分数量;\n4、积分将在每年的12月31日24时清空，请及时使用。"
+                        android:textColor="@color/font_light" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/huodong_rule"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/rule_background"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+                    android:paddingRight="8dp"
+                    android:paddingLeft="5dp"
+                    android:text="活动规则"
+                    android:textColor="#ffffff" />
+
+            </RelativeLayout>
+
         </LinearLayout>
 
     </com.team.imagemarker.utils.scrollview.BounceScrollView>
+
+    <ImageView
+        android:id="@+id/choujiang"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/jiang"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="540dp"/>
 
 </RelativeLayout>

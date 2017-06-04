@@ -4,19 +4,20 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.team.imagemarker.R;
 import com.team.imagemarker.adapters.task.TaskBoxAdapter;
 import com.team.imagemarker.entitys.home.CategoryModel;
-import com.team.imagemarker.utils.MyGridView;
 import com.team.imagemarker.utils.chart.LineChartView;
 import com.team.imagemarker.utils.chart.SlimChart;
+import com.team.imagemarker.utils.scrollview.MyHorizontalScrollView;
+import com.wangjie.rapidfloatingactionbutton.textlabel.LabelView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,12 +34,21 @@ public class UserTaskActivity extends AppCompatActivity implements View.OnClickL
 
     private SlimChart slimChart;
     private LineChartView chartView;
-    private MyGridView taskBox;
+//    private MyGridView taskBox;
+//    private ViewPager taskViewPager;
+//    private CardPagerAdapter cardPagerAdapter;
+//    private ShadowTransformer shadowTransformer;//ViewPager切换动画
+    private MyHorizontalScrollView recentTask;
+    private List<CategoryModel> taskList = new ArrayList<>();
 
     private List<String> dateList = new ArrayList<>();// 日期
     private List<Double> earnList = new ArrayList<>();// 图片数目 共8组值
     private List<CategoryModel> systemPushList = new ArrayList<>();
     private TaskBoxAdapter adapterSystem;
+
+//    private HobbyPushAdapter adapterHobby;
+//    private RecyclerView hobbyRecycle;
+//    private List<CategoryModel> hobbyPushList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +69,10 @@ public class UserTaskActivity extends AppCompatActivity implements View.OnClickL
 
         slimChart = (SlimChart) findViewById(R.id.slimChart);
         chartView = (LineChartView) findViewById(R.id.chartView);
-        taskBox = (MyGridView) findViewById(R.id.task_box);
+//        taskBox = (MyGridView) findViewById(R.id.task_box);
+//        taskViewPager = (ViewPager) findViewById(R.id.card_viewpager);
+        recentTask = (MyHorizontalScrollView) findViewById(R.id.recent_task);
+//        hobbyRecycle = (RecyclerView) findViewById(R.id.hobby_push);
 
         titleBar.setBackgroundColor(getResources().getColor(R.color.theme));
         title.setText("任务情况");
@@ -120,17 +133,33 @@ public class UserTaskActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void setTaskBox() {
-        systemPushList.add(new CategoryModel(R.mipmap.task1, "这是标题", "这是简要信息"));
-        systemPushList.add(new CategoryModel(R.mipmap.task2, "这是标题", "这是简要信息"));
-        systemPushList.add(new CategoryModel(R.mipmap.task3, "这是标题", "这是简要信息"));
-        adapterSystem = new TaskBoxAdapter(this, systemPushList);
-        taskBox.setAdapter(adapterSystem);
-        taskBox.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(UserTaskActivity.this, "position:" + (position + 1), Toast.LENGTH_SHORT).show();
-            }
-        });
+        taskList.add(new CategoryModel(R.mipmap.task2, R.mipmap.shopping1, "05-01"));
+        taskList.add(new CategoryModel(R.mipmap.task1, R.mipmap.shopping2, "05-02"));
+        taskList.add(new CategoryModel(R.mipmap.task3, R.mipmap.shopping3, "05-03"));
+        taskList.add(new CategoryModel(R.mipmap.task2, R.mipmap.shopping1, "05-04"));
+        taskList.add(new CategoryModel(R.mipmap.task1, R.mipmap.shopping2, "05-05"));
+        taskList.add(new CategoryModel(R.mipmap.task3, R.mipmap.shopping3, "05-06"));
+        taskList.add(new CategoryModel(R.mipmap.task2, R.mipmap.shopping3, "05-07"));
+        View recentItem = null;
+        ViewHolder viewHolder = new ViewHolder();
+        LinearLayout rootview = new LinearLayout(this);
+        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(250,340);//SizeUtils.px2dip(this, 130),SizeUtils.px2dip(this, 160)250,330
+        param.setMargins(0, 0, 20, 0);
+        for (int i = 0; i < taskList.size(); i++) {
+            recentItem = LayoutInflater.from(this).inflate(R.layout.item_recent_task, null);
+            viewHolder.categoryImg = (ImageView) recentItem.findViewById(R.id.category_img);
+            viewHolder.userHead = (ImageView) recentItem.findViewById(R.id.user_head);
+            viewHolder.userRanking = (LabelView) recentItem.findViewById(R.id.user_ranking);
+            viewHolder.categoryImg.setImageResource(taskList.get(i).getImgId());
+            viewHolder.userHead.setImageResource(taskList.get(i).getImgId1());
+            viewHolder.userRanking.setText(taskList.get(i).getName());
+//            if(i == taskList.size() - 1){
+//                param.setMargins(0, 0, 0, 0);
+//            }
+            rootview.addView(recentItem, param);
+        }
+        recentTask.removeAllViews();
+        recentTask.addView(rootview);
     }
 
     @Override
@@ -154,5 +183,11 @@ public class UserTaskActivity extends AppCompatActivity implements View.OnClickL
         super.onBackPressed();
         this.finish();
         overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+    }
+
+    class ViewHolder{
+        public ImageView categoryImg;
+        public ImageView userHead;
+        public LabelView userRanking;
     }
 }

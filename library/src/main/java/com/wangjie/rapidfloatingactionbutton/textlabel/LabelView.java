@@ -250,8 +250,7 @@ public class LabelView extends View {
         canvas.rotate(degrees, size / 2f, size / 2f);
         float delta = isTop ? -(textHeight + mPadding * 2) / 2 : (textHeight + mPadding * 2) / 2;
         float textBaseY = size / 2 - (mTextPaint.descent() + mTextPaint.ascent()) / 2 + delta;
-        canvas.drawText(mTextAllCaps ? mTextContent.toUpperCase() : mTextContent,
-                getPaddingLeft() + (size - getPaddingLeft() - getPaddingRight()) / 2, textBaseY, mTextPaint);
+        canvas.drawText(mTextAllCaps ? mTextContent.toUpperCase() : mTextContent, getPaddingLeft() + (size - getPaddingLeft() - getPaddingRight()) / 2, textBaseY, mTextPaint);
         canvas.restore();
     }
 
@@ -260,8 +259,7 @@ public class LabelView extends View {
         canvas.rotate(degrees, size / 2f, size / 2f);
         float delta = isTop ? -size / 4 : size / 4;
         float textBaseY = size / 2 - (mTextPaint.descent() + mTextPaint.ascent()) / 2 + delta;
-        canvas.drawText(mTextAllCaps ? mTextContent.toUpperCase() : mTextContent,
-                getPaddingLeft() + (size - getPaddingLeft() - getPaddingRight()) / 2, textBaseY, mTextPaint);
+        canvas.drawText(mTextAllCaps ? mTextContent.toUpperCase() : mTextContent, getPaddingLeft() + (size - getPaddingLeft() - getPaddingRight()) / 2, textBaseY, mTextPaint);
         canvas.restore();
     }
 
@@ -288,10 +286,8 @@ public class LabelView extends View {
             if (specMode == MeasureSpec.AT_MOST) {
                 result = Math.min(result, specSize);
             }
-
             result = Math.max((int) mMinSize, result);
         }
-
         return result;
     }
 
