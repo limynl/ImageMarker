@@ -7,7 +7,9 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.lzy.imagepicker.ImagePicker;
 import com.lzy.imagepicker.view.CropImageView;
+import com.lzy.ninegrid.NineGridView;
 import com.team.imagemarker.utils.GlideImageLoader;
+import com.team.imagemarker.utils.imageloder.NineGridViewLoader;
 
 /**
  *
@@ -36,6 +38,11 @@ public class MyApplication extends Application{
          * 系统图片多选ImagePicker初始化
          */
         initImagePicker();
+
+        /**
+         * 九宫格图片展示及加载方式初始化
+         */
+        NineGridView.setImageLoader(new NineGridViewLoader());
 
     }
 

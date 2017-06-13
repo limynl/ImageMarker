@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@android:color/white">
+
+    <View
+        android:id="@+id/dividerTop"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="#E4E6E3" />
+
+    <com.team.imagemarker.utils.CircleImageView
+        android:id="@+id/avatar"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_below="@+id/dividerTop"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginBottom="10dp"
+        android:src="@mipmap/shopping1" />
+
+    <TextView
+        android:id="@+id/text_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/avatar"
+        android:layout_marginTop="2dp"
+        android:layout_toEndOf="@+id/avatar"
+        android:layout_toLeftOf="@+id/text_date"
+        android:layout_toStartOf="@+id/text_date"
+        android:text="Tom"
+        android:textColor="#827f93"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/text_job_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/text_name"
+        android:layout_below="@+id/text_name"
+        android:layout_marginBottom="5dp"
+        android:text="软件工程师"
+        android:textColor="#827f93" />
+
+    <TextView
+        android:id="@+id/text_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/dividerTop"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp"
+        android:text="2017-01-01 08:59:00"
+        android:textColor="#827f93" />
+
+    <com.team.imagemarker.utils.tag.TagGroup
+        android:id="@+id/hobby_tag"
+        android:layout_below="@+id/avatar"
+        android:layout_marginLeft="5dp"
+        style="@style/TagGroup" />
+
+    <TextView
+        android:id="@+id/hobby_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/hobby_tag"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="10dp"
+        android:text="这里显示内容，这里显示内容，这里显示内容，这里显示内容，这里显示内容"
+        android:textColor="#827f93" />
+
+    <com.lzy.ninegrid.NineGridView
+        android:id="@+id/hobby_img"
+        android:layout_below="@+id/hobby_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        app:ngv_maxSize="6"
+        app:ngv_gridSpacing="6dp"/>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/hobby_img"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:background="#ebebeb" />
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/view_likes"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_below="@+id/divider"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/ic_heart"
+        android:tint="#827f93"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/text_likes_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/view_likes"
+        android:layout_margin="4dp"
+        android:layout_toEndOf="@+id/view_likes"
+        android:text="24"
+        android:textColor="#827f93"
+        android:textSize="12sp"
+        android:visibility="gone"/>
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/view_chat"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_below="@+id/divider"
+        android:layout_marginLeft="100dp"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/ic_chat"
+        android:tint="#827f93"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/text_chat_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/view_chat"
+        android:layout_margin="4dp"
+        android:layout_toEndOf="@+id/view_chat"
+        android:text="20"
+        android:textColor="#827f93"
+        android:textSize="12sp"
+        android:visibility="gone"/>
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/view_settings"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/divider"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_more"
+        android:tint="#827f93"
+        android:visibility="gone"/>
+
+    <View
+        android:id="@+id/dividerBottom"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_below="@+id/view_likes"
+        android:background="#E4E6E3" />
+
+</RelativeLayout>

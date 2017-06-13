@@ -52,23 +52,23 @@
                         android:paddingRight="60dp"
                         android:paddingStart="60dp" />
 
-                    <com.wangjie.rapidfloatingactionbutton.expandingcollection.ECBackgroundSwitcherView
-                        android:id="@+id/ec_bg_switcher_element"
-                        android:layout_alignParentTop="true"
-                        android:layout_width="match_parent"
-                        android:layout_height="150dp"
-                        android:foreground="@drawable/background_gradient"
-                        android:visibility="gone"/>
+                    <!--<com.wangjie.rapidfloatingactionbutton.expandingcollection.ECBackgroundSwitcherView-->
+                        <!--android:id="@+id/ec_bg_switcher_element"-->
+                        <!--android:layout_alignParentTop="true"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="150dp"-->
+                        <!--android:foreground="@drawable/background_gradient"-->
+                        <!--android:visibility="gone"/>-->
 
-                    <com.wangjie.rapidfloatingactionbutton.expandingcollection.ECPagerView
-                        android:id="@+id/ec_pager_element"
-                        android:layout_width="match_parent"
-                        android:layout_height="130dp"
-                        android:layout_marginTop="45dp"
-                        ec:cardHeaderHeightExpanded="50dp"
-                        ec:cardHeight="100dp"
-                        ec:cardWidth="320dp"
-                        android:visibility="gone"/>
+                    <!--<com.wangjie.rapidfloatingactionbutton.expandingcollection.ECPagerView-->
+                        <!--android:id="@+id/ec_pager_element"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="130dp"-->
+                        <!--android:layout_marginTop="45dp"-->
+                        <!--ec:cardHeaderHeightExpanded="50dp"-->
+                        <!--ec:cardHeight="100dp"-->
+                        <!--ec:cardWidth="320dp"-->
+                        <!--android:visibility="gone"/>-->
 
                 </RelativeLayout>
 

@@ -381,4 +381,5 @@ public class MarkHomeActivity extends Activity implements View.OnClickListener{
     private void saveTags() {
 
     }
+
 }

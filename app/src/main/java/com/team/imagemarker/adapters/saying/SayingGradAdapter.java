@@ -5,11 +5,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.team.imagemarker.R;
+import com.team.imagemarker.utils.RoundAngleImageView;
 
 import java.util.List;
 
@@ -50,12 +50,13 @@ public class SayingGradAdapter extends BaseAdapter {
         if (convertView == null) {
             viewHolder = new ViewHolder();
             convertView = LayoutInflater.from(context).inflate(R.layout.saying_grid_img, parent, false);
-            viewHolder.sayingImg = (ImageView) convertView.findViewById(R.id.saying_img);
+            viewHolder.sayingImg = (RoundAngleImageView) convertView.findViewById(R.id.saying_img);
             convertView.setTag(viewHolder);
         }else{
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        String urlImg = list.get(position);
+        if(parent.getChildCount() == position){
+            String urlImg = list.get(position);
 //        NetworkImageView networkImageView = (NetworkImageView) viewHolder.sayingImg;
 //        networkImageView.setDefaultImageResId(R.drawable.ic_default_image);
 //        networkImageView.setErrorImageResId(R.drawable.ic_default_image);
@@ -63,15 +64,19 @@ public class SayingGradAdapter extends BaseAdapter {
 //            networkImageView.setImageUrl(urlImg, mImageLoader);
 //        }
 
-        Glide.with(context)
-                .load(urlImg)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .crossFade()
-                .into(viewHolder.sayingImg);
+            Glide.with(context)
+                    .load(urlImg)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(viewHolder.sayingImg);
+        }else{
+
+        }
+
+
         return convertView;
     }
 
     class ViewHolder{
-        ImageView sayingImg;
+        RoundAngleImageView sayingImg;
     }
 }

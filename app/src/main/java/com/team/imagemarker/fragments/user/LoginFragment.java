@@ -1,5 +1,7 @@
 package com.team.imagemarker.fragments.user;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
@@ -16,12 +18,18 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
+import com.android.volley.VolleyError;
+import com.google.gson.Gson;
 import com.mob.tools.utils.UIHandler;
 import com.team.imagemarker.R;
 import com.team.imagemarker.activitys.home.HomeActivity;
 import com.team.imagemarker.activitys.user.UserResetPassActivity;
+import com.team.imagemarker.db.UserDbHelper;
+import com.team.imagemarker.entitys.UserModel;
 import com.team.imagemarker.utils.EditTextWithDel;
 import com.team.imagemarker.utils.PaperButton;
+import com.team.imagemarker.utils.volley.VolleyListenerInterface;
+import com.team.imagemarker.utils.volley.VolleyRequestUtil;
 import com.tencent.connect.UserInfo;
 import com.tencent.connect.auth.QQToken;
 import com.tencent.connect.common.Constants;
@@ -36,6 +44,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
@@ -51,10 +62,11 @@ import cn.sharesdk.sina.weibo.SinaWeibo;
 public class LoginFragment extends Fragment implements View.OnClickListener, PlatformActionListener, Handler.Callback{
     private View view;
 
-    private EditTextWithDel userPhone, userPassword;
-    private PaperButton userLogin;
+    private EditTextWithDel userPhone, userPassword;//账号密码
+    private PaperButton userLogin;//登录
     private LinearLayout resetPassword;
-    private RadioButton qqLogin, wechatLogin, sinaLogin;
+    private RadioButton qqLogin, wechatLogin, sinaLogin;//第三方登录
+    private Dialog dialog;
 
     private static final int MSG_TOAST = 1;
     private static final int MSG_ACTION_CCALLBACK = 2;
@@ -89,6 +101,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Pla
         qqLogin.setOnClickListener(this);
         wechatLogin.setOnClickListener(this);
         sinaLogin.setOnClickListener(this);
+        UserDbHelper.setInstance(getContext());
     }
 
     /**
@@ -103,8 +116,16 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Pla
 
     @Override
     public void onClick(View v) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         switch (v.getId()){
             case R.id.user_login:{//登录
+                dialog = new Dialog(getContext());
+                builder.setView(LayoutInflater.from(getContext()).inflate(R.layout.dialog_loading, null));
+                dialog = builder.create();
+//                UserLogin();
+                dialog.show();
+                Timer timer=new Timer();
+                timer.schedule(new wait(), 3000);
                 startActivity(new Intent(getActivity(), HomeActivity.class));
                 getActivity().overridePendingTransition(R.anim.slide_in_up,R.anim.slide_out_down);
             }
@@ -130,6 +151,55 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Pla
                 thirdSinaLogin();
             }
             break;
+        }
+    }
+
+    private void UserLogin() {
+        if(!userPhone.getText().toString().trim().equals("") || userPassword.getText().toString().trim().equals("")){
+            if(userPhone.getText().toString().length() == 11){
+                dialog.show();
+                String url = com.team.imagemarker.constants.Constants.USER_LOGIN;
+                Map<String, String> map = new HashMap<>();
+                map.put("phoneNumber", userPhone.getText().toString().trim());
+                map.put("passWord", userPassword.getText().toString().trim());
+                VolleyRequestUtil.RequestPost(getContext(), url, "login", map, new VolleyListenerInterface() {
+                    @Override
+                    public void onSuccess(String result) {
+                        Log.e("tag", "onSuccess: json字符串为：" + result.toString());
+                        try {
+                            JSONObject object = new JSONObject(result);
+                            String tag = object.optString("tag");
+                            if(tag.equals("success")){
+                                Gson gson = new Gson();
+                                UserModel userModel = gson.fromJson(object.optString("user"), UserModel.class);
+                                Log.e("tag", "onSuccess: " + userModel.toString());
+                                UserDbHelper.getInstance().saveUserLoginInfo(userModel);
+                                Log.e("tag", "onSuccess: 数据表：" + UserDbHelper.getInstance().getUserInfo().toString());
+
+                                Timer timer=new Timer();
+                                timer.schedule(new wait(), 2000);
+                                startActivity(new Intent(getActivity(), HomeActivity.class));
+                                getActivity().overridePendingTransition(R.anim.slide_in_up,R.anim.slide_out_down);
+                            }else{
+                                Toast.makeText(getContext(), "登录失败", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Toast.makeText(getContext(), "服务器连接错误", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onError(VolleyError error) {
+                        Toast.makeText(getContext(), "服务器连接错误", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+            }else{
+                Toast.makeText(getContext(), "电话号码格式不对，请重新输入", Toast.LENGTH_SHORT).show();
+            }
+        }else{
+            Toast.makeText(getContext(), "账号和密码不能为空", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -347,6 +417,14 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Pla
         @Override
         public void onCancel() {
             Toast.makeText(context, "授权取消", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    class wait extends TimerTask {
+
+        @Override
+        public void run() {
+            dialog.dismiss();
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.team.imagemarker.fragments.home;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -20,15 +21,21 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.team.imagemarker.R;
 import com.team.imagemarker.activitys.history.HistoryRecordActivity;
+import com.team.imagemarker.activitys.hobby.HobbyMainActivity;
 import com.team.imagemarker.activitys.imagscan.ImgScanMainActivity;
 import com.team.imagemarker.activitys.integral.IntegralActivity;
 import com.team.imagemarker.activitys.tasks.UserTaskActivity;
 import com.team.imagemarker.activitys.user.FeedBackActivity;
 import com.team.imagemarker.activitys.user.UpdateUserMessageActivity;
 import com.team.imagemarker.adapters.SharePopBaseAdapter;
+import com.team.imagemarker.db.UserDbHelper;
+import com.team.imagemarker.entitys.UserModel;
 import com.team.imagemarker.entitys.share.SharePopBean;
+import com.team.imagemarker.utils.CircleImageView;
 import com.team.imagemarker.utils.PaperButton;
 import com.team.imagemarker.utils.SlideSwitch;
 import com.team.imagemarker.utils.scrollview.TranslucentScrollView;
@@ -48,6 +55,9 @@ import cn.sharesdk.tencent.qq.QQ;
 
 public class UserCenterFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener, SlideSwitch.OnStateChangedListener{
     private View view;
+    private static final int UPDATE_USER_MESSAGE = 1;
+    private TextView tvName, tvIntegral;
+    private CircleImageView headImg;
 
     private TranslucentScrollView translucentScrollView;
     private View zoomView;
@@ -77,6 +87,10 @@ public class UserCenterFragment extends Fragment implements View.OnClickListener
         view = inflater.inflate(R.layout.fragment_user_center, null);
         popView=LayoutInflater.from(getActivity()).inflate(R.layout.share_grid,null);
 
+        tvName = (TextView) view.findViewById(R.id.tv_name);
+        tvIntegral = (TextView) view.findViewById(R.id.tv_fans);
+        headImg = (CircleImageView) view.findViewById(R.id.head_img);
+
         translucentScrollView = (TranslucentScrollView) view.findViewById(R.id.pullzoom_scrollview);
         zoomView = view.findViewById(R.id.lay_header);
 
@@ -99,6 +113,15 @@ public class UserCenterFragment extends Fragment implements View.OnClickListener
         super.onActivityCreated(savedInstanceState);
         setData();
         setShareApp();
+        UserDbHelper.setInstance(getContext());
+        UserModel userModel = UserDbHelper.getInstance().getUserInfo();
+        tvName.setText(TextUtils.isEmpty(userModel.getUserNickName()) ? "Limynl" : userModel.getUserNickName());
+        tvIntegral.setText(TextUtils.isEmpty(userModel.getIntegral() + "") ? "当前积分为：30" : ("当前积分为：" + userModel.getIntegral() + ""));
+        Glide.with(getContext())
+                .load(userModel.getUserHeadImage())
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(headImg);
+
     }
 
     private void setData() {
@@ -130,7 +153,7 @@ public class UserCenterFragment extends Fragment implements View.OnClickListener
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.to_update_user_message:{//用户信息修改
-                startActivity(new Intent(getActivity(), UpdateUserMessageActivity.class));
+                startActivityForResult(new Intent(getActivity(), UpdateUserMessageActivity.class), UPDATE_USER_MESSAGE);
                 getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             }
             break;
@@ -140,11 +163,11 @@ public class UserCenterFragment extends Fragment implements View.OnClickListener
             }
             break;
             case R.id.hobby_forum:{//兴趣论坛
-                Toast.makeText(getContext(), "兴趣论坛", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(getContext(), HobbyMainActivity.class));
+                getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             }
             break;
             case R.id.integral_mall:{
-                Toast.makeText(getContext(), "积分商城", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(getContext(), IntegralActivity.class));
                 getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             }
@@ -237,4 +260,13 @@ public class UserCenterFragment extends Fragment implements View.OnClickListener
         getActivity().getWindow().setAttributes(lp);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == UPDATE_USER_MESSAGE && resultCode == UPDATE_USER_MESSAGE && data != null){
+            Bundle bundle = data.getExtras();
+            tvName.setText(bundle.getString("userNick"));
+            headImg.setImageBitmap((Bitmap) bundle.getParcelable("userHead"));
+        }
+    }
 }

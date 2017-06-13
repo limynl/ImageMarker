@@ -50,7 +50,7 @@
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:layout_marginTop="5dp"
-            style="@style/TagGroup"/>
+            style="@style/TagGroup" />
 
         <com.team.imagemarker.utils.WavyLineView
             android:id="@+id/release_wavyLine"

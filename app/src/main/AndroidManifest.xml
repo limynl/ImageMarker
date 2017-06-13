@@ -11,6 +11,7 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.VIBRATE"/>
 
     <application
         android:name=".app.MyApplication"
@@ -93,7 +94,9 @@
         <activity android:name=".activitys.integral.IntegralActivity" />
         <activity
             android:name=".activitys.integral.LuckDrawActivity"
-            android:theme="@style/LuckDrawActivity"/>
+            android:theme="@style/LuckDrawActivity" />
+        <activity android:name=".activitys.hobby.HobbyMainActivity" />
+        <activity android:name=".activitys.hobby.HobbySelectActivity"></activity>
     </application>
 
 </manifest>

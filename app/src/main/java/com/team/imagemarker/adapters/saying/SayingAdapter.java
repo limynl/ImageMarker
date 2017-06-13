@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,7 +15,6 @@ import com.team.imagemarker.R;
 import com.team.imagemarker.constants.Constants;
 import com.team.imagemarker.entitys.saying.SayingModel;
 import com.team.imagemarker.utils.CircleImageView;
-import com.team.imagemarker.utils.MyGridView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,7 +68,7 @@ public class SayingAdapter extends BaseAdapter {
             viewHolder.sendTime = (TextView) convertView.findViewById(R.id.send_time);
             viewHolder.deleteSaying = (ImageView) convertView.findViewById(R.id.delete_saying);
             viewHolder.sayingContent = (TextView) convertView.findViewById(R.id.saying_content);
-            viewHolder.gridView = (MyGridView) convertView.findViewById(R.id.saying_imgs);
+            viewHolder.gridView = (GridView) convertView.findViewById(R.id.saying_imgs);
             convertView.setTag(viewHolder);
         }else{
             viewHolder = (ViewHolder) convertView.getTag();
@@ -154,7 +154,7 @@ public class SayingAdapter extends BaseAdapter {
         TextView sendTime;
         ImageView deleteSaying;
         TextView sayingContent;
-        MyGridView gridView;
+        GridView gridView;
     }
 
 }

@@ -42,9 +42,12 @@ dependencies {
     compile 'com.android.support:palette-v7:24.2.1'
     compile 'com.lzy.widget:ninegridview:0.2.0'
     compile 'com.lzy.widget:imagepicker:0.3.2'
+    compile 'com.jcodecraeer:xrecyclerview:1.2.7'
+//    compile 'com.nineoldandroids:library:2.4.0'
+//    compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.github.armcha:SpaceNavigationView:1.4.1'
-//    compile 'com.yalantis:contextmenu:1.0.7'
-    compile 'jp.wasabeef:glide-transformations:2.0.0'
+    //    compile 'com.yalantis:contextmenu:1.0.7'
+//    compile 'jp.wasabeef:glide-transformations:2.0.0'
     compile files('libs/glide-3.7.0.jar')
     compile project(':library')
     compile files('libs/MobCommons-2016.1107.1809.jar')
@@ -57,4 +60,5 @@ dependencies {
     compile files('libs/ShareSDK-Wechat-2.7.10.jar')
     compile files('libs/libammsdk.jar')
     compile files('libs/volley.jar')
+    compile files('libs/gson-2.7.jar')
 }

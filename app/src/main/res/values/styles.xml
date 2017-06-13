@@ -154,4 +154,18 @@
         <item name="android:windowCloseOnTouchOutside">true</item>
     </style>
 
+    <!--兴趣：顶部两个tab样式-->
+    <style name="found_button_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingTop">9dp</item>
+        <item name="android:paddingBottom">9dp</item>
+        <item name="android:paddingLeft">23dp</item>
+        <item name="android:paddingRight">23dp</item>
+        <item name="android:button">@android:color/transparent</item>
+    </style>
+
 </resources>

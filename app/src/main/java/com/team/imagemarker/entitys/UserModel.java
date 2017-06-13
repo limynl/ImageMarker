@@ -7,21 +7,21 @@ package com.team.imagemarker.entitys;
 
 public class UserModel {
     //用户id
-    private int id;
+    private int id;//
     //用户登陆用的电话号码
-    private String phoneNumber;
+    private String phoneNumber;//
     //用户密码
     private String passWord;
     //用户头像地址
-    private String userHeadImage;
+    private String userHeadImage;//
     //用户昵称
-    private String userNickName;
+    private String userNickName;//
     //用户性别
-    private String userSex;
+    private String userSex;//
     //用户年龄
-    private String userAge;
+    private String userAge;//
     //用户兴趣
-    private String userHobby;
+    private String userHobby;//
     //积分
     private int integral;
     //用户登陆状态
@@ -154,5 +154,24 @@ public class UserModel {
 
     public void setPushFlag(String pushFlag) {
         PushFlag = pushFlag;
+    }
+
+    @Override
+    public String toString() {
+        return "UserModel{" +
+                "id=" + id +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", passWord='" + passWord + '\'' +
+                ", userHeadImage='" + userHeadImage + '\'' +
+                ", userNickName='" + userNickName + '\'' +
+                ", userSex='" + userSex + '\'' +
+                ", userAge='" + userAge + '\'' +
+                ", userHobby='" + userHobby + '\'' +
+                ", integral=" + integral +
+                ", userFlag='" + userFlag + '\'' +
+                ", num=" + num +
+                ", otherLogin='" + otherLogin + '\'' +
+                ", PushFlag='" + PushFlag + '\'' +
+                '}';
     }
 }

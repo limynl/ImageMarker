@@ -17,6 +17,10 @@ import java.io.File;
  */
 
 public class GlideImageLoader implements ImageLoader {
+
+    /**
+     * 多选图片加载
+     */
     @Override
     public void displayImage(Activity activity, String path, ImageView imageView, int width, int height) {
         Glide.with(activity)                             //配置上下文

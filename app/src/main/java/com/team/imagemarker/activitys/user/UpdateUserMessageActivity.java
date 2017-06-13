@@ -19,7 +19,6 @@ import android.provider.MediaStore;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Base64;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,19 +35,33 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.VolleyError;
+import com.google.gson.Gson;
 import com.team.imagemarker.R;
 import com.team.imagemarker.bases.BaseListAdapter;
+import com.team.imagemarker.constants.Constants;
+import com.team.imagemarker.db.UserDbHelper;
+import com.team.imagemarker.entitys.UserModel;
 import com.team.imagemarker.utils.CircleImageView;
 import com.team.imagemarker.utils.CommonAdapter;
 import com.team.imagemarker.utils.CropOption;
 import com.team.imagemarker.utils.MyGridView;
 import com.team.imagemarker.utils.PaperButton;
 import com.team.imagemarker.utils.ViewHolder;
+import com.team.imagemarker.utils.volley.VolleyListenerInterface;
+import com.team.imagemarker.utils.volley.VolleyRequestUtil;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static com.tencent.open.utils.Global.getContext;
 
 
 /**
@@ -57,6 +70,7 @@ import java.util.List;
  */
 
 public class UpdateUserMessageActivity extends Activity implements View.OnClickListener{
+    private static final int UPDATE_USER_MESSAGE = 1;
     private RelativeLayout titleBar;
     private TextView title;
     private ImageView leftIcon, rightIcon;
@@ -96,6 +110,7 @@ public class UpdateUserMessageActivity extends Activity implements View.OnClickL
     private final int CROP_FROM_CAMERA = 3;//剪切图片
     private Uri imgUri; // 用于存储图片
     private byte[] bitmapByte;//用户头像的byte数组
+    private static Bitmap userHeadBitmap;
     private String userHeadPhoto;//用户的头像字节数据流
 
     //更新父表与子表中的数据
@@ -151,6 +166,9 @@ public class UpdateUserMessageActivity extends Activity implements View.OnClickL
         initData();
         //显示PopupWindow
         setPopupWindow();
+
+        UserDbHelper.setInstance(this);
+        UserModel userModel = UserDbHelper.getInstance().getUserInfo();
 
     }
 
@@ -255,19 +273,88 @@ public class UpdateUserMessageActivity extends Activity implements View.OnClickL
                 }
                 String userHobbyContent = "";
                 for (int i = 0; i < parentList.size(); i++) {
-                    userHobbyContent += parentList.get(i).toString().trim() + " ";
+                    userHobbyContent += parentList.get(i).toString().trim() + "-";
                 }
                 userHobby.setText(userHobbyContent);
                 popupWindow.dismiss();
             }
             break;
             case R.id.user_message_submit:{
-                Toast.makeText(this, "用户信息提交", Toast.LENGTH_SHORT).show();
-                this.finish();
-                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+//                Log.e("tag", "onClick: 用户的头像地址为：" + userHeadPhoto.toString());
+                UserModel userModel = new UserModel();
+                userModel.setId(UserDbHelper.getInstance().getInegerConfig("userId"));
+                userModel.setUserNickName(userNick.getText().toString().trim());
+                userModel.setUserAge(userAge.getText().toString().trim());
+                userModel.setUserSex(userSex.getText().toString().trim());
+                userModel.setPhoneNumber(userPhone.getText().toString().trim());
+                userModel.setUserHobby(userHobby.toString().trim());
+                userModel.setUserHeadImage(userHeadPhoto);
+                userModel.setPassWord(UserDbHelper.getInstance().getStringConfig("userPassword"));
+                userModel.setIntegral(UserDbHelper.getInstance().getInegerConfig("userIntegral"));
+                userModel.setNum(UserDbHelper.getInstance().getInegerConfig("userTaskNum"));
+                userModel.setUserFlag(UserDbHelper.getInstance().getStringConfig("userFlag"));
+                userModel.setPushFlag(UserDbHelper.getInstance().getStringConfig("PushFlag"));
+                userModel.setOtherLogin(UserDbHelper.getInstance().getStringConfig("OtherLogin"));
+                Gson gson = new Gson();
+                String userInfo = gson.toJson(userModel);
+                //这里发往服务器
+                sendUserInfo(userInfo);
+
+//                Toast.makeText(UpdateUserMessageActivity.this, "修改成功", Toast.LENGTH_SHORT).show();
+//                Intent intent = new Intent();
+//                Bundle bundle = new Bundle();
+//                bundle.putString("userNick", userNick.getText().toString().trim());
+//                bundle.putParcelable("userHead", userHeadBitmap == null ? null : userHeadBitmap);
+//                intent.putExtras(bundle);
+//                Toast.makeText(UpdateUserMessageActivity.this, "信息修改成功", Toast.LENGTH_SHORT).show();
+//                UpdateUserMessageActivity.this.setResult(UPDATE_USER_MESSAGE, intent);
+//                UpdateUserMessageActivity.this.finish();
+//                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
             }
             break;
         }
+    }
+
+    private void sendUserInfo(String userInfo) {
+        String url = Constants.USER_UPDATE_MESSAGE;
+        Map<String, String> map = new HashMap<>();
+        map.put("user", userInfo);
+        VolleyRequestUtil.RequestPost(getContext(), url, "login", map, new VolleyListenerInterface() {
+            @Override
+            public void onSuccess(String result) {
+                try {
+                    JSONObject object = new JSONObject(result);
+                    String tag = object.optString("tag");
+                    if(tag.equals("success")){
+                        Toast.makeText(UpdateUserMessageActivity.this, "修改成功", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent();
+                        Bundle bundle = new Bundle();
+                        bundle.putString("userNick", userNick.getText().toString().trim());
+                        bundle.putParcelable("userHead", userHeadBitmap == null ? null : userHeadBitmap);
+                        intent.putExtras(bundle);
+                        Toast.makeText(UpdateUserMessageActivity.this, "信息修改成功", Toast.LENGTH_SHORT).show();
+                        UpdateUserMessageActivity.this.setResult(UPDATE_USER_MESSAGE, intent);
+                        UpdateUserMessageActivity.this.finish();
+                        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+                    }else{
+                        Toast.makeText(UpdateUserMessageActivity.this, "修改失败", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Toast.makeText(UpdateUserMessageActivity.this, "服务器连接错误", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onError(VolleyError error) {
+                Toast.makeText(UpdateUserMessageActivity.this, "服务器连接错误", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+
+
+
     }
 
     /**
@@ -554,8 +641,7 @@ public class UpdateUserMessageActivity extends Activity implements View.OnClickL
         }
 
         @Override
-        public View getView(final int position, View convertView,
-                            ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
             ViewHolder holder;
             if (convertView == null) {
                 holder = new ViewHolder();
@@ -677,14 +763,14 @@ public class UpdateUserMessageActivity extends Activity implements View.OnClickL
     private void setCropImg(Intent picData){
         Bundle bundle = picData.getExtras();
         if (bundle != null){
-            Bitmap userHeadBitmap = bundle.getParcelable("data");
+            userHeadBitmap = bundle.getParcelable("data");
             userHeadImg.setImageBitmap(userHeadBitmap);
             try {
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 userHeadBitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);//将bitmap一字节流输出 Bitmap.CompressFormat.PNG 压缩格式，100：压缩率，baos：字节流
                 bitmapByte = baos.toByteArray();
                 userHeadPhoto = Base64.encodeToString(bitmapByte, 0, bitmapByte.length, Base64.DEFAULT);//将图片的字节流数据加密成base64字符输出
-                Log.e("lmy", "setCropImg: " + userHeadPhoto);
+//                Log.e("lmy", "setCropImg: " + userHeadPhoto);
                 baos.close();
             } catch (Exception e) {
                 e.printStackTrace();

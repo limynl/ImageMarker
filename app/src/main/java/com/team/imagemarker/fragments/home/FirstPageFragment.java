@@ -11,14 +11,8 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.team.imagemarker.R;
 import com.team.imagemarker.activitys.home.MoreCategoryActivity;
@@ -34,19 +28,12 @@ import com.team.imagemarker.entitys.CardItem;
 import com.team.imagemarker.entitys.home.CategoryModel;
 import com.team.imagemarker.utils.MyGridView;
 import com.team.imagemarker.utils.marker.FadeTransitionImageView;
-import com.team.imagemarker.viewpager.firstpager.CardData;
-import com.team.imagemarker.viewpager.firstpager.CommentArrayAdapter;
-import com.team.imagemarker.viewpager.firstpager.ExampleDataset;
 import com.wangjie.androidbucket.utils.ABTextUtil;
 import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionButton;
 import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionHelper;
 import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionLayout;
 import com.wangjie.rapidfloatingactionbutton.contentimpl.labellist.RFACLabelItem;
 import com.wangjie.rapidfloatingactionbutton.contentimpl.labellist.RapidFloatingActionContentLabelList;
-import com.wangjie.rapidfloatingactionbutton.expandingcollection.ECBackgroundSwitcherView;
-import com.wangjie.rapidfloatingactionbutton.expandingcollection.ECCardData;
-import com.wangjie.rapidfloatingactionbutton.expandingcollection.ECPagerView;
-import com.wangjie.rapidfloatingactionbutton.expandingcollection.ECPagerViewAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +50,7 @@ public class FirstPageFragment extends Fragment implements RapidFloatingActionCo
     private View view;
 //    private SwipeRefreshLayout refreshLayout;
 
-    private ECPagerView ecPagerView;
+//    private ECPagerView ecPagerView;
 
 //    private RelativeLayout titleBar;
 //    private TextView title;
@@ -139,7 +126,7 @@ public class FirstPageFragment extends Fragment implements RapidFloatingActionCo
 //        refreshLayout.setProgressBackgroundColor(R.color.theme);
 //        refreshLayout.setOnRefreshListener(this);
 
-        setTopViewPager();
+//        setTopViewPager();
         setFlaotButton();//设置悬浮按钮
         setSystemDate();//设置系统推送数据
         setHobbyDate();//设置兴趣推送数据
@@ -148,7 +135,7 @@ public class FirstPageFragment extends Fragment implements RapidFloatingActionCo
     /**
      * 设置顶部ViewPager
      */
-    private void setTopViewPager() {
+    /*private void setTopViewPager() {
         ECPagerViewAdapter adapter = new ECPagerViewAdapter(getActivity(), new ExampleDataset().getDataset()) {
             @Override
             public void instantiateCard(LayoutInflater inflaterService, ViewGroup head, ListView list, final ECCardData data) {
@@ -186,7 +173,7 @@ public class FirstPageFragment extends Fragment implements RapidFloatingActionCo
         ecPagerView = (ECPagerView) view.findViewById(R.id.ec_pager_element);
         ecPagerView.setPagerViewAdapter(adapter);
         ecPagerView.setBackgroundSwitcherView((ECBackgroundSwitcherView) view.findViewById(R.id.ec_bg_switcher_element));//设置背景转换
-    }
+    }*/
 
     /**
      * 设置系统推送数据

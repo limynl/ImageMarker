@@ -199,13 +199,13 @@ public class ImageNavFragment extends Fragment implements View.OnClickListener, 
     private void setSelectCategory() {
         selectCategoryList = new ArrayList<SelectCategoryModel>();
         List<CateGoryInfo> itemList = new ArrayList<>();
-        itemList.add(new CateGoryInfo("标题一", "http://139.199.23.142:8080/TestShowMessage1/marker/navbanner/banner1.jpg"));
-        itemList.add(new CateGoryInfo("标题二", "http://139.199.23.142:8080/TestShowMessage1/marker/navbanner/banner2.jpg"));
-        itemList.add(new CateGoryInfo("标题三", "http://139.199.23.142:8080/TestShowMessage1/marker/navbanner/banner3.jpg"));
-        itemList.add(new CateGoryInfo("标题四", "http://139.199.23.142:8080/TestShowMessage1/marker/navbanner/banner4.jpg"));
-        itemList.add(new CateGoryInfo("标题五", "http://139.199.23.142:8080/TestShowMessage1/marker/navbanner/banner5.jpg"));
-        itemList.add(new CateGoryInfo("标题六", "http://139.199.23.142:8080/TestShowMessage1/marker/navbanner/banner1.jpg"));
-        itemList.add(new CateGoryInfo("标题七", "http://139.199.23.142:8080/TestShowMessage1/marker/navbanner/banner2.jpg"));
+        itemList.add(new CateGoryInfo("标题一", "http://obs.myhwclouds.com/look.admin.image/华为/2017-5-21/天空-云朵-船-树-湖水.jpg"));
+        itemList.add(new CateGoryInfo("标题二", "http://obs.myhwclouds.com/look.admin.image/华为/2017-5-20/笔记本电脑-桌子-鼠标-手机.jpg"));
+        itemList.add(new CateGoryInfo("标题三", "http://obs.myhwclouds.com/look.admin.image/华为/2017-5-20/笔记本电脑-椅子-眼睛-桌子.jpg"));
+        itemList.add(new CateGoryInfo("标题四", "http://obs.myhwclouds.com/look.admin.image/华为/2017-5-20/笔记本电脑-水杯-桌子-手机.jpg"));
+        itemList.add(new CateGoryInfo("标题五", "http://obs.myhwclouds.com/look.admin.image/华为/2017-5-20/笔记本电脑-计算机-树木-草坪.jpg"));
+        itemList.add(new CateGoryInfo("标题六", "http://obs.myhwclouds.com/look.admin.image/华为/2017-5-20/键盘-鼠标-桌子.jpg"));
+        itemList.add(new CateGoryInfo("标题七", "http://obs.myhwclouds.com/look.admin.image/华为/2017-5-22/剪刀.jpg"));
         selectCategoryList.add(new SelectCategoryModel("主标题一", itemList));
         selectCategoryList.add(new SelectCategoryModel("主标题二", itemList));
         selectCategoryList.add(new SelectCategoryModel("主标题三", itemList));

@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.team.imagemarker.R;
+import com.team.imagemarker.constants.Constants;
 import com.team.imagemarker.utils.EditTextWithDel;
 import com.team.imagemarker.utils.PaperButton;
 import com.team.imagemarker.utils.volley.VolleyListenerInterface;
@@ -91,6 +92,10 @@ public class RegisterFragment extends Fragment implements View.OnClickListener{
                     if(!TextUtils.isEmpty(userPassword.getText().toString().trim())){
                         if(userPhone.getText().toString().trim().length() == 11){
                             isRegister(userPhone.getText().toString().trim());
+//                            iPhone = userPhone.getText().toString().trim();
+//                            SMSSDK.getVerificationCode("86", iPhone);//向服务器请求发送验证码
+//                            userCode.requestFocus();
+//                            registerUser();
                         }else{
                             Toast.makeText(getActivity(), "电话号码的位数不对", Toast.LENGTH_SHORT).show();
                             userPhone.requestFocus();
@@ -180,7 +185,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener{
             Object data = msg.obj;
             if (result == SMSSDK.RESULT_COMPLETE) {//回调完成
                 if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {//提交验证码成功,验证通过
-//                    handlerText.sendEmptyMessage(2);
+                    handlerText.sendEmptyMessage(2);
                     Toast.makeText(getActivity(), "注册成功", Toast.LENGTH_SHORT).show();
                     registerUser();//将用户的注册信息传至后台进行保存
                 } else if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE){//服务器验证码发送成功
@@ -210,7 +215,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener{
      * 判断该号码是否已经注册过
      */
     private void isRegister(String phoneNumber){
-        String url = "";
+        String url = Constants.USER_PHONE_JUDGE;
         Map<String, String> map = new HashMap<>();
         map.put("phoneNumber", phoneNumber);
 
@@ -223,7 +228,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener{
                     String tag = object.optString("tag");
                     if(tag.equals("success")){
                         iPhone = userPhone.getText().toString().trim();
-                        SMSSDK.getVerificationCode("86", iPhone);//向服务器请求发送验证码
+                        SMSSDK.getVerificationCode("86", userPhone.getText().toString().trim());//向服务器请求发送验证码
                         userCode.requestFocus();
                     }else{
                         Toast.makeText(getContext(), "该号码已经被成册了", Toast.LENGTH_SHORT).show();
@@ -244,7 +249,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener{
      * 注册用户的信息
      */
     private void registerUser(){
-        String url = "";
+        String url = Constants.USER_REGISTER;
         Toast.makeText(getContext(), "用户的信息注册成功", Toast.LENGTH_SHORT).show();
         Map<String, String> map = new HashMap<>();
         map.put("phoneNumber", userPhone.getText().toString().trim());

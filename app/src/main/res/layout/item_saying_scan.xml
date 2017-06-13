@@ -2,11 +2,11 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_marginBottom="3dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
@@ -20,7 +20,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_margin="3dp"
             android:orientation="vertical">
 
@@ -83,35 +83,56 @@
                 android:layout_marginTop="2dp"
                 android:background="#e6e6e6" />
 
-            <RelativeLayout
+            <TextView
+                android:id="@+id/saying_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
+                android:layout_marginBottom="4dip"
                 android:layout_marginLeft="2dp"
                 android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp">
+                android:lineSpacingExtra="2dip"
+                android:text="发表说说，发表说说，发表说说，发表说说，发表说说，发表说说，发表说说，发表说说，发表说说，发表说说，发表说说，发表说说，"
+                android:textColor="#424242"
+                android:textSize="15sp"/>
 
-                <TextView
-                    android:id="@+id/saying_content"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="4dip"
-                    android:lineSpacingExtra="2dip"
-                    android:text="发表说说，发表说说，发表说说，发表说说，发表说说，发表说说，发表说说，发表说说，发表说说，发表说说，发表说说，发表说说，"
-                    android:textColor="#424242"
-                    android:textSize="15sp"/>
+            <GridView
+                android:id="@+id/saying_imgs"
+                android:layout_below="@+id/saying_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:background="#ffffff"
+                android:cacheColorHint="#00000000"
+                android:stretchMode="columnWidth"
+                android:numColumns="3"
+                android:horizontalSpacing="2dp"
+                android:verticalSpacing="2dp"
+                android:scrollbars="none"
+                android:transcriptMode="alwaysScroll"/>
 
-                <com.team.imagemarker.utils.MyGridView
-                    android:id="@+id/saying_imgs"
-                    android:layout_below="@+id/saying_content"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:background="#ffffff"
-                    android:cacheColorHint="#00000000"
-                    android:numColumns="3"
+            <!--<RelativeLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="center_vertical"-->
+                <!--android:layout_marginLeft="2dp"-->
+                <!--android:layout_marginTop="5dp"-->
+                <!--android:layout_marginBottom="5dp">-->
 
-                    android:verticalSpacing="2dp" />
+                <!---->
+
+                <!--<com.team.imagemarker.utils.MyGridView-->
+                    <!--android:id="@+id/saying_imgs"-->
+                    <!--android:layout_below="@+id/saying_content"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginTop="5dp"-->
+                    <!--android:background="#ffffff"-->
+                    <!--android:cacheColorHint="#00000000"-->
+                    <!--android:numColumns="3"-->
+                    <!--android:scrollbars="none"-->
+                    <!--android:horizontalSpacing="2dp"-->
+                    <!--android:verticalSpacing="2dp" />-->
                 <!--android:scrollbars="none"
                     android:transcriptMode="alwaysScroll"-->
 
@@ -142,7 +163,7 @@
 
                     <!--</RelativeLayout>-->
 
-            </RelativeLayout>
+            <!--</RelativeLayout>-->
 
             <RelativeLayout
                 android:layout_width="match_parent"
