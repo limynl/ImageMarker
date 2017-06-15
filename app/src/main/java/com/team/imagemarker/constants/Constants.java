@@ -8,7 +8,7 @@ import android.graphics.Color;
  */
 
 public class Constants {
-    public static int USER_ID = 1;//用户id
+    public static int USER_ID = 520;//用户id
 //    public static final String HOST_IP = "http://139.199.23.142";//服务器地址
     public static final String HOST_IP = "http://192.168.43.204";//服务器地址
     public static final String HOST_PORT = ":8080";//端口号

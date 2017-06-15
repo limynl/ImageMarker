@@ -27,7 +27,6 @@ import com.team.imagemarker.utils.volley.VolleyListenerInterface;
 import com.team.imagemarker.utils.volley.VolleyRequestUtil;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -89,7 +88,7 @@ public class HotPointFragment extends Fragment implements View.OnClickListener{
             @Override
             public void onSuccess(String result) {
                 try {
-                    JSONObject object = new JSONObject(result);
+                    JSONObject object = new JSONObject(new String( result.getBytes("ISO-8859-1"),"UTF-8"));
                     String tag = object.optString("tag");
                     if (tag.equals("success")){
                         JSONArray jsonArray = object.optJSONArray("result");
@@ -114,7 +113,7 @@ public class HotPointFragment extends Fragment implements View.OnClickListener{
                     }else{
                         Toast.makeText(getContext(), "互数据接受错误", Toast.LENGTH_SHORT).show();
                     }
-                } catch (JSONException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }

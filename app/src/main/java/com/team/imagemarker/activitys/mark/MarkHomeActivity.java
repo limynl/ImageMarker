@@ -3,32 +3,41 @@ package com.team.imagemarker.activitys.mark;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
 import com.team.imagemarker.R;
+import com.team.imagemarker.entitys.MarkerModel;
 import com.team.imagemarker.entitys.marker.ItemEntity;
 import com.team.imagemarker.utils.marker.FadeTransitionImageView;
 import com.team.imagemarker.utils.marker.HorizontalTransitionLayout;
 import com.team.imagemarker.utils.marker.PileLayout;
 import com.team.imagemarker.utils.tag.TagColor;
 import com.team.imagemarker.utils.tag.TagGroup;
+import com.team.imagemarker.utils.volley.VolleyListenerInterface;
+import com.team.imagemarker.utils.volley.VolleyRequestUtil;
+import com.team.loading.SweetAlertDialog;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -62,6 +71,7 @@ public class MarkHomeActivity extends Activity implements View.OnClickListener{
     private Dialog dialogOne, dialogTwo;
 
     private String pageFlag;//页面标志，用于判断是哪一个界面进入的
+    private MarkerModel item;//用于最后提交的图片对象
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,7 +107,14 @@ public class MarkHomeActivity extends Activity implements View.OnClickListener{
         }else if(pageFlag.equals("noCompleteHistory")){//历史记录未完成，继续打标签
             dataList = (List<ItemEntity>) bundle.getSerializable("noCompleteData");
         }else if(pageFlag.equals("firstPage")){
-            initDataList();//接受需要打标签的图片数据
+            item = (MarkerModel) bundle.getSerializable("item");
+            dataList.add(new ItemEntity(item.getImageUrl1(), item.getLabel1().equals("") ? new String[]{} : item.getLabel1().split(",")));
+            dataList.add(new ItemEntity(item.getImageUrl2(), item.getLabel2().equals("") ? new String[]{} : item.getLabel1().split(",")));
+            dataList.add(new ItemEntity(item.getImageUrl3(), item.getLabel3().equals("") ? new String[]{} : item.getLabel1().split(",")));
+            dataList.add(new ItemEntity(item.getImageUrl4(), item.getLabel4().equals("") ? new String[]{} : item.getLabel1().split(",")));
+            dataList.add(new ItemEntity(item.getImageUrl5(), item.getLabel5().equals("") ? new String[]{} : item.getLabel1().split(",")));
+            dataList.add(new ItemEntity(item.getImageUrl6(), item.getLabel6().equals("") ? new String[]{} : item.getLabel1().split(",")));
+//            initDataList();//接受需要打标签的图片数据
         }
         pileLayout.setAdapter(new Adapter());//设置底部图片滚动数据
     }
@@ -264,58 +281,46 @@ public class MarkHomeActivity extends Activity implements View.OnClickListener{
             }
             break;
             case R.id.sub_title:{
-                customDialog = LayoutInflater.from(this).inflate(R.layout.dialog_delete, null);
-                showMessage = (TextView) customDialog.findViewById(R.id.show_message);
-                dialogTitle = (TextView) customDialog.findViewById(R.id.dialog_title);
-                showMessage.setText("请选择操作类型");
-                dialogTitle.setText("图片标注");
-                delete = (Button) customDialog.findViewById(R.id.record_delete);
-                cancel = (Button) customDialog.findViewById(R.id.record_cancel);
-                delete.setText("提交");
-                cancel.setText("保存");
-                dialogOne = new Dialog(this);
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setView(customDialog);
-                dialogOne = builder.create();
-                dialogOne.show();
-                delete.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialogTwo = new Dialog(MarkHomeActivity.this);
-                        AlertDialog.Builder builder1 = new AlertDialog.Builder(MarkHomeActivity.this);
-                        dialogMessage = LayoutInflater.from(MarkHomeActivity.this).inflate(R.layout.dialog_alter, null);
-                        operateMessage = (TextView) dialogMessage.findViewById(R.id.operate_message);
-                        operateMessage.setText("提交成功");
-                        builder1.setView(dialogMessage);
-                        dialogTwo = builder1.create();
-                        dialogTwo.show();
-                        Timer timer = new Timer();
-                        timer.schedule(new Wait(), 1500);
+                new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                        .setTitleText("图片标记完成")
+                        .setContentText("请选择您的操作！")
+                        .setCancelText("提 交")
+                        .setConfirmText("保 存")
+                        .showConfirmButton(true)
+                        .showCancelButton(true)
+                        .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sDialog) {
+                                String imgUrl = "";
+                                submitTags(imgUrl);//提交操作
+                                sDialog.setTitleText("提交成功")
+                                        .setContentText("已赠送30积分到您的账户!")
+                                        .showConfirmButton(false)
+                                        .showCancelButton(false)
+                                        .setCancelClickListener(null)
+                                        .setConfirmClickListener(null)
+                                        .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+                                Timer timer=new Timer();
+                                timer.schedule(new wait(sDialog), 3000);
+                            }
+                        })
+                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sDialog) {
+//                                saveTags();//保存操作
+                                sDialog.setTitleText("保存成功")
+                                        .setContentText("您可以在历史记录中查询，并继续修改")
+                                        .setConfirmText("OK")
+                                        .showCancelButton(false)
+                                        .setCancelClickListener(null)
+                                        .setConfirmClickListener(null)
+                                        .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+                                Timer timer=new Timer();
+                                timer.schedule(new wait(sDialog), 3000);
 
-                        submitTags();//提交操作
-
-                        dialogOne.dismiss();
-                    }
-                });
-                cancel.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialogTwo = new Dialog(MarkHomeActivity.this);
-                        AlertDialog.Builder builder1 = new AlertDialog.Builder(MarkHomeActivity.this);
-                        dialogMessage = LayoutInflater.from(MarkHomeActivity.this).inflate(R.layout.dialog_alter, null);
-                        operateMessage = (TextView) dialogMessage.findViewById(R.id.operate_message);
-                        operateMessage.setText("保存成功");
-                        builder1.setView(dialogMessage);
-                        dialogTwo = builder1.create();
-                        dialogTwo.show();
-                        Timer timer = new Timer();
-                        timer.schedule(new Wait(), 1500);
-
-                        saveTags();//保存操作
-
-                        dialogOne.dismiss();
-                    }
-                });
+                            }
+                        })
+                        .show();
             }
             break;
         }
@@ -332,13 +337,16 @@ public class MarkHomeActivity extends Activity implements View.OnClickListener{
         public ImageView imageView;
     }
 
-    /**
-     * dialog延时
-     */
-    class Wait extends TimerTask {
+    class wait extends TimerTask {
+        private SweetAlertDialog sDialog;
+
+        public wait(SweetAlertDialog sDialog){
+            this.sDialog = sDialog;
+        }
+
         @Override
         public void run() {
-            dialogTwo.dismiss();
+            sDialog.dismiss();
         }
     }
 
@@ -369,17 +377,56 @@ public class MarkHomeActivity extends Activity implements View.OnClickListener{
     }
 
     /**
-     * 提交用户所打的标签
+     * 转换标签
      */
-    private void submitTags() {
-
+    private String changeTags(String[] tags){
+        StringBuffer buffer = new StringBuffer();
+        for (int i = 0; i < tags.length; i++) {
+            buffer.append(tags[i] + ",");
+        }
+        return buffer.toString().equals("") || buffer == null ? "" : buffer.deleteCharAt(buffer.length() - 1).toString();
     }
 
     /**
-     * 保存用户所打的标签
+     * 上传标签:提交、保存
      */
-    private void saveTags() {
+    private void submitTags(String url) {
+        for (ItemEntity itemImag : dataList){
+            if(itemImag.getTags().equals("") || itemImag.getTags() == null){
+                Toast.makeText(this, "您还有为标签化的图片，请全部完成后再提交!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
+        item.setLabel1(changeTags(dataList.get(0).getTags()));
+        item.setLabel2(changeTags(dataList.get(1).getTags()));
+        item.setLabel3(changeTags(dataList.get(2).getTags()));
+        item.setLabel4(changeTags(dataList.get(3).getTags()));
+        item.setLabel5(changeTags(dataList.get(4).getTags()));
+        item.setLabel6(changeTags(dataList.get(5).getTags()));
+        Log.e("tag", "submitTags: 用户提交的数据为: " + item.toString());
+        Gson gson = new Gson();
+        String imgMessage = gson.toJson(item);
+        Map<String, String> submitMap = new HashMap<String, String>();
+        submitMap.put("submitImgMessage", imgMessage);
+        VolleyRequestUtil.RequestPost(this, url, "submitImgMessage", submitMap, new VolleyListenerInterface() {
+            @Override
+            public void onSuccess(String result) {
+                try {
+                    JSONObject object = new JSONObject(result);
+                    String tag = object.optString("tag");
+                    if(tag.equals("success")){
+                        Toast.makeText(MarkHomeActivity.this, "上传成功", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
 
+            @Override
+            public void onError(VolleyError error) {
+
+            }
+        });
     }
 
 }

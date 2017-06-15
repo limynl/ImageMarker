@@ -8,8 +8,10 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.team.imagemarker.R;
-import com.team.imagemarker.entitys.home.CategoryModel;
+import com.team.imagemarker.entitys.MarkerModel;
 
 import java.util.List;
 
@@ -20,9 +22,9 @@ import java.util.List;
 
 public class SystemPushAdapter extends BaseAdapter {
     private Context context;
-    private List<CategoryModel> list;
+    private List<MarkerModel> list;
 
-    public SystemPushAdapter(Context context, List<CategoryModel> list) {
+    public SystemPushAdapter(Context context, List<MarkerModel> list) {
         this.context = context;
         this.list = list;
     }
@@ -56,10 +58,20 @@ public class SystemPushAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        CategoryModel model = list.get(position);
-        viewHolder.categoryImg.setImageResource(model.getImgId());
-        viewHolder.categoryName.setText(model.getName());
-        viewHolder.categorySimapleMessage.setText(model.getSimpleMessage());
+        MarkerModel model = list.get(position);
+        try {
+            Glide.with(context)
+                    .load(model.getImageUrl1())
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .thumbnail(0.8f)
+                    .into(viewHolder.categoryImg);
+//            new String( model.getImageUrl1().getBytes("ISO-8859-1"),"UTF-8")
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+//        viewHolder.categoryImg.setImageResource(model.getImageUrl1());
+        viewHolder.categoryName.setText("这是标题");
+        viewHolder.categorySimapleMessage.setText("这是简要信息");
         return convertView;
     }
 

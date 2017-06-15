@@ -20,13 +20,13 @@ public class NineGridViewLoader implements NineGridView.ImageLoader {
      */
     @Override
     public void onDisplayImage(Context context, ImageView imageView, String url) {
-        Glide.with(context)
-                .load(url)
-                .placeholder(R.drawable.ic_default_image)
-                .error(R.mipmap.default_image)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .thumbnail(0.2f)
-                .into(imageView);
+            Glide.with(context)
+                    .load(url)
+                    .placeholder(R.drawable.ic_default_image)
+                    .error(R.mipmap.default_image)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .thumbnail(0.2f)
+                    .into(imageView);
     }
 
     @Override

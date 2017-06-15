@@ -11,12 +11,22 @@ import java.util.Arrays;
  */
 
 public class ItemEntity implements Serializable{
+
     private String coverImageUrl;
     private String[] tags;
+
+    public ItemEntity(){
+
+    }
 
     public ItemEntity(JSONObject jsonObject) {
         this.coverImageUrl = jsonObject.optString("coverImageUrl");
         this.tags = jsonObject.optString("imgTag").equals("") ? new String[]{} : jsonObject.optString("imgTag").split(",");
+    }
+
+    public ItemEntity(String coverImageUrl, String[] tags){
+        this.coverImageUrl = coverImageUrl;
+        this.tags = tags;
     }
 
     public String getCoverImageUrl() {
