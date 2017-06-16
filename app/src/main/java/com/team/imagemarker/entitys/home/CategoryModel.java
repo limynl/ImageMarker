@@ -1,5 +1,9 @@
 package com.team.imagemarker.entitys.home;
 
+import com.team.imagemarker.entitys.MarkerModel;
+
+import java.util.List;
+
 /**
  * Created by Lmy on 2017/5/1.
  * email 1434117404@qq.com
@@ -13,6 +17,7 @@ public class CategoryModel {
 
     private String imgUrl;
     private String headUrl;
+    private List<MarkerModel> itemList;
 
     public CategoryModel() {
     }
@@ -27,6 +32,12 @@ public class CategoryModel {
         this.imgId = imgId;
         this.imgId1 = imgId1;
         this.name = name;
+    }
+
+    public CategoryModel(int imgId, List<MarkerModel> itemList, String cateGroyName){
+        this.imgId = imgId;
+        this.itemList = itemList;
+        this.name = cateGroyName;
     }
 
     public CategoryModel(String name, String simpleMessage, String imgUrl, String headUrl) {
@@ -82,5 +93,13 @@ public class CategoryModel {
 
     public void setHeadUrl(String headUrl) {
         this.headUrl = headUrl;
+    }
+
+    public List<MarkerModel> getItemList() {
+        return itemList;
+    }
+
+    public void setItemList(List<MarkerModel> itemList) {
+        this.itemList = itemList;
     }
 }

@@ -4,11 +4,7 @@
         android:startColor="#7ADFB8"
         android:endColor="#7ADFB8"
         android:centerColor="#7ADFB8"/>
-    <!-- 描边 -->
-    <stroke
-        android:width="0dp"
-        />
-    <corners android:radius="10dp"></corners>
-
+    <stroke android:width="0dp" />
+    <corners android:radius="10dp"/>
 
 </shape>

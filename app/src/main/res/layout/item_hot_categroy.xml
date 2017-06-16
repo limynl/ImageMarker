@@ -6,6 +6,7 @@
     android:background="@mipmap/image1">
     <!--android:foreground="@drawable/background_gradient"-->
 
+
     <ImageView
         android:id="@+id/background"
         android:layout_width="75dp"

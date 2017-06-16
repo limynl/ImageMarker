@@ -1,41 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/cardView"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardMaxElevation="5dp">
-    <!--app:cardUseCompatPadding="true"-->
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <RelativeLayout
+    <android.support.v7.widget.CardView
+        android:id="@+id/cardView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:cardPreventCornerOverlap="false"
+        app:cardCornerRadius="1dp"
+        app:cardMaxElevation="3dp">
+        <!--app:cardUseCompatPadding="true"-->
 
-        <View
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#88000000" />
+            android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/test_imageview"
-            android:layout_width="match_parent"
-            android:layout_height="170dp"
-            android:src="@mipmap/loginback"
-            android:scaleType="fitXY"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#88000000" />
 
-        <TextView
-            android:id="@+id/item_theme_title_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="7dp"
-            android:maxLines="1"
-            android:text="这是一句对图片的描述性文字"
-            android:textColor="#fff"
-            android:textSize="12sp"
-            android:visibility="gone"/>
+            <ImageView
+                android:id="@+id/test_imageview"
+                android:layout_width="match_parent"
+                android:layout_height="170dp"
+                android:src="@mipmap/loginback"
+                android:scaleType="fitXY"/>
 
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/item_theme_title_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="7dp"
+                android:maxLines="1"
+                android:text="这是一句对图片的描述性文字"
+                android:textColor="#fff"
+                android:textSize="12sp"
+                android:visibility="gone"/>
 
-</android.support.v7.widget.CardView>
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+</FrameLayout>

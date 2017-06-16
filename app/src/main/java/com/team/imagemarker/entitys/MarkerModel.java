@@ -38,35 +38,6 @@ public class MarkerModel implements Serializable {
     public MarkerModel() {
     }
 
-    /*public MarkerModel(JSONObject json){
-        this.userId = Constants.USER_ID;
-        this.id = json.optInt("id");
-        this.imageNum = json.optInt("imageNum");
-        this.imageId1 = json.optInt("imageId1");
-        this.imageId2 = json.optInt("imageId2");
-        this.imageId3 = json.optInt("imageId3");
-        this.imageId4 = json.optInt("imageId4");
-        this.imageId5 = json.optInt("imageId5");
-        this.imageId6 = json.optInt("imageId6");
-        try {
-            this.imageUrl1 = new String(json.optString("imageUrl1").getBytes("ISO-8859-1"),"UTF-8");
-            this.imageUrl2 = new String(json.optString("imageUrl2").getBytes("ISO-8859-1"),"UTF-8");
-            this.imageUrl3 = new String(json.optString("imageUrl3").getBytes("ISO-8859-1"),"UTF-8");
-            this.imageUrl4 = new String(json.optString("imageUrl4").getBytes("ISO-8859-1"),"UTF-8");
-            this.imageUrl5 = new String(json.optString("imageUrl5").getBytes("ISO-8859-1"),"UTF-8");
-            this.imageUrl6 = new String(json.optString("imageUrl6").getBytes("ISO-8859-1"),"UTF-8");
-
-            this.label1 = new String(json.optString("label1").getBytes("ISO-8859-1"),"UTF-8");
-            this.label2 = new String(json.optString("label2").getBytes("ISO-8859-1"),"UTF-8");
-            this.label3 = new String(json.optString("label3").getBytes("ISO-8859-1"),"UTF-8");
-            this.label4 = new String(json.optString("label4").getBytes("ISO-8859-1"),"UTF-8");
-            this.label5 = new String(json.optString("label5").getBytes("ISO-8859-1"),"UTF-8");
-            this.label6 = new String(json.optString("label6").getBytes("ISO-8859-1"),"UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-    }*/
-
     public int getUserId() {
         return userId;
     }

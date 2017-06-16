@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.team.imagemarker.R;
 import com.team.imagemarker.entitys.home.CategoryModel;
+import com.team.imagemarker.utils.CircleImageView;
 
 import java.util.List;
 
@@ -58,6 +59,7 @@ public class GridViewLikeAdapter extends BaseAdapter {
         if (convertView == null) {
             viewHolder = new ViewHolder();
             convertView = inflater.inflate(R.layout.item_category, null);
+            viewHolder.managerHead = (CircleImageView) convertView.findViewById(R.id.manager_head_img);
             viewHolder.categoryImg = (ImageView) convertView.findViewById(R.id.category_img);
             viewHolder.categoryName = (TextView) convertView.findViewById(R.id.category_name);
             viewHolder.categorySimapleMessage = (TextView) convertView.findViewById(R.id.category_simple_message);
@@ -67,6 +69,7 @@ public class GridViewLikeAdapter extends BaseAdapter {
         }
 
         CategoryModel model = datas.get(position + currentindex * pageSize);
+        viewHolder.managerHead.setVisibility(View.GONE);
         viewHolder.categoryImg.setImageResource(model.getImgId());
         viewHolder.categoryName.setText(model.getName());
         viewHolder.categorySimapleMessage.setText(model.getSimpleMessage());
@@ -74,6 +77,7 @@ public class GridViewLikeAdapter extends BaseAdapter {
     }
 
     class ViewHolder{
+        public CircleImageView managerHead;
         public ImageView categoryImg;
         public TextView categoryName;
         public TextView categorySimapleMessage;

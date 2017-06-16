@@ -80,7 +80,7 @@ public class FirstPageFragment extends Fragment implements RapidFloatingActionCo
 
     //兴趣推送
     private MyGridView hobbyGridView;
-    private List<CategoryModel> hobbyPushList = new ArrayList<>();
+    private static List<MarkerModel> hobbyPushList = new ArrayList<>();
     private SystemPushAdapter hobbyAdapter;
 
     private HobbyPushAdapter adapterHobby;
@@ -107,7 +107,8 @@ public class FirstPageFragment extends Fragment implements RapidFloatingActionCo
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getDataFromNet(null);//系统推送数据
+        getDataFromNetToSystemPush();//系统推送数据
+        getDataFromNetToHobbyPush();//兴趣爱好数据
         setDataToViewPager();//为ViewPager设置数据
         initAnimationListener();
 
@@ -150,7 +151,7 @@ public class FirstPageFragment extends Fragment implements RapidFloatingActionCo
 //        hobbyPushList.add(new CategoryModel(R.mipmap.system_push2, "这是标题", "这是简要信息"));
 //        hobbyPushList.add(new CategoryModel(R.mipmap.system_push3, "这是标题", "这是简要信息"));
 //        hobbyPushList.add(new CategoryModel(R.mipmap.system_push4, "这是标题", "这是简要信息"));
-        hobbyAdapter = new SystemPushAdapter(getActivity(), systemPushDatas);
+        hobbyAdapter = new SystemPushAdapter(getActivity(), hobbyPushList);
         hobbyGridView.setAdapter(hobbyAdapter);
         hobbyGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -158,7 +159,7 @@ public class FirstPageFragment extends Fragment implements RapidFloatingActionCo
                 Intent intent = new Intent(getContext(), MarkHomeActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("pageTag", "firstPage");
-                bundle.putSerializable("item", systemPushDatas.get(position));
+                bundle.putSerializable("item", hobbyPushList.get(position));
                 intent.putExtras(bundle);
                 startActivity(intent);
                 getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
@@ -171,17 +172,17 @@ public class FirstPageFragment extends Fragment implements RapidFloatingActionCo
      */
     private void setDataToViewPager() {
         cardPagerAdapter = new CardPagerAdapter(getContext());
-        cardPagerAdapter.addCardItem(new CardItem("http://img.hb.aicdn.com/5342e50c6b6876b7cfde7dcdc3f89b290997624f37c56-qoOZli_fw658", "这是一句说明性文字"));
-        cardPagerAdapter.addCardItem(new CardItem("http://img.hb.aicdn.com/04e84f35444738307f4acf872138daca92e4c4bb2abe0-KB7srY_fw658", "这是一句说明性文字"));
-        cardPagerAdapter.addCardItem(new CardItem("http://attachments.gfan.com/forum/attachments2/day_110422/1104222243bffe391469c3bee4.jpg", "这是一句说明性文字"));
-        cardPagerAdapter.addCardItem(new CardItem("http://img.hb.aicdn.com/226ce6243ae187c107e1a22cfa7cc0763fe2bda9908c4-8foxjv_fw658", "这是一句说明性文字"));
-        cardPagerAdapter.addCardItem(new CardItem("http://img.hb.aicdn.com/3c515a7e4fac799d7f62bf6be045d8a287cb16f214b91-Y8N5wB_fw658", "这是一句说明性文字"));
+        cardPagerAdapter.addCardItem(new CardItem("http://obs.myhwclouds.com/look.admin.image/华为/2017-5-20/笔记本电脑-计算机-树木-草坪.jpg", "这是一句说明性文字"));
+        cardPagerAdapter.addCardItem(new CardItem("http://obs.myhwclouds.com/look.admin.image/华为/2017-5-20/笔记本电脑-水杯-桌子-手机.jpg", "这是一句说明性文字"));
+        cardPagerAdapter.addCardItem(new CardItem("http://obs.myhwclouds.com/look.admin.image/华为/2017-5-20/笔记本电脑-椅子-眼睛-桌子.jpg", "这是一句说明性文字"));
+        cardPagerAdapter.addCardItem(new CardItem("http://obs.myhwclouds.com/look.admin.image/华为/2017-5-20/笔记本电脑-桌子-鼠标-手机.jpg", "这是一句说明性文字"));
+        cardPagerAdapter.addCardItem(new CardItem("http://obs.myhwclouds.com/look.admin.image/华为/2017-5-20/键盘-鼠标-桌子.jpg", "这是一句说明性文字"));
 
-        backgroundList.add("http://img.hb.aicdn.com/5342e50c6b6876b7cfde7dcdc3f89b290997624f37c56-qoOZli_fw658");
-        backgroundList.add("http://img.hb.aicdn.com/04e84f35444738307f4acf872138daca92e4c4bb2abe0-KB7srY_fw658");
-        backgroundList.add("http://attachments.gfan.com/forum/attachments2/day_110422/1104222243bffe391469c3bee4.jpg");
-        backgroundList.add("http://img.hb.aicdn.com/226ce6243ae187c107e1a22cfa7cc0763fe2bda9908c4-8foxjv_fw658");
-        backgroundList.add("http://img.hb.aicdn.com/3c515a7e4fac799d7f62bf6be045d8a287cb16f214b91-Y8N5wB_fw658");
+        backgroundList.add("http://obs.myhwclouds.com/look.admin.image/华为/2017-5-20/笔记本电脑-计算机-树木-草坪.jpg");
+        backgroundList.add("http://obs.myhwclouds.com/look.admin.image/华为/2017-5-20/笔记本电脑-水杯-桌子-手机.jp");
+        backgroundList.add("http://obs.myhwclouds.com/look.admin.image/华为/2017-5-20/笔记本电脑-椅子-眼睛-桌子.jpg");
+        backgroundList.add("http://obs.myhwclouds.com/look.admin.image/华为/2017-5-20/笔记本电脑-桌子-鼠标-手机.jpg");
+        backgroundList.add("http://obs.myhwclouds.com/look.admin.image/华为/2017-5-20/键盘-鼠标-桌子.jpg");
 
         shadowTransformer = new ShadowTransformer(viewPager, cardPagerAdapter);
         viewPager.setPageMargin((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 30, getResources().getDisplayMetrics()));
@@ -189,7 +190,7 @@ public class FirstPageFragment extends Fragment implements RapidFloatingActionCo
         viewPager.setPageTransformer(false, shadowTransformer);
         viewPager.setOffscreenPageLimit(3);
         shadowTransformer.enableScaling(true);
-        viewPager.setCurrentItem(1);
+        viewPager.setCurrentItem(3);
 
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -358,7 +359,7 @@ public class FirstPageFragment extends Fragment implements RapidFloatingActionCo
     /**
      * 系统推送数据接收
      */
-    private void getDataFromNet(String dataUrl){
+    private void getDataFromNetToSystemPush(){
         String url  = "http://obs.myhwclouds.com/look.admin.info/systemPush.txt";
         VolleyRequestUtil.RequestGet(getContext(), url, "systemPush", new VolleyListenerInterface() {
             @Override
@@ -374,6 +375,34 @@ public class FirstPageFragment extends Fragment implements RapidFloatingActionCo
                         MarkerModel model = gson.fromJson(object1.toString(), MarkerModel.class);
                         systemPushDatas.add(model);
                         adapterSystem.notifyDataSetChanged();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(VolleyError error) {
+                Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void getDataFromNetToHobbyPush(){
+        String url  = "http://obs.myhwclouds.com/look.admin.info/hobbyPush.txt";
+        VolleyRequestUtil.RequestGet(getContext(), url, "hobbyPush", new VolleyListenerInterface() {
+            @Override
+            public void onSuccess(String result) {
+                try {
+                    JSONObject object = new JSONObject(new String(result.getBytes("ISO-8859-1"), "UTF-8"));
+                    String tag = new String(object.optString("TAG").getBytes("ISO-8859-1"), "UTF-8");
+                    JSONArray array = object.optJSONArray("picture");
+                    Gson gson = null;
+                    for (int i = 0; i < array.length(); i++) {
+                        JSONObject object1 = array.optJSONObject(i);
+                        gson = new Gson();
+                        MarkerModel model = gson.fromJson(object1.toString(), MarkerModel.class);
+                        hobbyPushList.add(model);
                         hobbyAdapter.notifyDataSetChanged();
                     }
                 } catch (Exception e) {

@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.team.imagemarker.R;
 import com.team.imagemarker.entitys.MarkerModel;
+import com.team.imagemarker.utils.CircleImageView;
 
 import java.util.List;
 
@@ -70,8 +71,8 @@ public class SystemPushAdapter extends BaseAdapter {
             e.printStackTrace();
         }
 //        viewHolder.categoryImg.setImageResource(model.getImageUrl1());
-        viewHolder.categoryName.setText("这是标题");
-        viewHolder.categorySimapleMessage.setText("这是简要信息");
+//        viewHolder.categoryName.setText("这是标题");
+//        viewHolder.categorySimapleMessage.setText("这是简要信息");
         return convertView;
     }
 
@@ -79,5 +80,6 @@ public class SystemPushAdapter extends BaseAdapter {
         public ImageView categoryImg;
         public TextView categoryName;
         public TextView categorySimapleMessage;
+        public CircleImageView managerHead;
     }
 }

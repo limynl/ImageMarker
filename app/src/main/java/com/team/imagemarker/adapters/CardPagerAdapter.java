@@ -82,10 +82,15 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
 
     private void bind(CardItem item, View view) {
         ImageView imageView = (ImageView) view.findViewById(R.id.test_imageview);
-//        imageView.setImageResource(item.getImgId());
-        Glide.with(context)
-                .load(item.getImgUrl())
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(imageView);
+//        imageView.setImageResource(item.getImgId());http://img.hb.aicdn.com/5342e50c6b6876b7cfde7dcdc3f89b290997624f37c56-qoOZli_fw658
+        //new String(item.getImgUrl().getBytes("ISO-8859-1"), "UTF-8")
+        try {
+            Glide.with(context)
+                    .load(item.getImgUrl())
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(imageView);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

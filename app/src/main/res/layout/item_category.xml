@@ -47,42 +47,63 @@
                 android:layout_height="match_parent"
                 android:background="#88000000" />
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/category_img"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
-                android:background="@android:color/white">
+                android:background="@android:color/white"
+                android:orientation="horizontal"
+                android:gravity="center">
 
-                <TextView
-                    android:id="@+id/category_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
+                <com.team.imagemarker.utils.CircleImageView
+                    android:id="@+id/manager_head_img"
+                    android:layout_width="31dp"
+                    android:layout_height="31dp"
                     android:layout_marginTop="5dp"
-                    android:gravity="center_vertical"
-                    android:singleLine="true"
-                    android:text="这是标题"
-                    android:textColor="@color/font_light"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:id="@+id/category_simple_message"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/category_name"
                     android:layout_marginBottom="5dp"
+                    android:src="@mipmap/shopping1"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
-                    android:gravity="center_vertical"
-                    android:singleLine="true"
-                    android:text="这是简要信息"
-                    android:textColor="@color/gray2"
-                    android:textSize="10sp" />
+                    android:layout_gravity="center"
+                    app:border_color="@color/gray1"/>
 
-            </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center">
+
+                    <TextView
+                        android:id="@+id/category_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginTop="5dp"
+                        android:gravity="center_vertical"
+                        android:singleLine="true"
+                        android:text="管理员A"
+                        android:textColor="@color/font_light"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/category_simple_message"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/category_name"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:gravity="center_vertical"
+                        android:singleLine="true"
+                        android:text="2017-06-15 12:00:00"
+                        android:textColor="@color/gray2"
+                        android:textSize="10sp" />
+
+                </RelativeLayout>
+
+                </LinearLayout>
 
         </RelativeLayout>
 

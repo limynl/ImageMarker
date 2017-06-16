@@ -107,14 +107,9 @@ public class MarkHomeActivity extends Activity implements View.OnClickListener{
         }else if(pageFlag.equals("noCompleteHistory")){//历史记录未完成，继续打标签
             dataList = (List<ItemEntity>) bundle.getSerializable("noCompleteData");
         }else if(pageFlag.equals("firstPage")){
-            item = (MarkerModel) bundle.getSerializable("item");
-            dataList.add(new ItemEntity(item.getImageUrl1(), item.getLabel1().equals("") ? new String[]{} : item.getLabel1().split(",")));
-            dataList.add(new ItemEntity(item.getImageUrl2(), item.getLabel2().equals("") ? new String[]{} : item.getLabel1().split(",")));
-            dataList.add(new ItemEntity(item.getImageUrl3(), item.getLabel3().equals("") ? new String[]{} : item.getLabel1().split(",")));
-            dataList.add(new ItemEntity(item.getImageUrl4(), item.getLabel4().equals("") ? new String[]{} : item.getLabel1().split(",")));
-            dataList.add(new ItemEntity(item.getImageUrl5(), item.getLabel5().equals("") ? new String[]{} : item.getLabel1().split(",")));
-            dataList.add(new ItemEntity(item.getImageUrl6(), item.getLabel6().equals("") ? new String[]{} : item.getLabel1().split(",")));
-//            initDataList();//接受需要打标签的图片数据
+            handelMessge((MarkerModel) bundle.getSerializable("item"));
+        }else if(pageFlag.equals("imgNavPage")){
+            handelMessge((MarkerModel) bundle.getSerializable("item"));
         }
         pileLayout.setAdapter(new Adapter());//设置底部图片滚动数据
     }
@@ -291,7 +286,7 @@ public class MarkHomeActivity extends Activity implements View.OnClickListener{
                         .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
                             @Override
                             public void onClick(SweetAlertDialog sDialog) {
-                                String imgUrl = "";
+                                String imgUrl = "http://192.168.43.204:8080/look/picture/judgeUserUpInageLabelInfo";
                                 submitTags(imgUrl);//提交操作
                                 sDialog.setTitleText("提交成功")
                                         .setContentText("已赠送30积分到您的账户!")
@@ -382,7 +377,7 @@ public class MarkHomeActivity extends Activity implements View.OnClickListener{
     private String changeTags(String[] tags){
         StringBuffer buffer = new StringBuffer();
         for (int i = 0; i < tags.length; i++) {
-            buffer.append(tags[i] + ",");
+            buffer.append(tags[i] + "-");
         }
         return buffer.toString().equals("") || buffer == null ? "" : buffer.deleteCharAt(buffer.length() - 1).toString();
     }
@@ -397,6 +392,7 @@ public class MarkHomeActivity extends Activity implements View.OnClickListener{
                 return;
             }
         }
+        item.setUserId(17);
         item.setLabel1(changeTags(dataList.get(0).getTags()));
         item.setLabel2(changeTags(dataList.get(1).getTags()));
         item.setLabel3(changeTags(dataList.get(2).getTags()));
@@ -407,7 +403,7 @@ public class MarkHomeActivity extends Activity implements View.OnClickListener{
         Gson gson = new Gson();
         String imgMessage = gson.toJson(item);
         Map<String, String> submitMap = new HashMap<String, String>();
-        submitMap.put("submitImgMessage", imgMessage);
+        submitMap.put("appImageGrouping", imgMessage);
         VolleyRequestUtil.RequestPost(this, url, "submitImgMessage", submitMap, new VolleyListenerInterface() {
             @Override
             public void onSuccess(String result) {
@@ -427,6 +423,19 @@ public class MarkHomeActivity extends Activity implements View.OnClickListener{
 
             }
         });
+    }
+
+    /**
+     * 处理从各个页面传来的数据，并进行界面填充
+     */
+    private void handelMessge(MarkerModel markerModel){
+        item = markerModel;
+        dataList.add(new ItemEntity(item.getImageUrl1(), item.getLabel1().equals("") ? new String[]{} : item.getLabel1().split("-")));
+        dataList.add(new ItemEntity(item.getImageUrl2(), item.getLabel2().equals("") ? new String[]{} : item.getLabel1().split("-")));
+        dataList.add(new ItemEntity(item.getImageUrl3(), item.getLabel3().equals("") ? new String[]{} : item.getLabel1().split("-")));
+        dataList.add(new ItemEntity(item.getImageUrl4(), item.getLabel4().equals("") ? new String[]{} : item.getLabel1().split("-")));
+        dataList.add(new ItemEntity(item.getImageUrl5(), item.getLabel5().equals("") ? new String[]{} : item.getLabel1().split("-")));
+        dataList.add(new ItemEntity(item.getImageUrl6(), item.getLabel6().equals("") ? new String[]{} : item.getLabel1().split("-")));
     }
 
 }

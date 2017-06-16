@@ -20,21 +20,31 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.android.volley.VolleyError;
+import com.google.gson.Gson;
 import com.team.imagemarker.R;
 import com.team.imagemarker.activitys.home.MoreCategoryActivity;
+import com.team.imagemarker.activitys.mark.MarkHomeActivity;
 import com.team.imagemarker.activitys.user.UserSearchActivity;
 import com.team.imagemarker.adapters.imgnav.GridViewLikeAdapter;
 import com.team.imagemarker.adapters.imgnav.HotCategroyAdapter;
 import com.team.imagemarker.adapters.imgnav.LikeViewPagerAdapter;
 import com.team.imagemarker.adapters.imgnav.SelectCateGoryAdapter;
+import com.team.imagemarker.constants.Constants;
+import com.team.imagemarker.entitys.MarkerModel;
 import com.team.imagemarker.entitys.home.CateGoryInfo;
 import com.team.imagemarker.entitys.home.CategoryModel;
 import com.team.imagemarker.entitys.home.SelectCategoryModel;
 import com.team.imagemarker.utils.EditTextWithDel;
 import com.team.imagemarker.utils.MyGridView;
 import com.team.imagemarker.utils.scrollview.MyScrollView;
+import com.team.imagemarker.utils.volley.VolleyListenerInterface;
+import com.team.imagemarker.utils.volley.VolleyRequestUtil;
 import com.team.imagemarker.viewpager.navbanner.BannerLayout;
 import com.team.imagemarker.viewpager.navbanner.GlideImageLoader;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +68,7 @@ public class ImageNavFragment extends Fragment implements View.OnClickListener, 
 
     //热门分类
     private MyGridView hotCategory;
-    private List<CategoryModel> hotList = new ArrayList<>();
+    private static List<CategoryModel> hotList = new ArrayList<>();
     private HotCategroyAdapter hotCategroyAdapter;
 
     //猜你喜欢
@@ -75,6 +85,8 @@ public class ImageNavFragment extends Fragment implements View.OnClickListener, 
     private ListView selectListView;
     private List<SelectCategoryModel> selectCategoryList;
     private SelectCateGoryAdapter selectCateGoryAdapter;
+
+    private static List<MarkerModel> itemList = new ArrayList<>();
 
     @Nullable
     @Override
@@ -99,6 +111,7 @@ public class ImageNavFragment extends Fragment implements View.OnClickListener, 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        getDataFromToHotCategroy();//热门分类数据
         //初始化刷新控件
         refreshLayout.setColorSchemeResources(R.color.colorAccent, R.color.write, R.color.yellow);
         refreshLayout.setProgressBackgroundColor(R.color.theme);
@@ -119,11 +132,12 @@ public class ImageNavFragment extends Fragment implements View.OnClickListener, 
      */
     private void setTopBanner() {
         List<String> bannerList = new ArrayList<>();
-        bannerList.add("http://139.199.23.142:8080/TestShowMessage1/marker/banner/img1.jpg");
-        bannerList.add("http://139.199.23.142:8080/TestShowMessage1/marker/banner/img2.jpg");
-        bannerList.add("http://139.199.23.142:8080/TestShowMessage1/marker/banner/img3.jpg");
-        bannerList.add("http://139.199.23.142:8080/TestShowMessage1/marker/banner/img4.jpg");
-        bannerList.add("http://139.199.23.142:8080/TestShowMessage1/marker/banner/img5.jpg");
+        bannerList.add(Constants.bannerImg[0]);
+        bannerList.add(Constants.bannerImg[1]);
+        bannerList.add(Constants.bannerImg[2]);
+        bannerList.add(Constants.bannerImg[3]);
+        bannerList.add(Constants.bannerImg[4]);
+        bannerList.add(Constants.bannerImg[5]);
         topBanner.setImageLoader(new GlideImageLoader());
         topBanner.setViewUrls(bannerList);
         topBanner.setOnBannerItemClickListener(new BannerLayout.OnBannerItemClickListener() {
@@ -150,15 +164,27 @@ public class ImageNavFragment extends Fragment implements View.OnClickListener, 
     }
 
     private void setHotCateGroy() {
-        hotList.add(new CategoryModel(R.mipmap.hot_categroy_bg1, R.mipmap.system_push1, "搞笑"));
-        hotList.add(new CategoryModel(R.mipmap.hot_categroy_bg2, R.mipmap.system_push2, "摄影"));
-        hotList.add(new CategoryModel(R.mipmap.hot_categroy_bg3, R.mipmap.system_push3, "萌控"));
-        hotList.add(new CategoryModel(R.mipmap.hot_categroy_bg4, R.mipmap.system_push4, "动漫"));
-        hotList.add(new CategoryModel(R.mipmap.hot_categroy_bg5, R.mipmap.system_push5, "明星"));
-        hotList.add(new CategoryModel(R.mipmap.hot_categroy_bg6, R.mipmap.system_push1, "美食"));
+        hotList.add(new CategoryModel(R.mipmap.hot_categroy_bg1, R.mipmap.hot1, "食物"));
+        hotList.add(new CategoryModel(R.mipmap.hot_categroy_bg2, R.mipmap.hot2, "学习"));
+        hotList.add(new CategoryModel(R.mipmap.hot_categroy_bg3, R.mipmap.hot3, "动物"));
+        hotList.add(new CategoryModel(R.mipmap.hot_categroy_bg4, R.mipmap.hot4, "植物"));
+        hotList.add(new CategoryModel(R.mipmap.hot_categroy_bg5, R.mipmap.hot5, "生活"));
+        hotList.add(new CategoryModel(R.mipmap.hot_categroy_bg6, R.mipmap.hot6, "风景"));
 
         hotCategroyAdapter = new HotCategroyAdapter(getActivity(), hotList);
         hotCategory.setAdapter(hotCategroyAdapter);
+        hotCategory.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getContext(), MarkHomeActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("pageTag", "imgNavPage");
+                bundle.putSerializable("item", itemList.get(position));
+                intent.putExtras(bundle);
+                startActivity(intent);
+                getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+            }
+        });
     }
 
     private void setLikeViewpager() {
@@ -290,6 +316,36 @@ public class ImageNavFragment extends Fragment implements View.OnClickListener, 
      */
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+    }
+
+    private void getDataFromToHotCategroy() {
+        String url = "http://obs.myhwclouds.com/look.admin.info/hotCateGroy.txt";
+        VolleyRequestUtil.RequestGet(getContext(), url, "hotCateGory", new VolleyListenerInterface() {
+            @Override
+            public void onSuccess(String result) {
+                try {
+                    JSONObject object = new JSONObject(new String(result.getBytes("ISO-8859-1"), "UTF-8"));
+                    String tag = new String(object.optString("TAG").getBytes("ISO-8859-1"), "UTF-8");
+                    JSONArray array = object.optJSONArray("picture");
+                    Gson gson = null;
+                    for (int i = 0; i < array.length(); i++) {
+                        JSONObject object1 = array.optJSONObject(i);
+                        gson = new Gson();
+                        MarkerModel model = gson.fromJson(object1.toString(), MarkerModel.class);
+                        itemList.add(model);
+                        hotCategroyAdapter.notifyDataSetChanged();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(VolleyError error) {
+
+            }
+        });
 
     }
 }

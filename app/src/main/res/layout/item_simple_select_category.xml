@@ -7,8 +7,8 @@
 
     <com.team.imagemarker.utils.RoundAngleImageView
         android:id="@+id/sdv_cart_image"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="70dp"
+        android:layout_height="75dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="5dp"
         android:layout_marginLeft="5dp"
@@ -25,6 +25,7 @@
         android:layout_gravity="center_horizontal"
         android:text="图片标题"
         android:textColor="#808080"
-        android:textSize="12sp" />
+        android:textSize="12sp"
+        android:visibility="gone"/>
 
 </LinearLayout>

@@ -52,4 +52,13 @@ public class Constants {
             Color.parseColor("#67CCB7"),
             Color.parseColor("#F6BC7E")
     };
+
+    public static final String[] bannerImg = {
+            "http://139.199.23.142:8080/TestShowMessage1/marker/banner/imgNavBanner/banner1.jpg",
+            "http://139.199.23.142:8080/TestShowMessage1/marker/banner/imgNavBanner/banner2.jpg",
+            "http://139.199.23.142:8080/TestShowMessage1/marker/banner/imgNavBanner/banner3.jpg",
+            "http://139.199.23.142:8080/TestShowMessage1/marker/banner/imgNavBanner/banner4.jpg",
+            "http://139.199.23.142:8080/TestShowMessage1/marker/banner/imgNavBanner/banner5.jpg",
+            "http://139.199.23.142:8080/TestShowMessage1/marker/banner/imgNavBanner/banner6.jpg"
+    };
 }
