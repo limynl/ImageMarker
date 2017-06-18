@@ -2,6 +2,7 @@ package com.team.imagemarker.fragments.history;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -14,15 +15,28 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.android.volley.VolleyError;
+import com.google.gson.Gson;
 import com.team.imagemarker.R;
+import com.team.imagemarker.activitys.mark.MarkHomeActivity;
 import com.team.imagemarker.adapters.history.ShowHistoryAdapter;
 import com.team.imagemarker.bases.btnClickListener;
-import com.team.imagemarker.entitys.history.HistoryModel;
+import com.team.imagemarker.constants.Constants;
+import com.team.imagemarker.entitys.MarkerModel;
+import com.team.imagemarker.entitys.marker.ItemEntity;
+import com.team.imagemarker.utils.volley.VolleyListenerInterface;
+import com.team.imagemarker.utils.volley.VolleyRequestUtil;
+import com.team.loading.SweetAlertDialog;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -36,7 +50,7 @@ public class AllHistoryFragment extends Fragment implements btnClickListener, Sw
     private View view;
     private ListView listView;
 
-    private List<HistoryModel> list = new ArrayList<>();
+    private static List<MarkerModel> list = new ArrayList<>();
     private ShowHistoryAdapter adapter;
 
     private SwipeRefreshLayout refreshLayout;
@@ -49,10 +63,10 @@ public class AllHistoryFragment extends Fragment implements btnClickListener, Sw
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_all_history, null);
-        Log.e("所有历史", "onCreateView: 所有历史记录");
-        listView = (ListView) view.findViewById(R.id.all_record_liseview);
-        refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.all_record_fresh);
+        view = inflater.inflate(R.layout.fragment_complete_history, null);
+        Log.e("tag", "onCreateView: 所有记录");
+        listView = (ListView) view.findViewById(R.id.complete_record_liseview);
+        refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.complete_record_fresh);
         refreshLayout.setColorSchemeResources(R.color.colorAccent, R.color.write, R.color.yellow);
         refreshLayout.setProgressBackgroundColor(R.color.theme);
         refreshLayout.setOnRefreshListener(this);
@@ -62,50 +76,45 @@ public class AllHistoryFragment extends Fragment implements btnClickListener, Sw
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getAllRecordData();//得到所有历史记录的数据
-    }
-
-    private void getAllRecordData() {
-        for (int i = 0; i < 2; i++) {
-            //未完成
-            list.add(new HistoryModel(2, "http://139.199.23.142:8080/TestShowMessage1/carImages/car1.jpg", "记录名称", "系统推送", "2017-04-29 19:39:00", 0));
-        }
-        for (int i = 0; i < 2; i++) {
-            //已完成
-            list.add(new HistoryModel(2, "http://139.199.23.142:8080/TestShowMessage1/carImages/car1.jpg", "记录名称", "系统推送", "2017-04-29 19:39:00", 1));
-        }
-        setData();
-    }
-
-    private void setData() {
-        adapter = new ShowHistoryAdapter(getActivity(), list, 0);//0表示所有记录
+        getDataFromToHistory();
+        adapter = new ShowHistoryAdapter(getContext(), list, 0);
         listView.setAdapter(adapter);
         adapter.setListener(this);
     }
-
 
     /**
      * 继续操作
      * @param position 点击的位置
      */
     @Override
-    public void btnEditClick(int position) {
+    public void btnEditClick(final int position) {
         customDialog = LayoutInflater.from(getContext()).inflate(R.layout.dialog_delete, null);
         showMessage = (TextView) customDialog.findViewById(R.id.show_message);
-        showMessage.setText("是否想要继续操作?");
         delete = (Button) customDialog.findViewById(R.id.record_delete);
-        delete.setText("继续");
+        if(list.get(position).getFlag().equals("T")){
+            showMessage.setText("是否想要查看这次操作?");
+            delete.setText("查看");
+        }else if (list.get(position).getFlag().equals("S")) {
+            showMessage.setText("是否想要继续完成此次操作?");
+            delete.setText("继续");
+        }
         cancel = (Button) customDialog.findViewById(R.id.record_cancel);
         dialogOne = new Dialog(getContext());
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setView(customDialog);
         dialogOne = builder.create();
         dialogOne.show();
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "继续操作", Toast.LENGTH_SHORT).show();
                 dialogOne.dismiss();
+                Intent intent = new Intent(getContext(), MarkHomeActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("pageTag", "completeHistory");
+                bundle.putSerializable("completeData", list.get(position));
+                intent.putExtras(bundle);
+                startActivity(intent);
+                getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             }
         });
         cancel.setOnClickListener(new View.OnClickListener() {
@@ -114,6 +123,34 @@ public class AllHistoryFragment extends Fragment implements btnClickListener, Sw
                 dialogOne.dismiss();
             }
         });
+
+        new SweetAlertDialog(getContext(), SweetAlertDialog.WARNING_TYPE)
+                .setTitleText("该次操作已经提交！")
+                .setContentText("是否继续查看？")
+                .setCancelText("查 看")
+                .setConfirmText("取 消")
+                .showConfirmButton(true)
+                .showCancelButton(true)
+                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sDialog) {
+                        sDialog.dismiss();
+                        Intent intent = new Intent(getContext(), MarkHomeActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putString("pageTag", "completeHistory");
+                        bundle.putSerializable("completeData", list.get(position));
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                        getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                    }
+                })
+                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sDialog) {
+                        sDialog.dismiss();
+                    }
+                })
+                .show();
     }
 
     /**
@@ -142,8 +179,7 @@ public class AllHistoryFragment extends Fragment implements btnClickListener, Sw
                 dialogTwo.show();
                 Timer timer = new Timer();
                 timer.schedule(new Wait(), 1500);
-                list.remove(position);
-                adapter.notifyDataSetChanged();
+                deleteHistory(position);
 
                 dialogOne.dismiss();
             }
@@ -156,30 +192,120 @@ public class AllHistoryFragment extends Fragment implements btnClickListener, Sw
         });
     }
 
+    private void deleteHistory(final int position) {
+        String url = Constants.USER_HISTORY_DELETE;
+        Map<String, String> map = new HashMap<>();
+        map.put("itemId", list.get(position).getId() + "");
+        VolleyRequestUtil.RequestPost(getContext(), url, "deleteHistory", map, new VolleyListenerInterface() {
+            @Override
+            public void onSuccess(String result) {
+                list.remove(position);
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onError(VolleyError error) {
+
+            }
+        });
+    }
+
     /**
-     * 下拉刷新
+     * 上拉刷新
      */
     @Override
     public void onRefresh() {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                list.clear();//清空数据
-                int size = 3;
-                for (int i = 0; i < 3; i++) {//重新加载数据
-                    list.add(new HistoryModel(2, "http://139.199.23.142:8080/TestShowMessage1/carImages/car1.jpg", "记录名称", "系统推送", "2017-04-29 19:39:00", 0));
-                }
+                list.clear();
+                getDataFromToHistory();
                 adapter.notifyDataSetChanged();
-                refreshLayout.setRefreshing(false);//刷新完成
+                refreshLayout.setRefreshing(false);
             }
-        }, 3000);
+        }, 2000);
     }
 
     class Wait extends TimerTask {
         @Override
         public void run() {
             dialogTwo.dismiss();
+        }
+    }
 
+    //    class wait extends TimerTask {
+//        private SweetAlertDialog sDialog;
+//
+//        public wait(SweetAlertDialog sDialog){
+//            this.sDialog = sDialog;
+//        }
+//
+//        @Override
+//        public void run() {
+//            sDialog.dismiss();
+//        }
+//    }
+//
+    private List<ItemEntity> getDataFromNet(){
+        List<ItemEntity> list = new ArrayList<>();
+        try {
+            InputStream in = getContext().getAssets().open("history.json");
+            int size = in.available();
+            byte[] buffer = new byte[size];
+            in.read(buffer);
+            String jsonStr = new String(buffer, "UTF-8");
+            JSONObject jsonObject = new JSONObject(jsonStr);
+            JSONArray jsonArray = jsonObject.optJSONArray("result");
+            if (null != jsonArray) {
+                int len = jsonArray.length();
+                for (int i = 0; i < len; i++) {
+                    JSONObject itemJsonObject = jsonArray.getJSONObject(i);
+                    ItemEntity itemEntity = new ItemEntity(itemJsonObject);
+                    list.add(itemEntity);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    private void getDataFromToHistory(){
+        String url = Constants.USER_HISTORY_DATA;
+        Map<String, String> userHistory = new HashMap<String, String>();
+        userHistory.put("userId", Constants.USER_ID + "");
+        VolleyRequestUtil.RequestGet(getContext(), url, "AllcompletHistory", new VolleyListenerInterface() {
+            @Override
+            public void onSuccess(String result) {
+                try {
+                    JSONObject object = new JSONObject(new String(result.getBytes("ISO-8859-1"), "UTF-8"));
+                    String tag = new String(object.optString("TAG").getBytes("ISO-8859-1"), "UTF-8");
+                    JSONArray array = object.optJSONArray("picture");
+                    Gson gson = null;
+                    for (int i = 0; i < array.length(); i++) {
+                        JSONObject object1 = array.optJSONObject(i);
+                        gson = new Gson();
+                        MarkerModel model = gson.fromJson(object1.toString(), MarkerModel.class);
+                        list.add(model);
+                        adapter.notifyDataSetChanged();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(VolleyError error) {
+                Log.e("tag", "onError: " + error.toString());
+            }
+        });
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(list != null){
+            list.clear();
         }
     }
 }

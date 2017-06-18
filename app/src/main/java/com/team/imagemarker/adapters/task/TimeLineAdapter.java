@@ -5,87 +5,60 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.team.imagemarker.R;
-import com.team.imagemarker.entitys.task.TimeLineModel;
-import com.team.imagemarker.utils.timeline.TimelineView;
 
 import java.util.List;
 
-public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineAdapter.TimeLineViewHolder> {
-    private static final String STATUS_COMPLETED = "COMPLETED";
-    private static final String STATUS_ACTIVE = "ACTIVE";
-    private static final String STATUS_INACTIVE = "INACTIVE";
-
-    private List<TimeLineModel> mFeedList;
+public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineAdapter.ViewHolder> {
     private Context mContext;
-    private LayoutInflater mLayoutInflater;
+    private List<Event> mList;
+    private int[] colors = {0xffFFAD6C, 0xff62f434, 0xffdeda78, 0xff7EDCFF, 0xff58fdea, 0xfffdc75f};//颜色组
 
-    public TimeLineAdapter(List<TimeLineModel> mFeedList) {
-        this.mFeedList = mFeedList;
+    public TimeLineAdapter(Context context, List<Event> list) {
+        mContext = context;
+        mList = list;
     }
 
     @Override
-    public int getItemViewType(int position) {
-        return TimelineView.getTimeLineViewType(position,getItemCount());
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(mContext).inflate(R.layout.item_task_timeline, parent, false);
+        return new ViewHolder(view);
     }
 
     @Override
-    public TimeLineViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        mContext = parent.getContext();
-        mLayoutInflater = LayoutInflater.from(mContext);
-        View view = mLayoutInflater.inflate(R.layout.item_task_timeline, parent, false);
-        return new TimeLineViewHolder(view, viewType);
-    }
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        holder.time.setText(mList.get(position).getTime());
+        holder.textView.setText(mList.get(position).getEvent());
+        holder.time.setTextColor(colors[(int)(Math.random() * 6 + 1) % colors.length]);
 
-    @Override
-    public void onBindViewHolder(TimeLineViewHolder holder, int position) {
-        TimeLineModel timeLineModel = mFeedList.get(position);
-        if(timeLineModel.getStatus() == STATUS_INACTIVE) {
-            holder.mTimelineView.setMarker(mContext.getResources().getDrawable(R.drawable.timeline_marker_inactive));
-        } else if(timeLineModel.getStatus() == STATUS_ACTIVE) {
-            holder.mTimelineView.setMarker(mContext.getResources().getDrawable(R.drawable.timeline_marker_active));
-        } else {
-            holder.mTimelineView.setMarker(mContext.getResources().getDrawable(R.drawable.timeline_marker));
-        }
-
-        if(!timeLineModel.getDate().isEmpty()) {
-            holder.mDate.setVisibility(View.VISIBLE);
-            holder.mDate.setText(timeLineModel.getDate());
-        }
-        else{
-            holder.mDate.setVisibility(View.GONE);
-        }
-//        TaskHistoryAdapter adapter = new TaskHistoryAdapter(mContext, timeLineModel.getHistories());
-//        holder.history.setAdapter(adapter);
-
-        holder.mMessage.setText(timeLineModel.getMessage());
-        holder.type.setText(timeLineModel.getmType());
+        Glide.with(mContext)
+                .load(mList.get(position).getImgUrl())
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .thumbnail(0.8f)
+                .into(holder.image);
+//        holder.image.setImageResource(mList.get(position).getImgId());
     }
 
     @Override
     public int getItemCount() {
-        return (mFeedList!=null? mFeedList.size():0);
+        return mList.size();
     }
 
-    class TimeLineViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
+        TextView time;
+        TextView textView;
+        ImageView image;
 
-        public TextView mDate;
-        public TextView mMessage;
-        public TextView type;
-        public TimelineView mTimelineView;
-        public ListView history;
-
-        public TimeLineViewHolder(View itemView, int viewType) {
-            super(itemView);
-            mDate = (TextView) itemView.findViewById(R.id.text_timeline_date);
-            mMessage = (TextView) itemView.findViewById(R.id.text_timeline_title);
-            mTimelineView = (TimelineView) itemView.findViewById(R.id.time_marker);
-            type = (TextView) itemView.findViewById(R.id.text_timeline_type);
-            history = (ListView) itemView.findViewById(R.id.task_history);
-            mTimelineView.initLine(viewType);
+        public ViewHolder(View view) {
+            super(view);
+            time = (TextView) view.findViewById(R.id.time);
+            textView = (TextView) view.findViewById(R.id.text);
+            image = (ImageView) view.findViewById(R.id.category_img);
         }
     }
 }

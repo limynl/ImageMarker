@@ -26,7 +26,7 @@ import java.util.List;
  * email 1434117404@qq.com
  */
 
-public class HistoryRecordActivity extends FragmentActivity implements View.OnClickListener{
+public class HistoryRecordActivity extends FragmentActivity implements View.OnClickListener {
     private RelativeLayout titleBar;
     private TextView title;
     private ImageView leftIcon, rightIcon;
@@ -35,9 +35,8 @@ public class HistoryRecordActivity extends FragmentActivity implements View.OnCl
     private ViewPager historyViewPager;
     private View line;
     private int line_length;
-    
-    private List<Fragment> fragmentList;
 
+    private List<Fragment> fragmentList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,7 +50,7 @@ public class HistoryRecordActivity extends FragmentActivity implements View.OnCl
         title = (TextView) findViewById(R.id.title);
         leftIcon = (ImageView) findViewById(R.id.left_icon);
         rightIcon = (ImageView) findViewById(R.id.right_icon);
-        
+
         allRecord = (TextView) findViewById(R.id.all_history);
         completeRecord = (TextView) findViewById(R.id.complete);
         noCompleteRecord = (TextView) findViewById(R.id.no_complete);
@@ -66,13 +65,14 @@ public class HistoryRecordActivity extends FragmentActivity implements View.OnCl
         allRecord.setOnClickListener(this);
         completeRecord.setOnClickListener(this);
         noCompleteRecord.setOnClickListener(this);
+
     }
 
     private void setViewPager() {
         //初始化TextView动画
         ViewPropertyAnimator.animate(allRecord).scaleX(1.2f).setDuration(0);
         ViewPropertyAnimator.animate(allRecord).scaleY(1.2f).setDuration(0);
-        
+
         //初始化Fragment
         fragmentList = new ArrayList<Fragment>();
         fragmentList.add(new NoCompleteFragment());
@@ -93,7 +93,7 @@ public class HistoryRecordActivity extends FragmentActivity implements View.OnCl
                 return fragmentList.size();
             }
         });
-        
+
         historyViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
             @Override
@@ -112,11 +112,12 @@ public class HistoryRecordActivity extends FragmentActivity implements View.OnCl
 
             }
         });
-        
+
     }
 
     /**
      * 根据传入的值来改变状态
+     *
      * @param position viewPager中选中的状态
      */
     private void changeState(int position) {
@@ -130,7 +131,7 @@ public class HistoryRecordActivity extends FragmentActivity implements View.OnCl
             ViewPropertyAnimator.animate(completeRecord).scaleY(1.0f).setDuration(200);
             ViewPropertyAnimator.animate(noCompleteRecord).scaleX(1.0f).setDuration(200);
             ViewPropertyAnimator.animate(noCompleteRecord).scaleY(1.0f).setDuration(200);
-        } else if (position == 1){
+        } else if (position == 1) {
             allRecord.setTextColor(Color.parseColor("#ffffff"));
             completeRecord.setTextColor(Color.parseColor("#7ADFB8"));
             noCompleteRecord.setTextColor(Color.parseColor("#ffffff"));
@@ -140,7 +141,7 @@ public class HistoryRecordActivity extends FragmentActivity implements View.OnCl
             ViewPropertyAnimator.animate(completeRecord).scaleY(1.2f).setDuration(200);
             ViewPropertyAnimator.animate(noCompleteRecord).scaleX(1.0f).setDuration(200);
             ViewPropertyAnimator.animate(noCompleteRecord).scaleY(1.0f).setDuration(200);
-        }else if (position == 2){
+        } else if (position == 2) {
             allRecord.setTextColor(Color.parseColor("#ffffff"));
             completeRecord.setTextColor(Color.parseColor("#ffffff"));
             noCompleteRecord.setTextColor(Color.parseColor("#7ADFB8"));
@@ -155,20 +156,20 @@ public class HistoryRecordActivity extends FragmentActivity implements View.OnCl
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.left_icon:{//返回
+        switch (v.getId()) {
+            case R.id.left_icon: {//返回
                 onBackPressed();
             }
             break;
-            case R.id.all_history:{//所有历史记录
+            case R.id.all_history: {//所有历史记录
                 historyViewPager.setCurrentItem(0);
-           }
+            }
             break;
-            case R.id.complete:{//已完成历史记录
+            case R.id.complete: {//已完成历史记录
                 historyViewPager.setCurrentItem(1);
             }
             break;
-            case R.id.no_complete:{//未完成历史记录
+            case R.id.no_complete: {//未完成历史记录
                 historyViewPager.setCurrentItem(2);
             }
             break;
@@ -180,5 +181,14 @@ public class HistoryRecordActivity extends FragmentActivity implements View.OnCl
         super.onBackPressed();
         this.finish();
         overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (fragmentList != null) {
+            fragmentList.clear();
+            fragmentList = null;
+        }
     }
 }

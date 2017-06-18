@@ -16,20 +16,26 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
+import com.google.gson.Gson;
 import com.team.imagemarker.R;
 import com.team.imagemarker.activitys.mark.MarkHomeActivity;
 import com.team.imagemarker.adapters.history.ShowHistoryAdapter;
 import com.team.imagemarker.bases.btnClickListener;
-import com.team.imagemarker.entitys.history.HistoryModel;
+import com.team.imagemarker.constants.Constants;
+import com.team.imagemarker.entitys.MarkerModel;
 import com.team.imagemarker.entitys.marker.ItemEntity;
+import com.team.imagemarker.utils.volley.VolleyListenerInterface;
+import com.team.imagemarker.utils.volley.VolleyRequestUtil;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.InputStream;
-import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -42,8 +48,10 @@ import java.util.TimerTask;
 public class NoCompleteFragment extends Fragment implements btnClickListener, SwipeRefreshLayout.OnRefreshListener{
     private View view;
     private ListView listView;
-    private List<HistoryModel> list = new ArrayList<>();
+
+    private static List<MarkerModel> list = new ArrayList<>();
     private ShowHistoryAdapter adapter;
+
     private SwipeRefreshLayout refreshLayout;
 
     private View customDialog;
@@ -54,10 +62,10 @@ public class NoCompleteFragment extends Fragment implements btnClickListener, Sw
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_no_complete_history, null);
-        Log.e("未完成", "onCreateView: 未完成");
-        listView = (ListView) view.findViewById(R.id.no_complete_record_liseview);
-        refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.no_complete_record_fresh);
+        view = inflater.inflate(R.layout.fragment_complete_history, null);
+        Log.e("tag", "onCreateView: 未完成");
+        listView = (ListView) view.findViewById(R.id.complete_record_liseview);
+        refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.complete_record_fresh);
         refreshLayout.setColorSchemeResources(R.color.colorAccent, R.color.write, R.color.yellow);
         refreshLayout.setProgressBackgroundColor(R.color.theme);
         refreshLayout.setOnRefreshListener(this);
@@ -67,23 +75,8 @@ public class NoCompleteFragment extends Fragment implements btnClickListener, Sw
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getAllRecordData();//得到所有历史记录的数据
-    }
-
-    private void getAllRecordData() {
-        for (int i = 0; i < 2; i++) {
-            //未完成
-            list.add(new HistoryModel(2, "http://139.199.23.142:8080/TestShowMessage1/carImages/car3.jpg", "记录名称", "系统推送", "2017-04-29 19:39:00", 0));
-        }
-        for (int i = 0; i < 2; i++) {
-            //已完成
-            list.add(new HistoryModel(2, "http://139.199.23.142:8080/TestShowMessage1/carImages/car3.jpg", "记录名称", "系统推送", "2017-04-29 19:39:00", 1));
-        }
-        setData();
-    }
-
-    private void setData() {
-        adapter = new ShowHistoryAdapter(getActivity(), list, 2);//2表示未完成的记录
+        getDataFromToHistory();
+        adapter = new ShowHistoryAdapter(getContext(), list, 2);
         listView.setAdapter(adapter);
         adapter.setListener(this);
     }
@@ -93,11 +86,11 @@ public class NoCompleteFragment extends Fragment implements btnClickListener, Sw
      * @param position 点击的位置
      */
     @Override
-    public void btnEditClick(int position) {
+    public void btnEditClick(final int position) {
         customDialog = LayoutInflater.from(getContext()).inflate(R.layout.dialog_delete, null);
         showMessage = (TextView) customDialog.findViewById(R.id.show_message);
-        showMessage.setText("是否想要继续操作?");
         delete = (Button) customDialog.findViewById(R.id.record_delete);
+        showMessage.setText("是否想要继续完成此次操作?");
         delete.setText("继续");
         cancel = (Button) customDialog.findViewById(R.id.record_cancel);
         dialogOne = new Dialog(getContext());
@@ -112,7 +105,7 @@ public class NoCompleteFragment extends Fragment implements btnClickListener, Sw
                 Intent intent = new Intent(getContext(), MarkHomeActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("pageTag", "noCompleteHistory");
-                bundle.putSerializable("noCompleteData", (Serializable) getDataFromNet());
+                bundle.putSerializable("noCompleteData", list.get(position));
                 intent.putExtras(bundle);
                 startActivity(intent);
                 getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
@@ -152,8 +145,7 @@ public class NoCompleteFragment extends Fragment implements btnClickListener, Sw
                 dialogTwo.show();
                 Timer timer = new Timer();
                 timer.schedule(new Wait(), 1500);
-                list.remove(position);
-                adapter.notifyDataSetChanged();
+                deleteHistory(position);
 
                 dialogOne.dismiss();
             }
@@ -166,33 +158,63 @@ public class NoCompleteFragment extends Fragment implements btnClickListener, Sw
         });
     }
 
+    private void deleteHistory(final int position) {
+//        list.remove(position);
+//        adapter.notifyDataSetChanged();
+
+        String url = Constants.USER_HISTORY_DELETE;
+        Map<String, String> map = new HashMap<>();
+        map.put("itemId", list.get(position).getId() + "");
+        VolleyRequestUtil.RequestPost(getContext(), url, "deleteHistory", map, new VolleyListenerInterface() {
+            @Override
+            public void onSuccess(String result) {
+                list.remove(position);
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onError(VolleyError error) {
+
+            }
+        });
+    }
+
     /**
-     * 下拉刷新
+     * 上拉刷新
      */
     @Override
     public void onRefresh() {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                list.clear();//清空数据
-                int size = 3;
-                for (int i = 0; i < 3; i++) {//重新加载数据
-                    list.add(new HistoryModel(2, "http://139.199.23.142:8080/TestShowMessage1/carImages/car3.jpg", "记录名称", "系统推送", "2017-04-29 19:39:00", 0));
-                }
+                list.clear();
+                getDataFromToHistory();
                 adapter.notifyDataSetChanged();
-                refreshLayout.setRefreshing(false);//刷新完成
+                refreshLayout.setRefreshing(false);
             }
-        }, 3000);
+        }, 2000);
     }
 
     class Wait extends TimerTask {
         @Override
         public void run() {
             dialogTwo.dismiss();
-
         }
     }
 
+    //    class wait extends TimerTask {
+//        private SweetAlertDialog sDialog;
+//
+//        public wait(SweetAlertDialog sDialog){
+//            this.sDialog = sDialog;
+//        }
+//
+//        @Override
+//        public void run() {
+//            sDialog.dismiss();
+//        }
+//    }
+//
     private List<ItemEntity> getDataFromNet(){
         List<ItemEntity> list = new ArrayList<>();
         try {
@@ -215,5 +237,47 @@ public class NoCompleteFragment extends Fragment implements btnClickListener, Sw
             e.printStackTrace();
         }
         return list;
+    }
+
+    private void getDataFromToHistory(){
+        String url = Constants.USER_HISTORY_DATA;
+//        String url = Constants.USER_ALL_HISTORY;
+        Map<String, String> userHistory = new HashMap<String, String>();
+        userHistory.put("userId", Constants.USER_ID + "");
+        VolleyRequestUtil.RequestGet(getContext(), url, "NocompletHistory", new VolleyListenerInterface() {
+            @Override
+            public void onSuccess(String result) {
+                try {
+                    JSONObject object = new JSONObject(result);
+                    JSONArray array = object.optJSONArray("picture");
+                    Gson gson = null;
+                    for (int i = 0; i < array.length(); i++) {
+                        JSONObject object1 = array.optJSONObject(i);
+                        gson = new Gson();
+                        MarkerModel model = gson.fromJson(object1.toString(), MarkerModel.class);
+                        if(model.getFlag().equals("S")){
+                            list.add(model);
+                        }
+                        adapter.notifyDataSetChanged();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(VolleyError error) {
+                Log.e("tag", "onError: " + error.toString());
+            }
+        });
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(list != null){
+            list.clear();
+//            list = null;
+        }
     }
 }

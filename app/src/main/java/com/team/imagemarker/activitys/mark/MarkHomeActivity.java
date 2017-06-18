@@ -3,11 +3,9 @@ package com.team.imagemarker.activitys.mark;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
-import android.app.Dialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -17,6 +15,7 @@ import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.team.imagemarker.R;
+import com.team.imagemarker.constants.Constants;
 import com.team.imagemarker.entitys.MarkerModel;
 import com.team.imagemarker.entitys.marker.ItemEntity;
 import com.team.imagemarker.utils.marker.FadeTransitionImageView;
@@ -52,7 +51,7 @@ public class MarkHomeActivity extends Activity implements View.OnClickListener{
     private RelativeLayout titleBar;
 
     private PileLayout pileLayout;
-    private List<ItemEntity> dataList = new ArrayList<>();
+    private static List<ItemEntity> dataList = new ArrayList<>();
 
     private int lastDisplay = -1;
 
@@ -64,11 +63,6 @@ public class MarkHomeActivity extends Activity implements View.OnClickListener{
     private TagGroup tag;
     private String[] tempTags;//暂存每张图片的先前的标签
     private List<TagColor> colors = TagColor.getRandomColors(7);//随机生成标签颜色
-
-    private View customDialog, dialogMessage;
-    private TextView showMessage, dialogTitle, operateMessage;
-    private Button delete, cancel;
-    private Dialog dialogOne, dialogTwo;
 
     private String pageFlag;//页面标志，用于判断是哪一个界面进入的
     private MarkerModel item;//用于最后提交的图片对象
@@ -103,9 +97,11 @@ public class MarkHomeActivity extends Activity implements View.OnClickListener{
             tag.setAppendMode(false);//将标签转换成不可编辑状态
             title.setText("历史标注");
             subTitle.setVisibility(View.GONE);
-            dataList = (List<ItemEntity>) bundle.getSerializable("completeData");
+            handelMessge((MarkerModel) bundle.getSerializable("completeData"));
+//            dataList = (List<ItemEntity>) bundle.getSerializable("completeData");
         }else if(pageFlag.equals("noCompleteHistory")){//历史记录未完成，继续打标签
-            dataList = (List<ItemEntity>) bundle.getSerializable("noCompleteData");
+//            dataList = (List<ItemEntity>) bundle.getSerializable("noCompleteData");
+            handelMessge((MarkerModel) bundle.getSerializable("noCompleteData"));
         }else if(pageFlag.equals("firstPage")){
             handelMessge((MarkerModel) bundle.getSerializable("item"));
         }else if(pageFlag.equals("imgNavPage")){
@@ -205,7 +201,7 @@ public class MarkHomeActivity extends Activity implements View.OnClickListener{
     }
 
     /**
-     * 相当于初始化数据，初始显示数据
+     * 初始显示数据
      */
     private void initSecene(int position) {
         countIndicator.firstInit((position + 1) + "/" + dataList.size());
@@ -217,12 +213,13 @@ public class MarkHomeActivity extends Activity implements View.OnClickListener{
      * 当前图片转换到下一张图片
      */
     private void transitionSecene(int position) {
+        List<TagColor> tagColors = TagColor.getRandomColors(7);
         if (transitionAnimator != null) {
             transitionAnimator.cancel();
         }
         countIndicator.saveNextPosition(position, (position + 1) + "/" + dataList.size());
         markImg.saveNextPosition(position, dataList.get(position).getCoverImageUrl());
-        tag.setTags(colors, dataList.get(position).getTags());
+        tag.setTags(tagColors, dataList.get(position).getTags());
 
         transitionAnimator = ObjectAnimator.ofFloat(this, "transitionValue", 0.0f, 1.0f);
         transitionAnimator.setDuration(300);
@@ -392,7 +389,7 @@ public class MarkHomeActivity extends Activity implements View.OnClickListener{
                 return;
             }
         }
-        item.setUserId(17);
+        item.setUserId(Constants.USER_ID);
         item.setLabel1(changeTags(dataList.get(0).getTags()));
         item.setLabel2(changeTags(dataList.get(1).getTags()));
         item.setLabel3(changeTags(dataList.get(2).getTags()));
@@ -431,11 +428,11 @@ public class MarkHomeActivity extends Activity implements View.OnClickListener{
     private void handelMessge(MarkerModel markerModel){
         item = markerModel;
         dataList.add(new ItemEntity(item.getImageUrl1(), item.getLabel1().equals("") ? new String[]{} : item.getLabel1().split("-")));
-        dataList.add(new ItemEntity(item.getImageUrl2(), item.getLabel2().equals("") ? new String[]{} : item.getLabel1().split("-")));
-        dataList.add(new ItemEntity(item.getImageUrl3(), item.getLabel3().equals("") ? new String[]{} : item.getLabel1().split("-")));
-        dataList.add(new ItemEntity(item.getImageUrl4(), item.getLabel4().equals("") ? new String[]{} : item.getLabel1().split("-")));
-        dataList.add(new ItemEntity(item.getImageUrl5(), item.getLabel5().equals("") ? new String[]{} : item.getLabel1().split("-")));
-        dataList.add(new ItemEntity(item.getImageUrl6(), item.getLabel6().equals("") ? new String[]{} : item.getLabel1().split("-")));
+        dataList.add(new ItemEntity(item.getImageUrl2(), item.getLabel2().equals("") ? new String[]{} : item.getLabel2().split("-")));
+        dataList.add(new ItemEntity(item.getImageUrl3(), item.getLabel3().equals("") ? new String[]{} : item.getLabel3().split("-")));
+        dataList.add(new ItemEntity(item.getImageUrl4(), item.getLabel4().equals("") ? new String[]{} : item.getLabel4().split("-")));
+        dataList.add(new ItemEntity(item.getImageUrl5(), item.getLabel5().equals("") ? new String[]{} : item.getLabel5().split("-")));
+        dataList.add(new ItemEntity(item.getImageUrl6(), item.getLabel6().equals("") ? new String[]{} : item.getLabel6().split("-")));
     }
 
 }

@@ -47,7 +47,7 @@ public class MyApplication extends Application{
     }
 
     /**
-     * 得到需要分配的缓存大小，此处设置为1/8
+     * 得到需要分配的缓存大小
      */
     public int getMemoryCacheSize() {
         int maxMemory = (int) Runtime.getRuntime().maxMemory();

@@ -2,14 +2,16 @@ package com.team.imagemarker.activitys.tasks;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.team.imagemarker.R;
+import com.team.imagemarker.adapters.task.Event;
+import com.team.imagemarker.adapters.task.ItemDecoration;
 import com.team.imagemarker.adapters.task.TimeLineAdapter;
 import com.team.imagemarker.entitys.task.TaskHistory;
 import com.team.imagemarker.entitys.task.TimeLineModel;
@@ -27,8 +29,43 @@ public class UserTaskOverViewActivity extends Activity implements View.OnClickLi
     private RelativeLayout titleBar;
 
     private RecyclerView mRecyclerView;
-    private TimeLineAdapter mTimeLineAdapter;
-    private List<TimeLineModel> mDataList = new ArrayList<>();
+    private  List<Event> mList = new ArrayList<>();
+    private TimeLineAdapter mAdapter;
+
+    String[] times = {
+            "2017-06-16 12:00:00",
+            "2017-06-16 12:00:00",
+            "2017-06-16 12:00:00",
+            "2017-06-16 12:00:00",
+            "2017-06-16 12:00:00",
+            "2017-06-16 12:00:00"
+    };
+    String[] events = new String[]{
+            "测试内容",
+            "测试内容",
+            "测试内容",
+            "测试内容",
+            "测试内容",
+            "测试内容"
+    };
+
+    int[] resId = {
+            R.mipmap.hot1,
+            R.mipmap.hot2,
+            R.mipmap.hot3,
+            R.mipmap.hot4,
+            R.mipmap.hot5,
+            R.mipmap.hot6
+    };
+
+    String[] imgs = {
+        "http://obs.myhwclouds.com/look.admin.image/老马识途/2017-5-21/白云岩-高山-水-天空-树.jpg",
+        "http://obs.myhwclouds.com/look.admin.image/老马识途/2017-5-22/橙子-水杯-果盘-果汁.jpg",
+        "http://obs.myhwclouds.com/look.admin.image/老马识途/2017-5-22/樱桃-蛋糕-花-篮子-甜点-水果.jpg",
+        "http://obs.myhwclouds.com/look.admin.image/老马识途/2017-5-22/冰淇淋-草莓-勺子-奶油蛋糕.jpg",
+        "http://obs.myhwclouds.com/look.admin.image/老马识途/2017-5-22/草莓-蓝莓-橙子-猕猴桃-盘子.jpg",
+        "http://obs.myhwclouds.com/look.admin.image/老马识途/2017-5-22/香蕉-草地-小花.jpg",
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,38 +80,28 @@ public class UserTaskOverViewActivity extends Activity implements View.OnClickLi
         title = (TextView) findViewById(R.id.title);
         leftIcon = (ImageView) findViewById(R.id.left_icon);
         rightIcon = (ImageView) findViewById(R.id.right_icon);
+        mRecyclerView = (RecyclerView) findViewById(R.id.timeline_recycleview);
 
-        titleBar.setBackgroundColor(getResources().getColor(R.color.theme));
+        titleBar.setBackgroundColor(getResources().getColor(R.color.theme1));
         title.setText("任务概览");
         rightIcon.setVisibility(View.GONE);
         leftIcon.setOnClickListener(this);
     }
 
     private void setTimeLine() {
-        mRecyclerView = (RecyclerView) findViewById(R.id.timeline_recycleview);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        mRecyclerView.addItemDecoration(new ItemDecoration(this, 50));
 
-        setDataListItems();
-        mTimeLineAdapter = new TimeLineAdapter(mDataList);
-        mRecyclerView.setAdapter(mTimeLineAdapter);
-    }
+        for (int i = 0; i < times.length; i++) {
+            Event event = new Event();
+            event.setTime(times[i]);
+            event.setEvent(events[i]);
+            event.setImgUrl(imgs[i]);
+            mList.add(event);
+        }
 
-    /**
-     * 设置数据
-     */
-    private void setDataListItems(){
-
-        mDataList.add(new TimeLineModel("图组列表名称", "2017-02-11 19:13", "INACTIVE", "系统推送"));
-        mDataList.add(new TimeLineModel("图组列表名称", "2017-02-11 19:13", "ACTIVE", "兴趣选择"));
-        mDataList.add(new TimeLineModel("图组列表名称", "2017-02-11 19:13", "COMPLETED", "系统推送"));
-        mDataList.add(new TimeLineModel("图组列表名称", "2017-02-11 19:13", "COMPLETED", "系统推送"));
-        mDataList.add(new TimeLineModel("图组列表名称", "2017-02-11 19:13", "COMPLETED", "兴趣选择"));
-        mDataList.add(new TimeLineModel("图组列表名称", "2017-02-11 19:13", "COMPLETED", "系统推送"));
-        mDataList.add(new TimeLineModel("图组列表名称", "2017-02-11 19:13", "COMPLETED", "系统推送"));
-        mDataList.add(new TimeLineModel("图组列表名称", "2017-02-11 19:13", "COMPLETED", "兴趣选择"));
-        mDataList.add(new TimeLineModel("图组列表名称", "2017-02-11 19:13", "COMPLETED", "兴趣选择"));
-        mDataList.add(new TimeLineModel("图组列表名称", "2017-02-11 19:13", "COMPLETED", "系统推送"));
+        mAdapter = new TimeLineAdapter(this, mList);
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     private void getDataFromNet() {
@@ -99,8 +126,8 @@ public class UserTaskOverViewActivity extends Activity implements View.OnClickLi
                     taskHistory.setOperatorType(jsonObject1.optString("operatorType"));
                     histories.add(taskHistory);
                 }
-                timeLineModel.setHistories(histories);
-                mDataList.add(timeLineModel);
+//                timeLineModel.setHistories(histories);
+//                mDataList.add(timeLineModel);
             }
         } catch (Exception e) {
             e.printStackTrace();

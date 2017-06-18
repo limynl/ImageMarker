@@ -40,11 +40,10 @@ public class CategoryModel {
         this.name = cateGroyName;
     }
 
-    public CategoryModel(String name, String simpleMessage, String imgUrl, String headUrl) {
+    public CategoryModel(String imgUrl, String name, String simpleMessage) {
         this.name = name;
         this.simpleMessage = simpleMessage;
         this.imgUrl = imgUrl;
-        this.headUrl = headUrl;
     }
 
     public int getImgId() {

@@ -12,8 +12,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.team.imagemarker.R;
 import com.team.imagemarker.bases.btnClickListener;
-import com.team.imagemarker.entitys.history.HistoryModel;
-import com.team.imagemarker.utils.CircleImageView;
+import com.team.imagemarker.entitys.MarkerModel;
+import com.team.imagemarker.utils.RoundAngleImageView;
 
 import java.util.List;
 
@@ -30,14 +30,14 @@ public class ShowHistoryAdapter extends BaseAdapter {
     private int type;
 
     private Context context;
-    private List<HistoryModel> list;
+    private List<MarkerModel> list;
     private btnClickListener listener;
 
     public void setListener(btnClickListener listener) {
         this.listener = listener;
     }
 
-    public ShowHistoryAdapter(Context context, List<HistoryModel> list, int type) {
+    public ShowHistoryAdapter(Context context, List<MarkerModel> list, int type) {
         this.context = context;
         this.list = list;
         this.type = type;
@@ -45,7 +45,7 @@ public class ShowHistoryAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return list.size();
+        return list.size() == 0 ? 0 : list.size();
     }
 
     @Override
@@ -64,7 +64,7 @@ public class ShowHistoryAdapter extends BaseAdapter {
         if (convertView == null) {
             viewHolder = new ViewHolder();
             convertView = LayoutInflater.from(context).inflate(R.layout.item_show_history, null);
-            viewHolder.firstImg = (CircleImageView) convertView.findViewById(R.id.first_img);
+            viewHolder.firstImg = (RoundAngleImageView) convertView.findViewById(R.id.first_img);
             viewHolder.recordName = (TextView) convertView.findViewById(R.id.record_name);
             viewHolder.operateType = (TextView) convertView.findViewById(R.id.operate_type);
             viewHolder.recordTime = (TextView) convertView.findViewById(R.id.record_time);
@@ -75,42 +75,42 @@ public class ShowHistoryAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        HistoryModel model = list.get(position);
+        MarkerModel model = list.get(position);
         if (model != null) {
             if (type == ALL){//全部记录
                 Glide.with(context)
-                        .load(model.getFirstImg())
+                        .load(model.getImageUrl1())
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(viewHolder.firstImg);
-                viewHolder.recordName.setText(model.getRecordName());
-                viewHolder.operateType.setText(model.getOperateType());
-                viewHolder.recordTime.setText(model.getRecordTime());
-                if(model.getRecordType() == 0){//未完成
+                viewHolder.recordName.setText(model.getSecondlabelName());
+                viewHolder.operateType.setText(model.getPushWay());
+                viewHolder.recordTime.setText(model.getSetTime());
+                if(model.getFlag().equals("S")){//未完成
                     viewHolder.editHitory.setText("继续");
                     viewHolder.deleteHistory.setText("删除");
                 }else{//已完成
                     viewHolder.editHitory.setText("查看");
                     viewHolder.deleteHistory.setText("删除");
                 }
-            }else if(type == COMPLETE && model.getRecordType() == 1){//已完成
+            }else if(type == COMPLETE && model.getFlag().equals("T")){//已完成
                     Glide.with(context)
-                            .load(model.getFirstImg())
+                            .load(model.getImageUrl1())
                             .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .into(viewHolder.firstImg);
-                    viewHolder.recordName.setText(model.getRecordName());
-                    viewHolder.operateType.setText(model.getOperateType());
-                    viewHolder.recordTime.setText(model.getRecordTime());
+                    viewHolder.recordName.setText(model.getSecondlabelName());
+                    viewHolder.operateType.setText(model.getPushWay());
+                    viewHolder.recordTime.setText(model.getSetTime());
 
                     viewHolder.editHitory.setText("查看");
                     viewHolder.deleteHistory.setText("删除");
-            }else if(type == NO_COMPLETE && model.getRecordType() == 0){//未完成
+            }else if(type == NO_COMPLETE && model.getFlag().equals("S")){//未完成
                     Glide.with(context)
-                            .load(model.getFirstImg())
+                            .load(model.getImageUrl1())
                             .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .into(viewHolder.firstImg);
-                    viewHolder.recordName.setText(model.getRecordName());
-                    viewHolder.operateType.setText(model.getOperateType());
-                    viewHolder.recordTime.setText(model.getRecordTime());
+                    viewHolder.recordName.setText(model.getSecondlabelName());
+                    viewHolder.operateType.setText(model.getPushWay());
+                    viewHolder.recordTime.setText(model.getSetTime());
 
                     viewHolder.editHitory.setText("继续");
                     viewHolder.deleteHistory.setText("删除");
@@ -140,7 +140,7 @@ public class ShowHistoryAdapter extends BaseAdapter {
     }
 
     class ViewHolder{
-        CircleImageView firstImg;
+        RoundAngleImageView firstImg;
         TextView recordName;
         TextView operateType;
         TextView recordTime;

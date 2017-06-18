@@ -8,12 +8,14 @@ import android.graphics.Color;
  */
 
 public class Constants {
-    public static int USER_ID = 520;//用户id
+    public static int USER_ID = 17;//用户id
 //    public static final String HOST_IP = "http://139.199.23.142";//服务器地址
     public static final String HOST_IP = "http://192.168.43.204";//服务器地址
     public static final String HOST_PORT = ":8080";//端口号
 
-    //用户信息请求URL
+    /**
+     * 用户信息请求URL
+     */
     public static final String USER_REGISTER = HOST_IP + HOST_PORT + "/look/app/SaveUser";//用户注册
     public static final String USER_LOGIN = HOST_IP + HOST_PORT + "/look/app/userLogin";//用户登录（手机号+密码）
     public static final String USER_LOGIN_OTHER = HOST_IP + HOST_PORT + "/look/app/otherLogin";//用户第三方登录
@@ -22,10 +24,21 @@ public class Constants {
     public static final String USER_UPDATE_MESSAGE = HOST_IP + HOST_PORT + "/look/app/ChangeUserInfo";//用户信息修改
     public static final String USER_EXIT = HOST_IP + HOST_PORT + "/look/app/outLogin";//用户退出登录
 
+    public static final String USER_HISTORY_DELETE = HOST_IP + HOST_PORT + "/look/app/DeleteUserHistoryById";
+    public static final String USER_ALL_HISTORY = HOST_IP + HOST_PORT + "/look/app/DeleteUserHistoryById";
 
+    public static final String USER_HISTORY_DATA = "http://obs.myhwclouds.com/look.admin.info/historyRecord.txt";
 
     /**
-     * 测试图片
+     * 界面数据展示地址
+     */
+    public static final String SYSTEM_PUSH_DATA = "http://obs.myhwclouds.com/look.admin.info/systemPush.txt";//首页-系统推送
+    public static final String HOBBY_PUSH_DATA = "http://obs.myhwclouds.com/look.admin.info/hobbyPush.txt";//首页-兴趣推送
+    public static final String HOT_CATEGROY_DATA = "http://obs.myhwclouds.com/look.admin.info/hotCateGroy.txt";//兴趣导航-热门种类
+    public static final String GUESS_YOU_LIKE_DATA = "http://obs.myhwclouds.com/look.admin.info/hotCateGroy.txt";//兴趣导航-猜你喜欢
+
+    /**
+     * 测试数据
      */
     public static String User_Head = "http://139.199.23.142:8080/TestShowMessage1/marker/head.jpg";
     public static String User_Head1 = "http:139.199.23.142:8080/TestShowMessage1/marker/head/user_head1.jpg";
@@ -53,6 +66,9 @@ public class Constants {
             Color.parseColor("#F6BC7E")
     };
 
+    /**
+     * banner页数据
+     */
     public static final String[] bannerImg = {
             "http://139.199.23.142:8080/TestShowMessage1/marker/banner/imgNavBanner/banner1.jpg",
             "http://139.199.23.142:8080/TestShowMessage1/marker/banner/imgNavBanner/banner2.jpg",
@@ -60,5 +76,16 @@ public class Constants {
             "http://139.199.23.142:8080/TestShowMessage1/marker/banner/imgNavBanner/banner4.jpg",
             "http://139.199.23.142:8080/TestShowMessage1/marker/banner/imgNavBanner/banner5.jpg",
             "http://139.199.23.142:8080/TestShowMessage1/marker/banner/imgNavBanner/banner6.jpg"
+    };
+
+    public static final String[] guessYouLikeImg = {
+            "http://obs.myhwclouds.com/look.admin.image/老马识途/2017-5-21/白云岩-高山-水-天空-树.jpg",
+            "http://obs.myhwclouds.com/look.admin.image/老马识途/2017-5-22/城堡-建筑-宫殿-天空.jpg",
+            "http://obs.myhwclouds.com/look.admin.image/华为/2017-5-21/天空-云朵-船-树-湖水.jpg",
+            "http://obs.myhwclouds.com/look.admin.image/腾讯/2017-5-21/建筑-纪念碑-卡鲁城堡.jpg",
+            "http://obs.myhwclouds.com/look.admin.image/老马识途/2017-5-20/城堡-树木-草地-建筑.jpg",
+            "http://obs.myhwclouds.com/look.admin.image/老马识途/2017-5-20/房屋-河-城市.jpg",
+            "http://obs.myhwclouds.com/look.admin.image/华为/2017-5-23/电梯-人-店铺-大厅.jpg",
+            "http://obs.myhwclouds.com/look.admin.image/腾讯/2017-5-23/山-树-建筑-水.jpg"
     };
 }

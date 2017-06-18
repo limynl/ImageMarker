@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -76,14 +77,16 @@ public class ImageNavFragment extends Fragment implements View.OnClickListener, 
     private LinearLayout dot;//指示器
     private List<View> pagerList;
     private List<CategoryModel> likeList = new ArrayList<>();
+    private List<MarkerModel> guessItemList = new ArrayList<>();
     private LayoutInflater inflater;
+    private LikeViewPagerAdapter likeViewPagerAdapter;
     private int pageCount;//总页数
     private int pageSize = 4;//每页显示的条目数
     private int currentIndex = 0;//显示当前页数
 
     //精选种类
     private ListView selectListView;
-    private List<SelectCategoryModel> selectCategoryList;
+    private static List<SelectCategoryModel> selectCategoryList = new ArrayList<SelectCategoryModel>();;
     private SelectCateGoryAdapter selectCateGoryAdapter;
 
     private static List<MarkerModel> itemList = new ArrayList<>();
@@ -112,6 +115,8 @@ public class ImageNavFragment extends Fragment implements View.OnClickListener, 
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         getDataFromToHotCategroy();//热门分类数据
+        getDataFromToGuessYouLike();//猜你喜欢
+        getDataFromToSelectCategroy();
         //初始化刷新控件
         refreshLayout.setColorSchemeResources(R.color.colorAccent, R.color.write, R.color.yellow);
         refreshLayout.setProgressBackgroundColor(R.color.theme);
@@ -188,18 +193,14 @@ public class ImageNavFragment extends Fragment implements View.OnClickListener, 
     }
 
     private void setLikeViewpager() {
-        likeList.add(new CategoryModel(R.mipmap.system_push1, "这是标题一", "这是简要信息"));
-        likeList.add(new CategoryModel(R.mipmap.system_push2, "这是标题二", "这是简要信息"));
-        likeList.add(new CategoryModel(R.mipmap.system_push2, "这是标题三", "这是简要信息"));
-        likeList.add(new CategoryModel(R.mipmap.system_push3, "这是标题四", "这是简要信息"));
-        likeList.add(new CategoryModel(R.mipmap.system_push1, "这是标题一", "这是简要信息"));
-        likeList.add(new CategoryModel(R.mipmap.system_push2, "这是标题二", "这是简要信息"));
-        likeList.add(new CategoryModel(R.mipmap.system_push2, "这是标题三", "这是简要信息"));
-        likeList.add(new CategoryModel(R.mipmap.system_push3, "这是标题四", "这是简要信息"));
-        likeList.add(new CategoryModel(R.mipmap.system_push1, "这是标题一", "这是简要信息"));
-        likeList.add(new CategoryModel(R.mipmap.system_push2, "这是标题二", "这是简要信息"));
-        likeList.add(new CategoryModel(R.mipmap.system_push2, "这是标题三", "这是简要信息"));
-        likeList.add(new CategoryModel(R.mipmap.system_push3, "这是标题四", "这是简要信息"));
+        likeList.add(new CategoryModel(Constants.guessYouLikeImg[0], "这是标题一", "这是简要信息"));
+        likeList.add(new CategoryModel(Constants.guessYouLikeImg[1], "这是标题二", "这是简要信息"));
+        likeList.add(new CategoryModel(Constants.guessYouLikeImg[2], "这是标题三", "这是简要信息"));
+        likeList.add(new CategoryModel(Constants.guessYouLikeImg[3], "这是标题四", "这是简要信息"));
+        likeList.add(new CategoryModel(Constants.guessYouLikeImg[4], "这是标题一", "这是简要信息"));
+        likeList.add(new CategoryModel(Constants.guessYouLikeImg[5], "这是标题二", "这是简要信息"));
+        likeList.add(new CategoryModel(Constants.guessYouLikeImg[6], "这是标题三", "这是简要信息"));
+        likeList.add(new CategoryModel(Constants.guessYouLikeImg[7], "这是标题四", "这是简要信息"));
         inflater = LayoutInflater.from(getContext());
         pageCount = (int) Math.ceil(likeList.size() * 1.0 / pageSize);//计算总页数
         pagerList = new ArrayList<>();
@@ -208,42 +209,51 @@ public class ImageNavFragment extends Fragment implements View.OnClickListener, 
             gridView.setAdapter(new GridViewLikeAdapter(getContext(), likeList, i, pageSize));
             pagerList.add(gridView);
 
-            //添加点击事件
             gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     int pos = position + currentIndex * pageSize;
-                    Toast.makeText(getContext(), "pos:" + pos, Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(getContext(), MarkHomeActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("pageTag", "imgNavPage");
+                    bundle.putSerializable("item", guessItemList.get(pos));
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                    getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 }
             });
         }
-        likeViewPager.setAdapter(new LikeViewPagerAdapter(pagerList));
+        likeViewPagerAdapter = new LikeViewPagerAdapter(pagerList);
+        likeViewPager.setAdapter(likeViewPagerAdapter);
         //设置指示器
-        setOvalLayout();
+        setOvalLayout(pageCount);
     }
 
     private void setSelectCategory() {
-        selectCategoryList = new ArrayList<SelectCategoryModel>();
-        List<CateGoryInfo> itemList = new ArrayList<>();
-        itemList.add(new CateGoryInfo("标题一", "http://obs.myhwclouds.com/look.admin.image/华为/2017-5-21/天空-云朵-船-树-湖水.jpg"));
-        itemList.add(new CateGoryInfo("标题二", "http://obs.myhwclouds.com/look.admin.image/华为/2017-5-20/笔记本电脑-桌子-鼠标-手机.jpg"));
-        itemList.add(new CateGoryInfo("标题三", "http://obs.myhwclouds.com/look.admin.image/华为/2017-5-20/笔记本电脑-椅子-眼睛-桌子.jpg"));
-        itemList.add(new CateGoryInfo("标题四", "http://obs.myhwclouds.com/look.admin.image/华为/2017-5-20/笔记本电脑-水杯-桌子-手机.jpg"));
-        itemList.add(new CateGoryInfo("标题五", "http://obs.myhwclouds.com/look.admin.image/华为/2017-5-20/笔记本电脑-计算机-树木-草坪.jpg"));
-        itemList.add(new CateGoryInfo("标题六", "http://obs.myhwclouds.com/look.admin.image/华为/2017-5-20/键盘-鼠标-桌子.jpg"));
-        itemList.add(new CateGoryInfo("标题七", "http://obs.myhwclouds.com/look.admin.image/华为/2017-5-22/剪刀.jpg"));
-        selectCategoryList.add(new SelectCategoryModel("主标题一", itemList));
-        selectCategoryList.add(new SelectCategoryModel("主标题二", itemList));
-        selectCategoryList.add(new SelectCategoryModel("主标题三", itemList));
         selectCateGoryAdapter = new SelectCateGoryAdapter(getContext(), selectCategoryList);
         selectListView.setAdapter(selectCateGoryAdapter);
+        selectListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getContext(), MarkHomeActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("pageTag", "imgNavPage");
+                bundle.putSerializable("item", guessItemList.get(position));
+                intent.putExtras(bundle);
+                startActivity(intent);
+                getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+            }
+        });
     }
 
     /**
      * 设置指示器(猜你喜欢)
      */
-    private void setOvalLayout() {
-        for (int i = 0; i < pageCount; i++) {
+    private void setOvalLayout(int page) {
+        if (page == 0){
+            return;
+        }
+        for (int i = 0; i < page; i++) {
             dot.addView(inflater.inflate(R.layout.dot, null));
         }
         dot.getChildAt(0).findViewById(R.id.v_dot).setBackgroundResource(R.drawable.dot_selected);
@@ -334,7 +344,37 @@ public class ImageNavFragment extends Fragment implements View.OnClickListener, 
                         gson = new Gson();
                         MarkerModel model = gson.fromJson(object1.toString(), MarkerModel.class);
                         itemList.add(model);
-                        hotCategroyAdapter.notifyDataSetChanged();
+                    }
+                    hotCategroyAdapter.notifyDataSetChanged();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(VolleyError error) {
+
+            }
+        });
+    }
+
+    private void getDataFromToGuessYouLike() {
+        String url = Constants.GUESS_YOU_LIKE_DATA;
+        VolleyRequestUtil.RequestGet(getContext(), url, "guessYouLike", new VolleyListenerInterface() {
+            @Override
+            public void onSuccess(String result) {
+                JSONObject object = null;
+                try {
+                    object = new JSONObject(new String(result.getBytes("ISO-8859-1"), "UTF-8"));
+                    String tag = new String(object.optString("TAG").getBytes("ISO-8859-1"), "UTF-8");
+                    JSONArray array = object.optJSONArray("picture");
+                    Gson gson = null;
+                    for (int i = 0; i < array.length(); i++) {
+                        JSONObject object1 = array.optJSONObject(i);
+                        gson = new Gson();
+                        MarkerModel model = gson.fromJson(object1.toString(), MarkerModel.class);
+                        guessItemList.add(model);
+                        likeViewPagerAdapter.notifyDataSetChanged();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -346,6 +386,43 @@ public class ImageNavFragment extends Fragment implements View.OnClickListener, 
 
             }
         });
+    }
 
+    private void getDataFromToSelectCategroy(){
+        String url = "http://obs.myhwclouds.com/look.admin.info/selectCateGory.txt";
+        VolleyRequestUtil.RequestGet(getContext(), url, "selectCateGory", new VolleyListenerInterface() {
+            @Override
+            public void onSuccess(String result) {
+                JSONObject object = null;
+                try {
+                    object = new JSONObject(new String(result.getBytes("ISO-8859-1"), "UTF-8"));
+                    String tag = new String(object.optString("TAG").getBytes("ISO-8859-1"), "UTF-8");
+                    JSONArray array = object.optJSONArray("picture");
+                    Gson gson = null;
+                    for (int i = 0; i < array.length(); i++) {
+                        JSONObject object1 = array.optJSONObject(i);
+                        gson = new Gson();
+                        MarkerModel model = gson.fromJson(object1.toString(), MarkerModel.class);
+                        List<CateGoryInfo> itemList = new ArrayList<>();
+                        itemList.add(new CateGoryInfo("标题一", model.getImageUrl1()));
+                        itemList.add(new CateGoryInfo("标题二", model.getImageUrl2()));
+                        itemList.add(new CateGoryInfo("标题三", model.getImageUrl3()));
+                        itemList.add(new CateGoryInfo("标题四", model.getImageUrl4()));
+                        itemList.add(new CateGoryInfo("标题五", model.getImageUrl5()));
+                        itemList.add(new CateGoryInfo("标题六", model.getImageUrl6()));
+                        selectCategoryList.add(new SelectCategoryModel(model.getSecondlabelName(), itemList));
+                    }
+                    Log.e("tag", "onSuccess: 接收到的数据为：" + selectCategoryList.toString());
+                    selectCateGoryAdapter.notifyDataSetChanged();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(VolleyError error) {
+
+            }
+        });
     }
 }

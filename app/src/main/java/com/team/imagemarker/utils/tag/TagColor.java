@@ -15,7 +15,6 @@ public class TagColor {
     public int textColor = Color.WHITE;
 
     public static List<TagColor> getRandomColors(int size){
-
         List<TagColor> list = new ArrayList<>();
         for(int i=0; i< size; i++){
             TagColor color = new TagColor();
