@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.view.KeyEvent;
-import android.widget.Toast;
 
 import com.luseen.spacenavigation.SpaceItem;
 import com.luseen.spacenavigation.SpaceNavigationView;
@@ -15,6 +14,7 @@ import com.team.imagemarker.R;
 import com.team.imagemarker.fragments.home.FirstPageFragment;
 import com.team.imagemarker.fragments.home.ImageNavFragment;
 import com.team.imagemarker.fragments.home.UserCenterFragment;
+import com.team.imagemarker.utils.ToastUtil;
 import com.team.imagemarker.utils.common.NetReceiver;
 
 import java.util.Timer;
@@ -39,6 +39,7 @@ public class HomeActivity extends FragmentActivity{
     private static Boolean isExit = false;
     private NetReceiver mReceiver;
     private IntentFilter mFilter;
+    private ToastUtil toastUtil = new ToastUtil();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +47,6 @@ public class HomeActivity extends FragmentActivity{
         setContentView(R.layout.activity_home);
         setTabs();
 
-        //网络判断
         mReceiver = new NetReceiver();
         mFilter = new IntentFilter();
         mFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
@@ -154,7 +154,7 @@ public class HomeActivity extends FragmentActivity{
             Timer timer = null;
             if(isExit == false){
                 isExit = true;
-                Toast.makeText(this, "再按一次退出应用", Toast.LENGTH_SHORT).show();
+                toastUtil.Short(this, "再按一次退出应用").show();
                 timer = new Timer();
                 timer.schedule(new TimerTask() {
                     @Override

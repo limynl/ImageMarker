@@ -1,6 +1,5 @@
 package com.team.imagemarker.fragments.history;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -88,46 +87,47 @@ public class AllHistoryFragment extends Fragment implements btnClickListener, Sw
      */
     @Override
     public void btnEditClick(final int position) {
-        customDialog = LayoutInflater.from(getContext()).inflate(R.layout.dialog_delete, null);
-        showMessage = (TextView) customDialog.findViewById(R.id.show_message);
-        delete = (Button) customDialog.findViewById(R.id.record_delete);
-        if(list.get(position).getFlag().equals("T")){
-            showMessage.setText("是否想要查看这次操作?");
-            delete.setText("查看");
-        }else if (list.get(position).getFlag().equals("S")) {
-            showMessage.setText("是否想要继续完成此次操作?");
-            delete.setText("继续");
-        }
-        cancel = (Button) customDialog.findViewById(R.id.record_cancel);
-        dialogOne = new Dialog(getContext());
-        final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setView(customDialog);
-        dialogOne = builder.create();
-        dialogOne.show();
-        delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialogOne.dismiss();
-                Intent intent = new Intent(getContext(), MarkHomeActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("pageTag", "completeHistory");
-                bundle.putSerializable("completeData", list.get(position));
-                intent.putExtras(bundle);
-                startActivity(intent);
-                getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-            }
-        });
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialogOne.dismiss();
-            }
-        });
+//        customDialog = LayoutInflater.from(getContext()).inflate(R.layout.dialog_delete, null);
+//        showMessage = (TextView) customDialog.findViewById(R.id.show_message);
+//        delete = (Button) customDialog.findViewById(R.id.record_delete);
+//        if(list.get(position).getFlag().equals("T")){
+//            showMessage.setText("是否想要查看这次操作?");
+//            delete.setText("查看");
+//        }else if (list.get(position).getFlag().equals("S")) {
+//            showMessage.setText("是否想要继续完成此次操作?");
+//            delete.setText("继续");
+//        }
+//        cancel = (Button) customDialog.findViewById(R.id.record_cancel);
+//        dialogOne = new Dialog(getContext());
+//        final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+//        builder.setView(customDialog);
+//        dialogOne = builder.create();
+//        dialogOne.show();
+//        delete.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                dialogOne.dismiss();
+//                Intent intent = new Intent(getContext(), MarkHomeActivity.class);
+//                Bundle bundle = new Bundle();
+//                bundle.putString("pageTag", "completeHistory");
+//                bundle.putSerializable("completeData", list.get(position));
+//                intent.putExtras(bundle);
+//                startActivity(intent);
+//                getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+//            }
+//        });
+//        cancel.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                dialogOne.dismiss();
+//            }
+//        });
+
 
         new SweetAlertDialog(getContext(), SweetAlertDialog.WARNING_TYPE)
-                .setTitleText("该次操作已经提交！")
-                .setContentText("是否继续查看？")
-                .setCancelText("查 看")
+                .setTitleText(list.get(position).getFlag().equals("T") ? "该次操作已经提交!" : "该次操作已经保存!")
+                .setContentText(list.get(position).getFlag().equals("T") ? "您可以选择查看此次操作!" : "您可以继续修改此次操作并提交!")
+                .setCancelText(list.get(position).getFlag().equals("T") ? "查 看" : "继 续")
                 .setConfirmText("取 消")
                 .showConfirmButton(true)
                 .showCancelButton(true)
@@ -147,7 +147,7 @@ public class AllHistoryFragment extends Fragment implements btnClickListener, Sw
                 .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                     @Override
                     public void onClick(SweetAlertDialog sDialog) {
-                        sDialog.dismiss();
+                       sDialog.dismiss();
                     }
                 })
                 .show();
@@ -159,37 +159,35 @@ public class AllHistoryFragment extends Fragment implements btnClickListener, Sw
      */
     @Override
     public void btnDeleteClick(final int position) {
-        customDialog = LayoutInflater.from(getContext()).inflate(R.layout.dialog_delete, null);
-        showMessage = (TextView) customDialog.findViewById(R.id.show_message);
-        showMessage.setText("是否要删除该条记录?");
-        delete = (Button) customDialog.findViewById(R.id.record_delete);
-        cancel = (Button) customDialog.findViewById(R.id.record_cancel);
-        dialogOne = new Dialog(getContext());
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setView(customDialog);
-        dialogOne = builder.create();
-        dialogOne.show();
-        delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialogTwo = new Dialog(getContext());
-                AlertDialog.Builder builder1 = new AlertDialog.Builder(getContext());
-                builder1.setView(LayoutInflater.from(getContext()).inflate(R.layout.dialog_alter, null));
-                dialogTwo = builder1.create();
-                dialogTwo.show();
-                Timer timer = new Timer();
-                timer.schedule(new Wait(), 1500);
-                deleteHistory(position);
-
-                dialogOne.dismiss();
-            }
-        });
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialogOne.dismiss();
-            }
-        });
+        new SweetAlertDialog(getContext(), SweetAlertDialog.WARNING_TYPE)
+                .setTitleText(list.get(position).getFlag().equals("T") ? "该次操作已经提交!" : "该次操作已经保存!")
+                .setContentText("您可以删除此次操作!")
+                .setCancelText("删 除")
+                .setConfirmText("取 消")
+                .showConfirmButton(true)
+                .showCancelButton(true)
+                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sDialog) {
+                        deleteHistory(position);
+                        sDialog.setTitleText("删除成功")
+                                .setContentText("")
+                                .showConfirmButton(false)
+                                .showCancelButton(false)
+                                .setCancelClickListener(null)
+                                .setConfirmClickListener(null)
+                                .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+                        Timer timer=new Timer();
+                        timer.schedule(new Wite(sDialog), 2000);
+                    }
+                })
+                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sDialog) {
+                        sDialog.dismiss();
+                    }
+                })
+                .show();
     }
 
     private void deleteHistory(final int position) {
@@ -233,19 +231,6 @@ public class AllHistoryFragment extends Fragment implements btnClickListener, Sw
         }
     }
 
-    //    class wait extends TimerTask {
-//        private SweetAlertDialog sDialog;
-//
-//        public wait(SweetAlertDialog sDialog){
-//            this.sDialog = sDialog;
-//        }
-//
-//        @Override
-//        public void run() {
-//            sDialog.dismiss();
-//        }
-//    }
-//
     private List<ItemEntity> getDataFromNet(){
         List<ItemEntity> list = new ArrayList<>();
         try {
@@ -308,4 +293,5 @@ public class AllHistoryFragment extends Fragment implements btnClickListener, Sw
             list.clear();
         }
     }
+
 }

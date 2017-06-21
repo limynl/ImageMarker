@@ -100,8 +100,8 @@ public class MarkHomeActivity extends Activity implements View.OnClickListener{
             handelMessge((MarkerModel) bundle.getSerializable("completeData"));
 //            dataList = (List<ItemEntity>) bundle.getSerializable("completeData");
         }else if(pageFlag.equals("noCompleteHistory")){//历史记录未完成，继续打标签
-//            dataList = (List<ItemEntity>) bundle.getSerializable("noCompleteData");
-            handelMessge((MarkerModel) bundle.getSerializable("noCompleteData"));
+            dataList = (List<ItemEntity>) bundle.getSerializable("noCompleteData");
+//            handelMessge((MarkerModel) bundle.getSerializable("noCompleteData"));
         }else if(pageFlag.equals("firstPage")){
             handelMessge((MarkerModel) bundle.getSerializable("item"));
         }else if(pageFlag.equals("imgNavPage")){
@@ -339,6 +339,8 @@ public class MarkHomeActivity extends Activity implements View.OnClickListener{
         @Override
         public void run() {
             sDialog.dismiss();
+            MarkHomeActivity.this.finish();
+            MarkHomeActivity.this.overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
         }
     }
 
@@ -435,4 +437,11 @@ public class MarkHomeActivity extends Activity implements View.OnClickListener{
         dataList.add(new ItemEntity(item.getImageUrl6(), item.getLabel6().equals("") ? new String[]{} : item.getLabel6().split("-")));
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(dataList != null){
+            dataList.clear();
+        }
+    }
 }

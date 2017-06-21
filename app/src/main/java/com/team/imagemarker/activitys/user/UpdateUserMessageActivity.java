@@ -350,11 +350,6 @@ public class UpdateUserMessageActivity extends Activity implements View.OnClickL
                 Toast.makeText(UpdateUserMessageActivity.this, "服务器连接错误", Toast.LENGTH_SHORT).show();
             }
         });
-
-
-
-
-
     }
 
     /**

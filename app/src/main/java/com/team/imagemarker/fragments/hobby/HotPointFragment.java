@@ -152,6 +152,7 @@ public class HotPointFragment extends Fragment implements View.OnClickListener{
 
         hot.setAdapter(mAdapter);
         hot.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
+        hot.addHeaderView(LayoutInflater.from(getContext()).inflate(R.layout.hobby_head, null));
         hot.setRefreshProgressStyle(ProgressStyle.BallSpinFadeLoader);
         hot.setLoadingMoreProgressStyle(ProgressStyle.SquareSpin);
         hot.setArrowImageView(R.drawable.ic_pulltorefresh_arrow);

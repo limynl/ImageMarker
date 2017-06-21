@@ -50,8 +50,9 @@
                         android:layout_marginLeft="10dp"
                         android:maxLines="1"
                         android:text="标题名称"
-                        android:textColor="#f57c00"
+                        android:textColor="@color/gray2"
                         android:textSize="14sp" />
+                <!--f57c00-->
 
             </RelativeLayout>
 

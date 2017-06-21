@@ -2,6 +2,7 @@ package com.team.imagemarker.activitys.integral;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -17,7 +18,6 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.team.imagemarker.R;
 import com.team.imagemarker.adapters.ShoppingAdapter;
@@ -25,10 +25,13 @@ import com.team.imagemarker.adapters.UserIntegralAdapter;
 import com.team.imagemarker.adapters.task.TaskBoxAdapter;
 import com.team.imagemarker.entitys.UserIntegralModel;
 import com.team.imagemarker.entitys.home.CategoryModel;
+import com.team.imagemarker.fragments.history.Wite;
 import com.team.imagemarker.utils.MyGridView;
+import com.team.loading.SweetAlertDialog;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
 
 /**
  * 积分商城
@@ -43,6 +46,7 @@ public class IntegralActivity extends Activity implements View.OnClickListener{
 
     private RecyclerView shopping;
     private List<CategoryModel> list;
+    private TextView integral;
 
     private MyGridView taskBox;
     private List<CategoryModel> systemPushList = new ArrayList<>();
@@ -73,6 +77,8 @@ public class IntegralActivity extends Activity implements View.OnClickListener{
         rightIcon.setVisibility(View.GONE);
         leftIcon.setOnClickListener(this);
 
+        integral = (TextView) findViewById(R.id.integral);
+
         taskBox = (MyGridView) findViewById(R.id.task_box);
         taskBox = (MyGridView) findViewById(R.id.task_box);
         luckDraw = (ImageView) findViewById(R.id.luck_draw);
@@ -90,6 +96,42 @@ public class IntegralActivity extends Activity implements View.OnClickListener{
         shopping = (RecyclerView) findViewById(R.id.shopping);
         shopping.setLayoutManager(new GridLayoutManager(this,2));
         shopping.setAdapter(shoppingAdapter);
+        shoppingAdapter.setOnItemClickListner(new ShoppingAdapter.ItemClickListener() {
+            @Override
+            public void onItemClick(final View view) {
+                new SweetAlertDialog(IntegralActivity.this, SweetAlertDialog.WARNING_TYPE)
+                        .setTitleText("积分兑换")
+                        .setContentText("该件商品将消耗10积分，确认兑换吗？")
+                        .setCancelText("确 认")
+                        .setConfirmText("取 消")
+                        .showConfirmButton(true)
+                        .showCancelButton(true)
+                        .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sDialog) {
+                                sDialog.setTitleText("兑换成功!")
+                                        .setContentText("稍后我们将与您取得联系!")
+                                        .showConfirmButton(false)
+                                        .showCancelButton(false)
+                                        .setCancelClickListener(null)
+                                        .setConfirmClickListener(null)
+                                        .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+                                Timer timer=new Timer();
+                                timer.schedule(new Wite(sDialog), 3000);
+                                integral.setText((Integer.parseInt(integral.getText().toString()) - 10) + "");
+                                ((TextView) view).setText((Integer.parseInt(((TextView) view).getText().toString().substring(0, 1)) + 1) + "人已兑换");
+                                ((TextView) view).setTextColor(Color.parseColor("#FF5C5D"));
+                            }
+                        })
+                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sDialog) {
+                                sDialog.dismiss();
+                            }
+                        })
+                        .show();
+            }
+        });
     }
 
     private void setTaskBox() {
@@ -101,7 +143,7 @@ public class IntegralActivity extends Activity implements View.OnClickListener{
         taskBox.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(IntegralActivity.this, "position:" + (position + 1), Toast.LENGTH_SHORT).show();
+
             }
         });
     }

@@ -11,7 +11,7 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
-    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:name=".app.MyApplication"
@@ -20,7 +20,8 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <!--tools:replace="android:icon, android:theme"-->
+
+        <!-- tools:replace="android:icon, android:theme" -->
         <!-- Mob注册声明 -->
         <activity android:name="com.mob.tools.MobUIShell">
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
@@ -96,7 +97,9 @@
             android:name=".activitys.integral.LuckDrawActivity"
             android:theme="@style/LuckDrawActivity" />
         <activity android:name=".activitys.hobby.HobbyMainActivity" />
-        <activity android:name=".activitys.hobby.HobbySelectActivity"></activity>
+        <activity android:name=".activitys.hobby.HobbySelectActivity" />
+        <activity android:name=".activitys.integral.IntegralMainActivity" />
+        <activity android:name=".activitys.hobby.HobbyActivity"></activity>
     </application>
 
 </manifest>

@@ -28,6 +28,7 @@ import com.team.imagemarker.db.UserDbHelper;
 import com.team.imagemarker.entitys.UserModel;
 import com.team.imagemarker.utils.EditTextWithDel;
 import com.team.imagemarker.utils.PaperButton;
+import com.team.imagemarker.utils.ToastUtil;
 import com.team.imagemarker.utils.volley.VolleyListenerInterface;
 import com.team.imagemarker.utils.volley.VolleyRequestUtil;
 import com.tencent.connect.UserInfo;
@@ -77,6 +78,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Pla
     private BaseUiListener mIUiListener;
     private UserInfo mUserInfo;
     private  IWXAPI api;
+    private ToastUtil toastUtil = new ToastUtil();
 
     @Nullable
     @Override
@@ -125,9 +127,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Pla
 //                UserLogin();
                 dialog.show();
                 Timer timer=new Timer();
-                timer.schedule(new wait(), 3000);
-                startActivity(new Intent(getActivity(), HomeActivity.class));
-                getActivity().overridePendingTransition(R.anim.slide_in_up,R.anim.slide_out_down);
+                timer.schedule(new wait(), 4000);
             }
             break;
             case R.id.reset_password:{//重置密码
@@ -141,7 +141,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Pla
             break;
             case R.id.wechat_login:{//微信登录
                 if(!api.isWXAppInstalled()){
-                    Toast.makeText(context, "请安装微信客户端之后再进行登录", Toast.LENGTH_SHORT).show();
+                    toastUtil.Short(getContext(), "请安装微信客户端之后再进行登录").show();
                     return;
                 }
                 getCode();
@@ -178,28 +178,28 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Pla
 
                                 Timer timer=new Timer();
                                 timer.schedule(new wait(), 2000);
-                                startActivity(new Intent(getActivity(), HomeActivity.class));
-                                getActivity().overridePendingTransition(R.anim.slide_in_up,R.anim.slide_out_down);
+//                                startActivity(new Intent(getActivity(), HomeActivity.class));
+//                                getActivity().overridePendingTransition(R.anim.slide_in_up,R.anim.slide_out_down);
                             }else{
-                                Toast.makeText(getContext(), "登录失败", Toast.LENGTH_SHORT).show();
+                                toastUtil.Short(getContext(), "登陆失败").show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            Toast.makeText(getContext(), "服务器连接错误", Toast.LENGTH_SHORT).show();
+                            toastUtil.Short(getContext(), "服务器连接错误").show();
                         }
                     }
 
                     @Override
                     public void onError(VolleyError error) {
-                        Toast.makeText(getContext(), "服务器连接错误", Toast.LENGTH_SHORT).show();
+                        toastUtil.Short(getContext(), "服务器连接错误").show();
                     }
                 });
 
             }else{
-                Toast.makeText(getContext(), "电话号码格式不对，请重新输入", Toast.LENGTH_SHORT).show();
+                toastUtil.Short(getContext(), "电话号码格式不对，请重新输入").show();
             }
         }else{
-            Toast.makeText(getContext(), "账号和密码不能为空", Toast.LENGTH_SHORT).show();
+            toastUtil.Short(getContext(), "账号和密码不能为空").show();
         }
     }
 
@@ -363,7 +363,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Pla
     private class BaseUiListener implements IUiListener {
         @Override
         public void onComplete(Object response) {
-            Toast.makeText(context, "授权成功", Toast.LENGTH_SHORT).show();
+            toastUtil.Short(getContext(), "授权成功").show();
             JSONObject obj = (JSONObject) response;
             try {
                 String openID = obj.getString("openid");
@@ -388,7 +388,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Pla
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        Toast.makeText(getActivity(), "登录成功", Toast.LENGTH_SHORT).show();
+                        toastUtil.Short(getContext(), "登录成功").show();
                         Log.e("Mainactivity","登录成功"+response.toString());
                         /*Intent intent = new Intent(TestLoginActivity.this, TestExampleAsyncActivity.class);
                         startActivity(intent);
@@ -411,12 +411,12 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Pla
         @Override
         public void onError(UiError uiError) {
             Log.e("MainActivity", "onError: " + uiError.toString());
-            Toast.makeText(context, "授权失败", Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onCancel() {
             Toast.makeText(context, "授权取消", Toast.LENGTH_SHORT).show();
+            toastUtil.Short(getContext(), "授权取消").show();
         }
     }
 
@@ -425,6 +425,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Pla
         @Override
         public void run() {
             dialog.dismiss();
+            startActivity(new Intent(getActivity(), HomeActivity.class));
+            getActivity().overridePendingTransition(R.anim.slide_in_up,R.anim.slide_out_down);
         }
     }
 }

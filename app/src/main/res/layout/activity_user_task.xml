@@ -177,7 +177,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="近七天详细情况"
+                    android:text="近七次详细情况"
                     android:textColor="@color/font_light"
                     android:textSize="16dp"
                     android:layout_alignParentLeft="true"

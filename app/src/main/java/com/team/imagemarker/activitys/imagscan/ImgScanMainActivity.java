@@ -32,7 +32,7 @@ public class ImgScanMainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_img_scan_main);
         initFragments();
         initViewPager();
-        mImageArray = new int[]{R.mipmap.scan1,R.mipmap.scan2,R.mipmap.scan3,R.mipmap.scan4};
+        mImageArray = new int[]{R.mipmap.hot1,R.mipmap.hot2,R.mipmap.hot4,R.mipmap.hot6};
         mColorArray = new int[]{android.R.color.holo_blue_light,android.R.color.holo_red_light,android.R.color.holo_orange_light,android.R.color.holo_green_light};
 
         mCoordinatorTabLayout = (CoordinatorTabLayout) findViewById(R.id.coordinatortablayout);

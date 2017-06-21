@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.team.imagemarker.R;
 import com.team.imagemarker.utils.common.SizeUtils;
@@ -81,8 +80,7 @@ public class LuckDrawActivity extends Activity implements RotatePan.AnimationEnd
     @Override
     public void endAnimation(int position) {
         goBtn.setEnabled(true);
-        luckPanLayout.setDelayTime(500);
-        Toast.makeText(this,"Position = "+position+","+strs[position],Toast.LENGTH_SHORT).show();
+        luckPanLayout.setDelayTime(300);
         dialog = new Dialog(this);
         AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
         dialogMessage = LayoutInflater.from(this).inflate(R.layout.dialog_alter, null);

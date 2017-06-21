@@ -109,7 +109,8 @@
                 android:horizontalSpacing="2dp"
                 android:verticalSpacing="2dp"
                 android:scrollbars="none"
-                android:transcriptMode="alwaysScroll"/>
+                android:transcriptMode="alwaysScroll"
+                android:visibility="gone"/>
 
             <!--<RelativeLayout-->
                 <!--android:layout_width="match_parent"-->

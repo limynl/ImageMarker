@@ -25,9 +25,9 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.team.imagemarker.R;
 import com.team.imagemarker.activitys.history.HistoryRecordActivity;
-import com.team.imagemarker.activitys.hobby.HobbyMainActivity;
+import com.team.imagemarker.activitys.hobby.HobbyActivity;
 import com.team.imagemarker.activitys.imagscan.ImgScanMainActivity;
-import com.team.imagemarker.activitys.integral.IntegralActivity;
+import com.team.imagemarker.activitys.integral.IntegralMainActivity;
 import com.team.imagemarker.activitys.tasks.UserTaskActivity;
 import com.team.imagemarker.activitys.user.FeedBackActivity;
 import com.team.imagemarker.activitys.user.UpdateUserMessageActivity;
@@ -163,12 +163,12 @@ public class UserCenterFragment extends Fragment implements View.OnClickListener
             }
             break;
             case R.id.hobby_forum:{//兴趣论坛
-                startActivity(new Intent(getContext(), HobbyMainActivity.class));
+                startActivity(new Intent(getContext(), HobbyActivity.class));
                 getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             }
             break;
             case R.id.integral_mall:{
-                startActivity(new Intent(getContext(), IntegralActivity.class));
+                startActivity(new Intent(getContext(), IntegralMainActivity.class));
                 getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             }
             break;

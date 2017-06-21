@@ -72,7 +72,7 @@
         android:layout_below="@+id/hobby_tag"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="5dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginRight="5dp"
         android:layout_marginBottom="10dp"
         android:text="这里显示内容，这里显示内容，这里显示内容，这里显示内容，这里显示内容"
         android:textColor="#827f93" />
@@ -89,74 +89,108 @@
     <View
         android:id="@+id/divider"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="0dp"
         android:layout_below="@+id/hobby_img"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:background="#ebebeb" />
 
-    <android.support.v7.widget.AppCompatImageView
-        android:id="@+id/view_likes"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+    <RelativeLayout
+        android:id="@+id/share_bar"
+        android:layout_width="match_parent"
+        android:layout_height="35dip"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
         android:layout_below="@+id/divider"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="10dp"
-        android:src="@drawable/ic_heart"
-        android:tint="#827f93"
-        android:visibility="gone"/>
+        android:background="@android:color/white"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="6dp">
 
-    <TextView
-        android:id="@+id/text_likes_count"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/view_likes"
-        android:layout_margin="4dp"
-        android:layout_toEndOf="@+id/view_likes"
-        android:text="24"
-        android:textColor="#827f93"
-        android:textSize="12sp"
-        android:visibility="gone"/>
+        <RelativeLayout
+            android:id="@+id/btnLike"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dip"
+            android:orientation="horizontal"
+            android:paddingBottom="2dip">
 
-    <android.support.v7.widget.AppCompatImageView
-        android:id="@+id/view_chat"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_below="@+id/divider"
-        android:layout_marginLeft="100dp"
-        android:layout_marginTop="10dp"
-        android:src="@drawable/ic_chat"
-        android:tint="#827f93"
-        android:visibility="gone"/>
+            <ImageView
+                android:id="@+id/img_like"
+                android:layout_width="24dip"
+                android:layout_height="20dip"
+                android:src="@drawable/saying_like"/>
 
-    <TextView
-        android:id="@+id/text_chat_count"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/view_chat"
-        android:layout_margin="4dp"
-        android:layout_toEndOf="@+id/view_chat"
-        android:text="20"
-        android:textColor="#827f93"
-        android:textSize="12sp"
-        android:visibility="gone"/>
+            <TextView
+                android:id="@+id/text_like"
+                android:layout_toRightOf="@+id/img_like"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:paddingTop="4dip"
+                android:text="1人赞了"
+                android:textColor="@color/gray2"
+                android:textSize="12sp"/>
+        </RelativeLayout>
 
-    <android.support.v7.widget.AppCompatImageView
-        android:id="@+id/view_settings"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/divider"
-        android:layout_margin="16dp"
-        android:src="@drawable/ic_more"
-        android:tint="#827f93"
-        android:visibility="gone"/>
+        <RelativeLayout
+            android:id="@+id/btnCmt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/img_comment"
+                android:layout_width="24dip"
+                android:layout_height="20dip"
+                android:src="@mipmap/saying_comment"/>
+
+            <TextView
+                android:id="@+id/text_comment"
+                android:layout_toRightOf="@+id/img_comment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="100"
+                android:textColor="@color/gray2"
+                android:textSize="12sp"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/btnRepost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dip"
+            android:layout_toLeftOf="@id/btnCmt"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/img_repost"
+                android:layout_width="24dip"
+                android:layout_height="20dip"
+                android:src="@mipmap/saying_redirect"/>
+
+            <TextView
+                android:id="@+id/text_repost"
+                android:layout_toRightOf="@+id/img_repost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="100"
+                android:textColor="@color/gray2"
+                android:textSize="12sp"/>
+        </RelativeLayout>
+
+    </RelativeLayout>
 
     <View
         android:id="@+id/dividerBottom"
         android:layout_width="match_parent"
         android:layout_height="20dp"
-        android:layout_below="@+id/view_likes"
+        android:layout_below="@+id/share_bar"
         android:background="#E4E6E3" />
 
 </RelativeLayout>

@@ -1,6 +1,7 @@
 package com.team.imagemarker.activitys.hobby;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -131,6 +132,9 @@ public class HobbySelectActivity extends Activity implements View.OnClickListene
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        Intent intent = new Intent();
+        intent.putExtra("resultCode", "test");
+        this.setResult(1, intent);
         this.finish();
         overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
     }

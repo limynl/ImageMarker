@@ -22,6 +22,7 @@ import java.util.List;
 public class ShoppingAdapter extends RecyclerView.Adapter<ShoppingAdapter.ViewHolder> {
     private Context context;
     private List<CategoryModel> list;
+    private ItemClickListener itemClickListener;
 
     public ShoppingAdapter(Context context, List<CategoryModel> list) {
         this.context = context;
@@ -30,12 +31,14 @@ public class ShoppingAdapter extends RecyclerView.Adapter<ShoppingAdapter.ViewHo
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        ViewHolder viewHolder = new ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_shopping_select, parent, false));
+        View view = LayoutInflater.from(context).inflate(R.layout.item_shopping_select, parent, false);
+        ViewHolder viewHolder = new ViewHolder(view);
+//        view.setOnClickListener(this);
         return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
 //        Glide.with(context)
 //                .load(list.get(position).getImgUrl())
 //                .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -44,12 +47,27 @@ public class ShoppingAdapter extends RecyclerView.Adapter<ShoppingAdapter.ViewHo
         holder.headImg.setImageResource(R.drawable.head);
         holder.describe.setText(list.get(position).getName());
         holder.scanCount.setText(list.get(position).getSimpleMessage());
+        holder.shoppingBg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(itemClickListener != null){
+                    itemClickListener.onItemClick(holder.scanCount);
+                }
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
         return list.size();
     }
+//
+//    @Override
+//    public void onClick(View v) {
+//        if(itemClickListener != null){
+//            itemClickListener.onItemClick(v);
+//        }
+//    }
 
     class ViewHolder extends RecyclerView.ViewHolder{
         public ImageView shoppingBg;
@@ -66,4 +84,13 @@ public class ShoppingAdapter extends RecyclerView.Adapter<ShoppingAdapter.ViewHo
 
         }
     }
+
+    public interface ItemClickListener{
+        void onItemClick(View view);
+    }
+
+    public void setOnItemClickListner(ItemClickListener itemClickListener){
+        this.itemClickListener = itemClickListener;
+    }
+
 }
