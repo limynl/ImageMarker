@@ -43,4 +43,8 @@
     <color name="transparent_background">#ffffff</color>
 
     <color name="bgColor_overlay_black">#666666</color>
+
+    <color name="bgColor2">#C0AFD0</color>
+    <color name="bgColor3">#F88F55</color>
+    <color name="bgColor4">#67CCB7</color>
 </resources>

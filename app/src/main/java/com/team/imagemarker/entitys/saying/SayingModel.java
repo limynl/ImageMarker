@@ -7,85 +7,164 @@ package com.team.imagemarker.entitys.saying;
  */
 
 public class SayingModel {
-    private int userId;
-    private int sayingId;
-    private String userHeadImg;//用户头像
-    private String nickName;//用户昵称
-    private String sendTime;//发送时间
-    private String sayingContent;//说说内容
-    private int sayingType;//说说类型
-    private String sayingImg1;//图片1
-    private String sayingImg2;//图片2
-    private String sayingImg3;//图片3
-    private String sayingImg4;//图片4
-    private String sayingImg5;//图片5
-    private String sayingImg6;//图片6
+//    private int userId;
+//    private int sayingId;
+//    private String userHeadImg;//用户头像
+//    private String nickName;//用户昵称
+//    private String sendTime;//发送时间
+//    private String sayingContent;//说说内容
+//    private int sayingType;//说说类型
+//    private String sayingImg1;//图片1
+//    private String sayingImg2;//图片2
+//    private String sayingImg3;//图片3
+//    private String sayingImg4;//图片4
+//    private String sayingImg5;//图片5
+//    private String sayingImg6;//图片6
+
+    private int id;
+    //用户id
+    private int uId;
+    //用户描述
+    private String title;
+    //用户分享图片地址
+    private String imageUrl1;
+    private String imageUrl2;
+    private String imageUrl3;
+    private String imageUrl4;
+    private String imageUrl5;
+    private String imageUrl6;
+    //用户本条分享图片数目
+    private int imageNum;
+    //用户昵称
+    private String userNickName;
+    //用户头像地址
+    private String userPhotoUrl;
+    //分享日期
+    private String uptime;
+    private int sayingType;
 
     public SayingModel() {
     }
 
-    public SayingModel(int userId, int sayingId, String userHeadImg, String nickName, String sendTime, String sayingContent, int sayingType, String sayingImg1, String sayingImg2, String sayingImg3, String sayingImg4, String sayingImg5, String sayingImg6) {
-        this.userId = userId;
-        this.sayingId = sayingId;
-        this.userHeadImg = userHeadImg;
-        this.nickName = nickName;
-        this.sendTime = sendTime;
-        this.sayingContent = sayingContent;
+    public SayingModel(int id, int uId, String title, String imageUrl1, String imageUrl2, String imageUrl3, String imageUrl4, String imageUrl5, String imageUrl6, int imageNum, String userNickName, String userPhotoUrl, String uptime, int sayingType) {
+        this.id = id;
+        this.uId = uId;
+        this.title = title;
+        this.imageUrl1 = imageUrl1;
+        this.imageUrl2 = imageUrl2;
+        this.imageUrl3 = imageUrl3;
+        this.imageUrl4 = imageUrl4;
+        this.imageUrl5 = imageUrl5;
+        this.imageUrl6 = imageUrl6;
+        this.imageNum = imageNum;
+        this.userNickName = userNickName;
+        this.userPhotoUrl = userPhotoUrl;
+        this.uptime = uptime;
         this.sayingType = sayingType;
-        this.sayingImg1 = sayingImg1;
-        this.sayingImg2 = sayingImg2;
-        this.sayingImg3 = sayingImg3;
-        this.sayingImg4 = sayingImg4;
-        this.sayingImg5 = sayingImg5;
-        this.sayingImg6 = sayingImg6;
     }
 
-    public int getUserId() {
-        return userId;
+    public int getId() {
+        return id;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public int getSayingId() {
-        return sayingId;
+    public int getuId() {
+        return uId;
     }
 
-    public void setSayingId(int sayingId) {
-        this.sayingId = sayingId;
+    public void setuId(int uId) {
+        this.uId = uId;
     }
 
-    public String getUserHeadImg() {
-        return userHeadImg;
+    public String getTitle() {
+        return title;
     }
 
-    public void setUserHeadImg(String userHeadImg) {
-        this.userHeadImg = userHeadImg;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public String getNickName() {
-        return nickName;
+    public String getImageUrl1() {
+        return imageUrl1;
     }
 
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
+    public void setImageUrl1(String imageUrl1) {
+        this.imageUrl1 = imageUrl1;
     }
 
-    public String getSendTime() {
-        return sendTime;
+    public String getImageUrl2() {
+        return imageUrl2;
     }
 
-    public void setSendTime(String sendTime) {
-        this.sendTime = sendTime;
+    public void setImageUrl2(String imageUrl2) {
+        this.imageUrl2 = imageUrl2;
     }
 
-    public String getSayingContent() {
-        return sayingContent;
+    public String getImageUrl3() {
+        return imageUrl3;
     }
 
-    public void setSayingContent(String sayingContent) {
-        this.sayingContent = sayingContent;
+    public void setImageUrl3(String imageUrl3) {
+        this.imageUrl3 = imageUrl3;
+    }
+
+    public String getImageUrl4() {
+        return imageUrl4;
+    }
+
+    public void setImageUrl4(String imageUrl4) {
+        this.imageUrl4 = imageUrl4;
+    }
+
+    public String getImageUrl5() {
+        return imageUrl5;
+    }
+
+    public void setImageUrl5(String imageUrl5) {
+        this.imageUrl5 = imageUrl5;
+    }
+
+    public String getImageUrl6() {
+        return imageUrl6;
+    }
+
+    public void setImageUrl6(String imageUrl6) {
+        this.imageUrl6 = imageUrl6;
+    }
+
+    public int getImageNum() {
+        return imageNum;
+    }
+
+    public void setImageNum(int imageNum) {
+        this.imageNum = imageNum;
+    }
+
+    public String getUserNickName() {
+        return userNickName;
+    }
+
+    public void setUserNickName(String userNickName) {
+        this.userNickName = userNickName;
+    }
+
+    public String getUserPhotoUrl() {
+        return userPhotoUrl;
+    }
+
+    public void setUserPhotoUrl(String userPhotoUrl) {
+        this.userPhotoUrl = userPhotoUrl;
+    }
+
+    public String getUptime() {
+        return uptime;
+    }
+
+    public void setUptime(String uptime) {
+        this.uptime = uptime;
     }
 
     public int getSayingType() {
@@ -94,53 +173,5 @@ public class SayingModel {
 
     public void setSayingType(int sayingType) {
         this.sayingType = sayingType;
-    }
-
-    public String getSayingImg1() {
-        return sayingImg1;
-    }
-
-    public void setSayingImg1(String sayingImg1) {
-        this.sayingImg1 = sayingImg1;
-    }
-
-    public String getSayingImg2() {
-        return sayingImg2;
-    }
-
-    public void setSayingImg2(String sayingImg2) {
-        this.sayingImg2 = sayingImg2;
-    }
-
-    public String getSayingImg3() {
-        return sayingImg3;
-    }
-
-    public void setSayingImg3(String sayingImg3) {
-        this.sayingImg3 = sayingImg3;
-    }
-
-    public String getSayingImg4() {
-        return sayingImg4;
-    }
-
-    public void setSayingImg4(String sayingImg4) {
-        this.sayingImg4 = sayingImg4;
-    }
-
-    public String getSayingImg5() {
-        return sayingImg5;
-    }
-
-    public void setSayingImg5(String sayingImg5) {
-        this.sayingImg5 = sayingImg5;
-    }
-
-    public String getSayingImg6() {
-        return sayingImg6;
-    }
-
-    public void setSayingImg6(String sayingImg6) {
-        this.sayingImg6 = sayingImg6;
     }
 }

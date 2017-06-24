@@ -78,9 +78,9 @@ public class ShoppingFragment extends Fragment {
     }
 
     private void setTaskBox() {
-        systemPushList.add(new CategoryModel(R.mipmap.task2, R.mipmap.shopping1, "第一名"));
+        systemPushList.add(new CategoryModel(R.mipmap.task2, R.mipmap.shopping3, "第一名"));
         systemPushList.add(new CategoryModel(R.mipmap.task1, R.mipmap.shopping2, "第二名"));
-        systemPushList.add(new CategoryModel(R.mipmap.task3, R.mipmap.shopping3, "第三名"));
+        systemPushList.add(new CategoryModel(R.mipmap.task3, R.mipmap.shopping1, "第三名"));
         adapterSystem = new TaskBoxAdapter(getContext(), systemPushList);
         taskBox.setAdapter(adapterSystem);
         taskBox.setOnItemClickListener(new AdapterView.OnItemClickListener() {

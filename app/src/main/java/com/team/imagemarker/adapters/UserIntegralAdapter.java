@@ -56,6 +56,7 @@ public class UserIntegralAdapter extends BaseAdapter {
             viewHolder.headImageView = (CircleImageView) convertView.findViewById(R.id.integral_user_header);
             viewHolder.userNickName = (TextView) convertView.findViewById(R.id.integral_user_nick_name);
 //            viewHolder.userIntegralFlag = (ImageView) convertView.findViewById(R.id.user_integral_flag);
+            viewHolder.rank = (TextView) convertView.findViewById(R.id.user_integral_flag);
             viewHolder.userIntegralItem = (RelativeLayout) convertView.findViewById(R.id.user_integral_item_layout);
             viewHolder.userIntegral = (TextView) convertView.findViewById(R.id.integral_user_count);
             convertView.setTag(viewHolder);
@@ -88,7 +89,7 @@ public class UserIntegralAdapter extends BaseAdapter {
                 .into(viewHolder.headImageView);
 //        ImageLoader imageLoader = new ImageLoader.Builder().url(model.getUserHeadUrl()).imgView(viewHolder.headImageView).build();
 //        ImageLoaderUtil.getInstance().loadImage(context, imageLoader);
-
+        viewHolder.rank.setText((position + 1) + "");
         viewHolder.userNickName.setText(model.getUserNickName());
         viewHolder.userIntegral.setText(model.getUserIntegralCount() + "积分");
 
@@ -101,6 +102,7 @@ public class UserIntegralAdapter extends BaseAdapter {
         private ImageView userIntegralFlag;
         private TextView userIntegral;
         private RelativeLayout userIntegralItem;
+        private TextView rank;
     }
 
 }

@@ -15,6 +15,11 @@ public class DayRecommendModel {
         this.imgTag = imgTag;
     }
 
+    public DayRecommendModel(String bgUrl, String imgTag){
+        this.bgUrl = bgUrl;
+        this.imgTag = imgTag;
+    }
+
     public int getBackground() {
         return background;
     }

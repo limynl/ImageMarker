@@ -127,7 +127,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Pla
 //                UserLogin();
                 dialog.show();
                 Timer timer=new Timer();
-                timer.schedule(new wait(), 4000);
+                timer.schedule(new wait(), 3000);
             }
             break;
             case R.id.reset_password:{//重置密码
@@ -174,12 +174,11 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Pla
                                 UserModel userModel = gson.fromJson(object.optString("user"), UserModel.class);
                                 Log.e("tag", "onSuccess: " + userModel.toString());
                                 UserDbHelper.getInstance().saveUserLoginInfo(userModel);
+                                com.team.imagemarker.constants.Constants.USER_ID = userModel.getId();
                                 Log.e("tag", "onSuccess: 数据表：" + UserDbHelper.getInstance().getUserInfo().toString());
 
                                 Timer timer=new Timer();
-                                timer.schedule(new wait(), 2000);
-//                                startActivity(new Intent(getActivity(), HomeActivity.class));
-//                                getActivity().overridePendingTransition(R.anim.slide_in_up,R.anim.slide_out_down);
+                                timer.schedule(new wait(), 3000);
                             }else{
                                 toastUtil.Short(getContext(), "登陆失败").show();
                             }

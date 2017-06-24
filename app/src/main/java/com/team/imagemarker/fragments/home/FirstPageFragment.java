@@ -121,11 +121,6 @@ public class FirstPageFragment extends Fragment implements RapidFloatingActionCo
      * 设置系统推送数据
      */
     private void setSystemDate() {
-
-//        systemPushList.add(new CategoryModel(R.mipmap.system_push1, "这是标题", "这是简要信息"));
-//        systemPushList.add(new CategoryModel(R.mipmap.system_push2, "这是标题", "这是简要信息"));
-        /*systemPushList.add(new CategoryModel(R.mipmap.system_push3, "这是标题", "这是简要信息"));
-        systemPushList.add(new CategoryModel(R.mipmap.system_push4, "这是标题", "这是简要信息"));*/
         adapterSystem = new SystemPushAdapter(getActivity(), systemPushDatas);
         SystemgridView.setAdapter(adapterSystem);
 
@@ -147,10 +142,6 @@ public class FirstPageFragment extends Fragment implements RapidFloatingActionCo
      * 设置兴趣推送数据
      */
     private void setHobbyDate(){
-//        hobbyPushList.add(new CategoryModel(R.mipmap.system_push1, "这是标题", "这是简要信息"));
-//        hobbyPushList.add(new CategoryModel(R.mipmap.system_push2, "这是标题", "这是简要信息"));
-//        hobbyPushList.add(new CategoryModel(R.mipmap.system_push3, "这是标题", "这是简要信息"));
-//        hobbyPushList.add(new CategoryModel(R.mipmap.system_push4, "这是标题", "这是简要信息"));
         hobbyAdapter = new SystemPushAdapter(getActivity(), hobbyPushList);
         hobbyGridView.setAdapter(hobbyAdapter);
         hobbyGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.team.imagemarker.R;
 import com.team.imagemarker.entitys.home.CategoryModel;
@@ -53,6 +54,7 @@ public class TaskBoxAdapter extends BaseAdapter {
             viewHolder.categoryImg = (ImageView) convertView.findViewById(R.id.category_img);
 //            viewHolder.categoryName = (TextView) convertView.findViewById(R.id.category_name);
 //            viewHolder.categorySimapleMessage = (TextView) convertView.findViewById(R.id.category_simple_message);
+//            viewHolder.userScore = (TextView) convertView.findViewById(R.id.user_score);
             viewHolder.userHead = (CircleImageView) convertView.findViewById(R.id.user_head);
             viewHolder.userRanking = (LabelView) convertView.findViewById(R.id.user_ranking);
             convertView.setTag(viewHolder);
@@ -76,11 +78,17 @@ public class TaskBoxAdapter extends BaseAdapter {
 //                });
 //            }
 //        });
-
+//        int score = (Integer.parseInt(viewHolder.userScore.getText().toString().split(":")[1]) - position * 10);
+//        viewHolder.userScore.setText("积分:" + score);
+//        Glide.with(context)
+//                .load(model.getName())
+//                .diskCacheStrategy(DiskCacheStrategy.ALL)
+//                .thumbnail(0.8f)
+//                .into(viewHolder.userHead);
         viewHolder.categoryImg.setImageResource(model.getImgId());
 //        viewHolder.categoryName.setText(model.getName());
 //        viewHolder.categorySimapleMessage.setText("");
-        viewHolder.userHead.setImageResource(model.getImgId1());
+        viewHolder.userHead.setImageResource(R.mipmap.shopping1);
         viewHolder.userRanking.setText(model.getName());
 
         return convertView;
@@ -92,5 +100,6 @@ public class TaskBoxAdapter extends BaseAdapter {
 //        public TextView categorySimapleMessage;
         public CircleImageView userHead;
         public LabelView userRanking;
+        private TextView userScore;
     }
 }

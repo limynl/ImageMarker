@@ -91,7 +91,7 @@
             android:layout_height="match_parent"
             android:layout_marginTop="3dp"
             android:divider="@null"
-            android:scrollbars="none"
+
             android:cacheColorHint="#fafafa"/>
 
     </LinearLayout>

@@ -14,17 +14,10 @@
         android:layout_marginLeft="4dp"
         android:layout_marginRight="4dp">
 
-        <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/picture_group_refreshlayout"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/picture_group_recycle"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/picture_group_recycle"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-        </android.support.v4.widget.SwipeRefreshLayout>
+            android:layout_height="match_parent" />
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/to_top"
@@ -35,7 +28,7 @@
             app:backgroundTint="@color/theme"
             app:elevation="8.0dip"
             app:fabSize="normal"
-            app:layout_anchor="@id/picture_group_refreshlayout"
+            app:layout_anchor="@id/picture_group_recycle"
             app:layout_anchorGravity="bottom|right"
             app:layout_behavior="com.team.imagemarker.utils.ScrollAwareFABBehavior"
             app:pressedTranslationZ="10dp"

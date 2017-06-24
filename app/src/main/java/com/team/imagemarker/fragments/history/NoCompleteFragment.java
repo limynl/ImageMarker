@@ -235,11 +235,11 @@ public class NoCompleteFragment extends Fragment implements btnClickListener, Sw
     }
 
     private void getDataFromToHistory(){
-        String url = Constants.USER_HISTORY_DATA;
-//        String url = Constants.USER_ALL_HISTORY;
+//        String url = Constants.USER_HISTORY_DATA;
+        String url = Constants.USER_ALL_HISTORY;
         Map<String, String> userHistory = new HashMap<String, String>();
         userHistory.put("userId", Constants.USER_ID + "");
-        VolleyRequestUtil.RequestGet(getContext(), url, "NocompletHistory", new VolleyListenerInterface() {
+        VolleyRequestUtil.RequestPost(getContext(), url, "NocompletHistory", userHistory, new VolleyListenerInterface() {
             @Override
             public void onSuccess(String result) {
                 try {

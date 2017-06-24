@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -23,7 +24,10 @@ import com.team.imagemarker.activitys.saying.SendMoodActivity;
 import com.team.imagemarker.adapters.saying.CommonRecyclerAdapter;
 import com.team.imagemarker.adapters.saying.CommonRecyclerHolder;
 import com.team.imagemarker.constants.Constants;
+import com.team.imagemarker.db.UserDbHelper;
+import com.team.imagemarker.entitys.UserModel;
 import com.team.imagemarker.entitys.hobby.HotPointModel;
+import com.team.imagemarker.utils.CircleImageView;
 import com.team.imagemarker.utils.ToastUtil;
 import com.team.imagemarker.utils.volley.VolleyListenerInterface;
 import com.team.imagemarker.utils.volley.VolleyRequestUtil;
@@ -37,13 +41,18 @@ import com.wangjie.rapidfloatingactionbutton.contentimpl.labellist.RapidFloating
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-public class HobbyActivity extends Activity implements RapidFloatingActionContentLabelList.OnRapidFloatingActionContentLabelListListener, View.OnClickListener{
+public class HobbyActivity extends Activity implements RapidFloatingActionContentLabelList.OnRapidFloatingActionContentLabelListListener, View.OnClickListener, XRecyclerView.LoadingListener{
     private TextView title;
     private ImageView leftIcon,rightIcon;
     private RelativeLayout titleBar;
+
+    private TextView userNick;
+    private CircleImageView userHead;
 
     private RapidFloatingActionLayout rfaLayout;
     private RapidFloatingActionButton rfaButton;
@@ -58,11 +67,13 @@ public class HobbyActivity extends Activity implements RapidFloatingActionConten
     private int count = 2;//每次加载两条
 
     private ToastUtil toastUtil = new ToastUtil();
+    private View headView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hobby);
+        headView = LayoutInflater.from(HobbyActivity.this).inflate(R.layout.hobby_head, null);
 
         titleBar = (RelativeLayout) findViewById(R.id.title_bar);
         titleBar.setBackgroundColor(getResources().getColor(R.color.theme1));
@@ -73,6 +84,9 @@ public class HobbyActivity extends Activity implements RapidFloatingActionConten
         rightIcon.setVisibility(View.GONE);
         leftIcon.setOnClickListener(this);
 
+        userNick = (TextView) headView.findViewById(R.id.user_name);
+        userHead = (CircleImageView) headView.findViewById(R.id.man_head);
+
         hot = (XRecyclerView) findViewById(R.id.hot_recycleview);
         rfaLayout = (RapidFloatingActionLayout) findViewById(R.id.rfa_layout);
         rfaButton = (RapidFloatingActionButton) findViewById(R.id.rfa_button);
@@ -80,6 +94,20 @@ public class HobbyActivity extends Activity implements RapidFloatingActionConten
         initData();
         setDate();
         setFlaotButton();//设置悬浮按钮
+
+        UserDbHelper.setInstance(this);
+        UserModel userModel = UserDbHelper.getInstance().getUserInfo();
+        Log.e("tag", "onCreate: 用户的信息为：" + userModel.getUserNickName() + " " + userModel.getUserHeadImage());
+//        userNick.setText(TextUtils.isEmpty(userModel.getUserNickName()) ? "Limynl" : userModel.getUserNickName());
+        userNick.setText(userModel.getUserNickName());
+//        if(!userModel.getUserHeadImage().equals("")){
+//            Glide.with(this)
+//                    .load(userModel.getUserHeadImage())
+//                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+//                    .into(userHead);
+//        }else{
+            userHead.setImageResource(R.mipmap.man_head);
+//        }
     }
 
     @Override
@@ -173,53 +201,17 @@ public class HobbyActivity extends Activity implements RapidFloatingActionConten
 
         hot.setAdapter(mAdapter);
         hot.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
-        hot.addHeaderView(LayoutInflater.from(HobbyActivity.this).inflate(R.layout.hobby_head, null));
+        hot.addHeaderView(headView);
         hot.setRefreshProgressStyle(ProgressStyle.BallSpinFadeLoader);
         hot.setLoadingMoreProgressStyle(ProgressStyle.SquareSpin);
         hot.setArrowImageView(R.drawable.ic_pulltorefresh_arrow);
-        hot.setLoadingListener(new XRecyclerView.LoadingListener() {
-            @Override
-            public void onRefresh() {
-//                list.clear();
-//                initData();
-//                mAdapter.notifyDataSetChanged();
-//                hot.refreshComplete();//刷新完成
-//                toastUtil.Short(HobbyActivity.this, "刷新完成").show();
-
-                new Handler().postDelayed(new Runnable(){
-                    public void run() {
-                        list.clear();
-                        initData();
-                        mAdapter.notifyDataSetChanged();
-                        hot.refreshComplete();//刷新完成
-                        toastUtil.Short(HobbyActivity.this, "刷新完成").show();
-                    }
-                }, 2000);
-
-            }
-
-            @Override
-            public void onLoadMore() {
-//                getSomeData();
-//                mAdapter.notifyDataSetChanged();
-//                hot.loadMoreComplete();//加载更多完成
-                new Handler().postDelayed(new Runnable(){
-                    public void run() {
-                        getSomeData();
-                        mAdapter.notifyDataSetChanged();
-                        hot.loadMoreComplete();//加载更多完成
-                    }
-                }, 2000);
-            }
-        });
+        hot.setLoadingListener(this);
     }
 
     private void getSomeData() {
         List<String> imgList = new ArrayList<>();
         imgList.add("http://139.199.23.142:8080/TestShowMessage1/marker/shopping/img1.jpg");
         imgList.add("http://139.199.23.142:8080/TestShowMessage1/marker/shopping/img2.jpg");
-        imgList.add("http://139.199.23.142:8080/TestShowMessage1/marker/shopping/img3.jpg");
-        imgList.add("http://139.199.23.142:8080/TestShowMessage1/marker/shopping/img4.jpg");
         list.add(new HotPointModel(Constants.Test_Img1, "Tom1", "软件工程师", "2017-01-01 08:59:00", imgTag, "这是测试内容, 这是测试内容, 这是测试内容, 这是测试内容", imgList));
         list.add(new HotPointModel(Constants.Test_Img1, "Tom2", "Android开发", "2017-01-01 08:59:00", imgTag, "这是测试内容, 这是测试内容, 这是测试内容, 这是测试内容", imgList));
     }
@@ -311,7 +303,8 @@ public class HobbyActivity extends Activity implements RapidFloatingActionConten
             }
             break;
             case 1:{
-                startActivity(new Intent(this, SendMoodActivity.class));
+                Intent intent = new Intent(this, SendMoodActivity.class);
+                startActivityForResult(intent, 2);
                 this.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             }
             break;
@@ -322,10 +315,23 @@ public class HobbyActivity extends Activity implements RapidFloatingActionConten
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 1 && requestCode == 1 && data != null){
+        if(requestCode == 1 && resultCode == 1){
             list.clear();
             initData();
             mAdapter.notifyDataSetChanged();
+            Log.e("tag", "onActivityResult: 兴趣选择界面值获取成功!");
+        }else if(requestCode == 2 && resultCode == 2){
+            SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String str=sdf.format(new Date());
+            String sayContent = data.getStringExtra("sayContent");
+            Log.e("tag", "onActivityResult: 内容："+sayContent);
+            List<String> imgList = new ArrayList<>();
+            imgList.add("http://obs.myhwclouds.com/look.admin.image/腾讯/2017-5-23/路-道路-树木-落叶.jpg");
+            imgList.add("http://obs.myhwclouds.com/look.admin.image/腾讯/2017-5-23/路-道路-树木-落叶.jpg");
+            HotPointModel item = new HotPointModel("http://obs.myhwclouds.com/look.admin.image/腾讯/2017-5-23/路-道路-树木-落叶.jpg", "NickName", "CEO", str, imgTag, sayContent, imgList);
+            list.add(0, item);
+            mAdapter.notifyDataSetChanged();
+            Log.e("tag", "onActivityResult: 添加成功");
         }
     }
 
@@ -337,4 +343,28 @@ public class HobbyActivity extends Activity implements RapidFloatingActionConten
         }
     }
 
+    @Override
+    public void onRefresh() {
+        new Handler().postDelayed(new Runnable(){
+            public void run() {
+                list.clear();
+                initData();
+                mAdapter.notifyDataSetChanged();
+                hot.refreshComplete();//刷新完成
+                toastUtil.Short(HobbyActivity.this, "刷新完成").show();
+            }
+        }, 1000);
+
+    }
+
+    @Override
+    public void onLoadMore() {
+        new Handler().postDelayed(new Runnable(){
+            public void run() {
+                getSomeData();
+                mAdapter.notifyDataSetChanged();
+                hot.loadMoreComplete();//加载更多完成
+            }
+        }, 2000);
+    }
 }

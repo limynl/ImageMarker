@@ -10,6 +10,10 @@ public class CateGoryInfo {
     private String name;
     private String imgUrl;
 
+    public CateGoryInfo(){
+
+    }
+
     public CateGoryInfo(String name, String imgUrl) {
         this.name = name;
         this.imgUrl = imgUrl;

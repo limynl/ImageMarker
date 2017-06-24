@@ -92,7 +92,7 @@
             android:name=".activitys.imagscan.ImgScanMainActivity"
             android:theme="@style/UserCoordinatorLayout" />
         <activity android:name=".activitys.home.SplashActivity" />
-        <activity android:name=".activitys.integral.IntegralActivity" />
+        <!--<activity android:name=".activitys.integral.IntegralActivity" />-->
         <activity
             android:name=".activitys.integral.LuckDrawActivity"
             android:theme="@style/LuckDrawActivity" />

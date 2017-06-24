@@ -67,6 +67,20 @@ public class UserDbHelper {
     }
 
     /**
+     * 保存用户的头像
+     */
+    public void saveUserHeadImg(String value){
+        sharedPreferences.edit().putString("userHeadImg", value);
+    }
+
+    /**
+     * 得到用户头像
+     */
+    public String getUserHeadImg(){
+        return sharedPreferences.getString("userHeadImg", "");
+    }
+
+    /**
      * 保存String类型数据
      */
     public void saveStringConfig(String key, String value){

@@ -5,9 +5,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.RelativeLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.team.imagemarker.R;
 import com.team.imagemarker.entitys.imgscan.DayRecommendModel;
 
@@ -53,17 +55,20 @@ public class DayRecommendAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         viewHolder.imgTag.setText(list.get(position).getImgTag());
-        viewHolder.background.setBackgroundResource(list.get(position).getBackground());
+        Glide.with(context)
+                .load(list.get(position).getBgUrl())
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(viewHolder.showImg);
         return convertView;
     }
 
     class ViewHolder{
+        public ImageView showImg;
         public TextView imgTag;
-        public RelativeLayout background;
 
         public ViewHolder(View view) {
             imgTag = (TextView) view.findViewById(R.id.img_tag);
-            background = (RelativeLayout) view.findViewById(R.id.item_background);
+            showImg = (ImageView) view.findViewById(R.id.show_image);
         }
     }
 }

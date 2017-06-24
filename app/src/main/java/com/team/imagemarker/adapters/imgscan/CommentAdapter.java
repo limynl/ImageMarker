@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.team.imagemarker.R;
 import com.team.imagemarker.entitys.image.CommentInfoModel;
 import com.team.imagemarker.utils.CircleImageView;
@@ -53,11 +55,11 @@ public class CommentAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-//        Glide.with(context)
-//                .load(list.get(position).getUserHead())
-//                .diskCacheStrategy(DiskCacheStrategy.ALL)
-//                .into(viewHolder.userHead);
-        viewHolder.userHead.setImageResource(R.mipmap.system_push4);
+        Glide.with(context)
+                .load(list.get(position).getUserHead())
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(viewHolder.userHead);
+//        viewHolder.userHead.setImageResource(R.mipmap.system_push4);
         viewHolder.userNick.setText(list.get(position).getNickName());
         viewHolder.sendTime.setText(list.get(position).getSendTime());
         viewHolder.commentContent.setText(list.get(position).getSendContent());

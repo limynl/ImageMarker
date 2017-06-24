@@ -38,6 +38,7 @@ import com.team.imagemarker.entitys.share.SharePopBean;
 import com.team.imagemarker.utils.CircleImageView;
 import com.team.imagemarker.utils.PaperButton;
 import com.team.imagemarker.utils.SlideSwitch;
+import com.team.imagemarker.utils.ToastUtil;
 import com.team.imagemarker.utils.scrollview.TranslucentScrollView;
 
 import java.util.ArrayList;
@@ -81,6 +82,8 @@ public class UserCenterFragment extends Fragment implements View.OnClickListener
     private List<SharePopBean> shareBeanList = new ArrayList<SharePopBean>();
     private SharePopBaseAdapter shareBaseAdapter;
 
+    private ToastUtil toastUtil = new ToastUtil();
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -116,11 +119,15 @@ public class UserCenterFragment extends Fragment implements View.OnClickListener
         UserDbHelper.setInstance(getContext());
         UserModel userModel = UserDbHelper.getInstance().getUserInfo();
         tvName.setText(TextUtils.isEmpty(userModel.getUserNickName()) ? "Limynl" : userModel.getUserNickName());
-        tvIntegral.setText(TextUtils.isEmpty(userModel.getIntegral() + "") ? "当前积分为：30" : ("当前积分为：" + userModel.getIntegral() + ""));
-        Glide.with(getContext())
-                .load(userModel.getUserHeadImage())
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(headImg);
+        tvIntegral.setText(userModel.getIntegral() <= 0 ? "当前积分为：30" : ("当前积分为：" + userModel.getIntegral() + ""));
+        if(!userModel.getUserHeadImage().equals("")){
+            Glide.with(getContext())
+                    .load(userModel.getUserHeadImage())
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(headImg);
+        }else{
+            headImg.setImageResource(R.mipmap.man_head);
+        }
 
     }
 
@@ -223,9 +230,9 @@ public class UserCenterFragment extends Fragment implements View.OnClickListener
     @Override
     public void onStateChanged(boolean state) {
         if (state == true) {
-            Toast.makeText(getContext(), "系统推送已打开", Toast.LENGTH_SHORT).show();
+            toastUtil.Short(getContext(), "系统推送已打开").show();
         } else {
-            Toast.makeText(getContext(), "系统推送已关闭", Toast.LENGTH_SHORT).show();
+            toastUtil.Short(getContext(), "系统推送已关闭").show();
         }
     }
 

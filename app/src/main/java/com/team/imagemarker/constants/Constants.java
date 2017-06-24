@@ -10,7 +10,7 @@ import android.graphics.Color;
 public class Constants {
     public static int USER_ID = 17;//用户id
 //    public static final String HOST_IP = "http://139.199.23.142";//服务器地址
-    public static final String HOST_IP = "http://192.168.43.204";//服务器地址
+    public static final String HOST_IP = "http://172.20.10.10";//服务器地址
     public static final String HOST_PORT = ":8080";//端口号
 
     /**
@@ -25,7 +25,10 @@ public class Constants {
     public static final String USER_EXIT = HOST_IP + HOST_PORT + "/look/app/outLogin";//用户退出登录
 
     public static final String USER_HISTORY_DELETE = HOST_IP + HOST_PORT + "/look/app/DeleteUserHistoryById";
-    public static final String USER_ALL_HISTORY = HOST_IP + HOST_PORT + "/look/app/DeleteUserHistoryById";
+    public static final String USER_ALL_HISTORY = HOST_IP + HOST_PORT + "/look/app/GetUserHistory";
+
+    public static final String USER_SUBMIT_TAG = HOST_IP + HOST_PORT + "/look/picture/judgeUserUpInageLabelInfo";
+    public static final String USER_SAVE_TAG = HOST_IP + HOST_PORT + "/look/picture/saveUserUpImageInfo";
 
     public static final String USER_HISTORY_DATA = "http://obs.myhwclouds.com/look.admin.info/historyRecord.txt";
 

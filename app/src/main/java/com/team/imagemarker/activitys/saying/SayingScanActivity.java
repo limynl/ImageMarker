@@ -15,7 +15,6 @@ import android.widget.Toast;
 import com.android.volley.VolleyError;
 import com.team.imagemarker.R;
 import com.team.imagemarker.adapters.saying.SayingAdapter;
-import com.team.imagemarker.constants.Constants;
 import com.team.imagemarker.entitys.saying.SayingModel;
 import com.team.imagemarker.utils.volley.VolleyListenerInterface;
 import com.team.imagemarker.utils.volley.VolleyRequestUtil;
@@ -69,11 +68,11 @@ public class SayingScanActivity extends Activity implements View.OnClickListener
 
         //模拟
         sayingList = new ArrayList<>();
-        sayingList.add(new SayingModel(1, 1, Constants.User_Head1, "Sharon", "2017-04-30 11:07:00", "今天好开心，今天好开心今天好开心", 1, Constants.Test_Img1, Constants.Test_Img2, "", "", "", ""));
-        sayingList.add(new SayingModel(2, 1, Constants.User_Head2, "Sophia", "2017-04-30 11:07:00", "今天好开心，今天好开心今天好开心", 1, Constants.Test_Img4, Constants.Test_Img5, Constants.Test_Img6, "", "", ""));
-        sayingList.add(new SayingModel(3, 1, Constants.User_Head3, "Kelly", "2017-04-30 11:07:00", "今天好开心，今天好开心今天好开心", 1, Constants.Test_Img4, Constants.Test_Img5, Constants.Test_Img1, "", "", ""));
-        sayingList.add(new SayingModel(4, 1, Constants.User_Head4, "Allen", "2017-04-30 11:07:00", "今天好开心，今天好开心今天好开心", 1, Constants.Test_Img1, Constants.Test_Img6, Constants.Test_Img1, "", "", ""));
-        sayingList.add(new SayingModel(5, 1, Constants.User_Head5, "Richard", "2017-04-30 11:07:00", "今天好开心，今天好开心今天好开心", 1, Constants.Test_Img3, Constants.Test_Img4, Constants.Test_Img1, Constants.Test_Img3, Constants.Test_Img4, Constants.Test_Img1));
+//        sayingList.add(new SayingModel(1, 1, Constants.User_Head1, "Sharon", "2017-04-30 11:07:00", "今天好开心，今天好开心今天好开心", 1, Constants.Test_Img1, Constants.Test_Img2, "", "", "", ""));
+//        sayingList.add(new SayingModel(2, 1, Constants.User_Head2, "Sophia", "2017-04-30 11:07:00", "今天好开心，今天好开心今天好开心", 1, Constants.Test_Img4, Constants.Test_Img5, Constants.Test_Img6, "", "", ""));
+//        sayingList.add(new SayingModel(3, 1, Constants.User_Head3, "Kelly", "2017-04-30 11:07:00", "今天好开心，今天好开心今天好开心", 1, Constants.Test_Img4, Constants.Test_Img5, Constants.Test_Img1, "", "", ""));
+//        sayingList.add(new SayingModel(4, 1, Constants.User_Head4, "Allen", "2017-04-30 11:07:00", "今天好开心，今天好开心今天好开心", 1, Constants.Test_Img1, Constants.Test_Img6, Constants.Test_Img1, "", "", ""));
+//        sayingList.add(new SayingModel(5, 1, Constants.User_Head5, "Richard", "2017-04-30 11:07:00", "今天好开心，今天好开心今天好开心", 1, Constants.Test_Img3, Constants.Test_Img4, Constants.Test_Img1, Constants.Test_Img3, Constants.Test_Img4, Constants.Test_Img1));
         adapter = new SayingAdapter(this, sayingList);
         listView.setAdapter(adapter);
     }

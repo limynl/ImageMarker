@@ -123,7 +123,11 @@ public class HobbySelectActivity extends Activity implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.left_icon:{
-                onBackPressed();
+                Intent intent = new Intent();
+                intent.putExtra("resultCode", "test");
+                this.setResult(1, intent);
+                this.finish();
+                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
             }
             break;
         }
@@ -132,10 +136,10 @@ public class HobbySelectActivity extends Activity implements View.OnClickListene
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent intent = new Intent();
-        intent.putExtra("resultCode", "test");
-        this.setResult(1, intent);
-        this.finish();
-        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+//        Intent intent = new Intent();
+//        intent.putExtra("resultCode", "test");
+//        this.setResult(1, intent);
+//        this.finish();
+//        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
     }
 }

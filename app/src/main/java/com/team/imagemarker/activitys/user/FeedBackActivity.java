@@ -7,10 +7,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.team.imagemarker.R;
 import com.team.imagemarker.utils.PaperButton;
+import com.team.imagemarker.utils.ToastUtil;
 import com.team.imagemarker.utils.WavyLineView;
 
 /**
@@ -26,6 +26,7 @@ public class FeedBackActivity extends Activity implements View.OnClickListener{
 
     private PaperButton submit;
     private WavyLineView mWavyLine;
+    private ToastUtil toastUtil = new ToastUtil();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +43,7 @@ public class FeedBackActivity extends Activity implements View.OnClickListener{
         mWavyLine = (WavyLineView) findViewById(R.id.release_wavyLine);
         submit = (PaperButton) findViewById(R.id.submit_feed_back);
 
-        titleBar.setBackgroundColor(getResources().getColor(R.color.theme));
+        titleBar.setBackgroundColor(getResources().getColor(R.color.theme1));
         title.setText("意见反馈");
         rightIcon.setVisibility(View.GONE);
         leftIcon.setOnClickListener(this);
@@ -64,7 +65,7 @@ public class FeedBackActivity extends Activity implements View.OnClickListener{
             }
             break;
             case R.id.submit_feed_back:{
-                Toast.makeText(this, "提交完成", Toast.LENGTH_SHORT).show();
+                toastUtil.Short(this, "提交成功").show();
             }
             break;
         }

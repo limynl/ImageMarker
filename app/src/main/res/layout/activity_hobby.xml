@@ -6,7 +6,8 @@
     android:id="@+id/activity_hobby"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.team.imagemarker.activitys.hobby.HobbyActivity">
+    tools:context="com.team.imagemarker.activitys.hobby.HobbyActivity"
+    android:background="@android:color/white">
 
     <include layout="@layout/title_bar"/>
 

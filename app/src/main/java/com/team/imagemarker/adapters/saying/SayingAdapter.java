@@ -2,7 +2,6 @@ package com.team.imagemarker.adapters.saying;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,11 +11,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.team.imagemarker.R;
-import com.team.imagemarker.constants.Constants;
 import com.team.imagemarker.entitys.saying.SayingModel;
 import com.team.imagemarker.utils.CircleImageView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -74,7 +71,7 @@ public class SayingAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         SayingModel sayingBean = list.get(position);
-        Log.e("tag", "用户头像地址: " + sayingBean.getUserHeadImg());
+//        Log.e("tag", "用户头像地址: " + sayingBean.getUserHeadImg());
 //        getImg(sayingBean.getUserHeadImg());
         viewHolder.userHeadImg.setImageResource(R.mipmap.image1);
 
@@ -83,43 +80,43 @@ public class SayingAdapter extends BaseAdapter {
 //                .diskCacheStrategy(DiskCacheStrategy.ALL)
 //                .into((viewHolder.userHeadImg);
 
-        viewHolder.userNickName.setText(sayingBean.getNickName());
-        viewHolder.sendTime.setText("发布时间: " + sayingBean.getSendTime());
-        viewHolder.sayingContent.setText(sayingBean.getSayingContent());
-        if(sayingBean.getUserId() == Constants.USER_ID){
-            viewHolder.deleteSaying.setVisibility(View.VISIBLE);
-            viewHolder.deleteSaying.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    listener.btnDeleteClick(position);
-                }
-            });
-        }else{
-            viewHolder.deleteSaying.setVisibility(View.GONE);
-        }
-
-        List<String> mList = new ArrayList<String>();
-        if(sayingBean.getSayingImg1() != null && !sayingBean.getSayingImg1().equals("")){
-            mList.add(sayingBean.getSayingImg1());
-        }
-        if(sayingBean.getSayingImg3() != null && !sayingBean.getSayingImg2().equals("")){
-            mList.add(sayingBean.getSayingImg3());
-        }
-        if(sayingBean.getSayingImg3() != null && !sayingBean.getSayingImg3().equals("")){
-            mList.add(sayingBean.getSayingImg3());
-        }
-        if(sayingBean.getSayingImg4() != null && !sayingBean.getSayingImg4().equals("")){
-            mList.add(sayingBean.getSayingImg4());
+//        viewHolder.userNickName.setText(sayingBean.getNickName());
+//        viewHolder.sendTime.setText("发布时间: " + sayingBean.getSendTime());
+//        viewHolder.sayingContent.setText(sayingBean.getSayingContent());
+//        if(sayingBean.getUserId() == Constants.USER_ID){
+//            viewHolder.deleteSaying.setVisibility(View.VISIBLE);
+//            viewHolder.deleteSaying.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    listener.btnDeleteClick(position);
+//                }
+//            });
+//        }else{
+//            viewHolder.deleteSaying.setVisibility(View.GONE);
+//        }
+//
+//        List<String> mList = new ArrayList<String>();
+//        if(sayingBean.getSayingImg1() != null && !sayingBean.getSayingImg1().equals("")){
+//            mList.add(sayingBean.getSayingImg1());
+//        }
+//        if(sayingBean.getSayingImg3() != null && !sayingBean.getSayingImg2().equals("")){
+//            mList.add(sayingBean.getSayingImg3());
+//        }
+//        if(sayingBean.getSayingImg3() != null && !sayingBean.getSayingImg3().equals("")){
+//            mList.add(sayingBean.getSayingImg3());
+//        }
+//        if(sayingBean.getSayingImg4() != null && !sayingBean.getSayingImg4().equals("")){
+//            mList.add(sayingBean.getSayingImg4());
 //            ViewGroup.MarginLayoutParams marginLayoutParams=new ViewGroup.MarginLayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,620);
 //            marginLayoutParams.setMargins(marginLayoutParams.leftMargin+50, 5, marginLayoutParams.rightMargin+50, marginLayoutParams.bottomMargin);
 //            viewHolder.gridView.setLayoutParams(new RelativeLayout.LayoutParams(marginLayoutParams));
-        }
-        if(sayingBean.getSayingImg5() != null && !sayingBean.getSayingImg5().equals("")){
-            mList.add(sayingBean.getSayingImg5());
-        }
-        if(sayingBean.getSayingImg6() != null && !sayingBean.getSayingImg6().equals("")){
-            mList.add(sayingBean.getSayingImg6());
-        }
+//        }
+//        if(sayingBean.getSayingImg5() != null && !sayingBean.getSayingImg5().equals("")){
+//            mList.add(sayingBean.getSayingImg5());
+//        }
+//        if(sayingBean.getSayingImg6() != null && !sayingBean.getSayingImg6().equals("")){
+//            mList.add(sayingBean.getSayingImg6());
+//        }
 
 //        if(sayingBean.getSayingImg1() ==null && sayingBean.getSayingImg4().equals("")){
 //            ViewGroup.MarginLayoutParams marginLayoutParams=new ViewGroup.MarginLayoutParams(viewHolder.gridView.getLayoutParams().width,0);
@@ -136,11 +133,11 @@ public class SayingAdapter extends BaseAdapter {
 //            marginLayoutParams.setMargins(marginLayoutParams.leftMargin+50, 5, marginLayoutParams.rightMargin+50, marginLayoutParams.bottomMargin);
 //            viewHolder.gridView.setLayoutParams(new RelativeLayout.LayoutParams(marginLayoutParams));
 //        }
-        if (mList != null && mList.size() != 0) {
-            viewHolder.gridView.setAdapter(new SayingGradAdapter(context, mList));
-        } else {
-            viewHolder.gridView.setVisibility(View.GONE);
-        }
+//        if (mList != null && mList.size() != 0) {
+//            viewHolder.gridView.setAdapter(new SayingGradAdapter(context, mList));
+//        } else {
+//            viewHolder.gridView.setVisibility(View.GONE);
+//        }
         return convertView;
     }
 

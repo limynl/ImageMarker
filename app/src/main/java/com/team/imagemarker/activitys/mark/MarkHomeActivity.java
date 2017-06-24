@@ -106,6 +106,8 @@ public class MarkHomeActivity extends Activity implements View.OnClickListener{
             handelMessge((MarkerModel) bundle.getSerializable("item"));
         }else if(pageFlag.equals("imgNavPage")){
             handelMessge((MarkerModel) bundle.getSerializable("item"));
+        }else if(pageFlag.equals("searchHobby")){
+            dataList = (List<ItemEntity>) bundle.getSerializable("item");
         }
         pileLayout.setAdapter(new Adapter());//设置底部图片滚动数据
     }
@@ -283,7 +285,8 @@ public class MarkHomeActivity extends Activity implements View.OnClickListener{
                         .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
                             @Override
                             public void onClick(SweetAlertDialog sDialog) {
-                                String imgUrl = "http://192.168.43.204:8080/look/picture/judgeUserUpInageLabelInfo";
+//                                String imgUrl = "http://172.20.10.10:8080/look/picture/judgeUserUpInageLabelInfo";
+                                String imgUrl = Constants.USER_SUBMIT_TAG;
                                 submitTags(imgUrl);//提交操作
                                 sDialog.setTitleText("提交成功")
                                         .setContentText("已赠送30积分到您的账户!")
@@ -300,6 +303,8 @@ public class MarkHomeActivity extends Activity implements View.OnClickListener{
                             @Override
                             public void onClick(SweetAlertDialog sDialog) {
 //                                saveTags();//保存操作
+                                String url = Constants.USER_SAVE_TAG;
+                                submitTags(url);//提交操作
                                 sDialog.setTitleText("保存成功")
                                         .setContentText("您可以在历史记录中查询，并继续修改")
                                         .setConfirmText("OK")

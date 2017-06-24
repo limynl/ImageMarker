@@ -19,6 +19,7 @@ import android.provider.MediaStore;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Base64;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,6 +48,7 @@ import com.team.imagemarker.utils.CommonAdapter;
 import com.team.imagemarker.utils.CropOption;
 import com.team.imagemarker.utils.MyGridView;
 import com.team.imagemarker.utils.PaperButton;
+import com.team.imagemarker.utils.ToastUtil;
 import com.team.imagemarker.utils.ViewHolder;
 import com.team.imagemarker.utils.volley.VolleyListenerInterface;
 import com.team.imagemarker.utils.volley.VolleyRequestUtil;
@@ -112,6 +114,8 @@ public class UpdateUserMessageActivity extends Activity implements View.OnClickL
     private byte[] bitmapByte;//用户头像的byte数组
     private static Bitmap userHeadBitmap;
     private String userHeadPhoto;//用户的头像字节数据流
+
+    private ToastUtil toastUtil = new ToastUtil();
 
     //更新父表与子表中的数据
     private Handler mHandler = new Handler() {
@@ -298,6 +302,8 @@ public class UpdateUserMessageActivity extends Activity implements View.OnClickL
                 Gson gson = new Gson();
                 String userInfo = gson.toJson(userModel);
                 //这里发往服务器
+                UserDbHelper.setInstance(this);
+                UserDbHelper.getInstance().saveUserLoginInfo(userModel);
                 sendUserInfo(userInfo);
 
 //                Toast.makeText(UpdateUserMessageActivity.this, "修改成功", Toast.LENGTH_SHORT).show();
@@ -326,13 +332,15 @@ public class UpdateUserMessageActivity extends Activity implements View.OnClickL
                     JSONObject object = new JSONObject(result);
                     String tag = object.optString("tag");
                     if(tag.equals("success")){
-                        Toast.makeText(UpdateUserMessageActivity.this, "修改成功", Toast.LENGTH_SHORT).show();
+                        toastUtil.Short(UpdateUserMessageActivity.this, "修改成功").show();
+                        String userImg = object.optString("url");
+                        Log.e("tag", "onSuccess: 头像地址为：" + userImg);
+                        UserDbHelper.getInstance().saveUserHeadImg(userImg);
                         Intent intent = new Intent();
                         Bundle bundle = new Bundle();
                         bundle.putString("userNick", userNick.getText().toString().trim());
                         bundle.putParcelable("userHead", userHeadBitmap == null ? null : userHeadBitmap);
                         intent.putExtras(bundle);
-                        Toast.makeText(UpdateUserMessageActivity.this, "信息修改成功", Toast.LENGTH_SHORT).show();
                         UpdateUserMessageActivity.this.setResult(UPDATE_USER_MESSAGE, intent);
                         UpdateUserMessageActivity.this.finish();
                         overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
@@ -341,13 +349,13 @@ public class UpdateUserMessageActivity extends Activity implements View.OnClickL
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    Toast.makeText(UpdateUserMessageActivity.this, "服务器连接错误", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(UpdateUserMessageActivity.this, "服务器连接错误", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onError(VolleyError error) {
-                Toast.makeText(UpdateUserMessageActivity.this, "服务器连接错误", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(UpdateUserMessageActivity.this, "服务器连接错误", Toast.LENGTH_SHORT).show();
             }
         });
     }

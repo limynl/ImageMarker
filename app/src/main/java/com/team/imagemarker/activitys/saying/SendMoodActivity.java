@@ -14,13 +14,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.lzy.imagepicker.ImagePicker;
 import com.lzy.imagepicker.bean.ImageItem;
 import com.lzy.imagepicker.ui.ImagePreviewDelActivity;
 import com.team.imagemarker.R;
 import com.team.imagemarker.adapters.ImagePickerAdapter;
+import com.team.imagemarker.entitys.UserModel;
+import com.team.imagemarker.utils.ToastUtil;
 import com.team.imagemarker.utils.WavyLineView;
 import com.team.imagemarker.utils.imageloder.BitmapUtil;
 
@@ -32,6 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SendMoodActivity extends Activity implements View.OnClickListener, ImagePickerAdapter.OnRecyclerViewItemClickListener{
+    private ToastUtil toastUtil = new ToastUtil();
     private RelativeLayout titleBar;
     private TextView title;
     private ImageView leftIcon, rightIcon;
@@ -53,11 +55,16 @@ public class SendMoodActivity extends Activity implements View.OnClickListener, 
     private int reqHeight = 0;
     private Point point;
 
+    private List<String> imgList = new ArrayList<>();//图片地址
+    private UserModel userModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_send_mood);
-
+//        UserDbHelper.setInstance(this);
+//        userModel = UserDbHelper.getInstance().getUserInfo();
+//        tvName.setText(TextUtils.isEmpty(userModel.getUserNickName()) ? "Limynl" : userModel.getUserNickName());
         updatePixel();
         bindView();
         initDate();
@@ -66,7 +73,7 @@ public class SendMoodActivity extends Activity implements View.OnClickListener, 
     private void updatePixel() {
         point = new Point();
         getWindowManager().getDefaultDisplay().getSize(point);
-        Log.e("carDynamicActivity","宽:"+point.x+",高："+point.y + "hahha.............");
+//        Log.e("carDynamicActivity","宽:"+point.x+",高："+point.y + "hahha.............");
         reqWidth = point.x ;
         reqHeight = point.y ;
     }
@@ -115,15 +122,29 @@ public class SendMoodActivity extends Activity implements View.OnClickListener, 
             break;
             case R.id.right_icon:{
                 if(editSayingContent.getText().toString().equals("")){
-                    Toast.makeText(this, "请输入说说内容", Toast.LENGTH_SHORT).show();
+                    toastUtil.Short(this, "说说的内容不能为空").show();
                 }else{
+                    toastUtil.Short(this, "发送成功").show();
                     //显示进度条
-                    tryDecodeSmallImg2();
+//                    tryDecodeSmallImg2();
                     //取消进度条
                 }
+                sendMessage();
             }
             break;
         }
+    }
+
+    /**
+     * 发送数据
+     */
+    private void sendMessage() {
+        Intent intent = new Intent();
+        intent.putExtra("sayContent", editSayingContent.getText().toString());
+        Log.e("tag", "sendMessage: 进行传递数据：" + editSayingContent.getText().toString());
+        this.setResult(2, intent);
+        this.finish();
+        this.overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
     }
 
     /**
@@ -131,16 +152,11 @@ public class SendMoodActivity extends Activity implements View.OnClickListener, 
      */
     private void tryDecodeSmallImg2() {
         for (int i = 0; i < selImageList.size(); i++) {
-            Log.e("carDynamicActivity","第"+i+"个图片宽:"+selImageList.get(i).width);
-            Log.e("carDynamicActivity","第"+i+"个图片高:"+selImageList.get(i).height);
             String filePath = selImageList.get(i).path;
-
-            /* 这里假设只对 200k 以上 并且 宽高小的像素 > 400的图片进行裁剪*/
-            reqHeight = selImageList.get(i).height;
+            reqHeight = selImageList.get(i).height; /* 这里假设只对 200k 以上 并且 宽高小的像素 > 400的图片进行裁剪*/
             reqWidth = selImageList.get(i).width;
             int minSize = Math.min(reqHeight,reqWidth);
             int size = (int) (selImageList.get(i).size/1024);//当前图片的大小
-            Log.e("carDynamicActivity","图片size:"+size+"KB");
             while (minSize > 350 && size >= 200){
                 reqWidth /= 2;
                 reqHeight /= 2;
@@ -150,14 +166,12 @@ public class SendMoodActivity extends Activity implements View.OnClickListener, 
                 reqWidth = 390;
                 reqHeight = 520;
             }
-            Log.e("carDynamicActivity","第"+i+"个图片压缩后宽："+reqWidth);
-            Log.e("carDynamicActivity","第"+i+"个图片压缩后高："+reqHeight);
             // 对图片压缩尺寸为原来的八分之一
             Bitmap bitmap = BitmapUtil.decodeSampledBitmapFromFile(filePath,reqWidth,reqHeight);
-            Log.e("carDynamicActivity","第"+i+"个图片大小:"+bitmap.getByteCount()/1024+"kb");
+            imgList.add(load(bitmap));
             saveBitmapFile(bitmap,filePath);
         }
-        Toast.makeText(this, "发表成功", Toast.LENGTH_SHORT).show();
+        toastUtil.Short(this, "发表成功").show();
     }
 
     /**
@@ -169,7 +183,6 @@ public class SendMoodActivity extends Activity implements View.OnClickListener, 
         if(bitmap==null){
             return;
         }
-        Log.e("carDynamicActivity","文件路径:"+filePath);
         File file = new File(filePath);
         try {
             FileOutputStream bos = new FileOutputStream(file);
@@ -177,39 +190,36 @@ public class SendMoodActivity extends Activity implements View.OnClickListener, 
             bos.flush();
             bos.close();
             mFiles.add(file);
-
         } catch (IOException e) {
             e.printStackTrace();
-            Log.e("carDynamicActivity","失败："+e.getMessage());
         }
     }
 
-    //向服务器发送图片
-    private void  load(Bitmap photodata) {
+    //将图片转换成字符串
+    private String  load(Bitmap photodata) {
+        String photo = null;
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             photodata.compress(Bitmap.CompressFormat.PNG, 100, baos);//将bitmap一字节流输出 Bitmap.CompressFormat.PNG 压缩格式，100：压缩率，baos：字节流
             baos.close();
             byte[] buffer = baos.toByteArray();
-            //将图片的字节流数据加密成base64字符输出
-            String photo = Base64.encodeToString(buffer, 0, buffer.length,Base64.DEFAULT);
-            String url = "http://139.199.23.142:8080/TestShowMessage1/lmy/ShowPicture";
+            photo = Base64.encodeToString(buffer, 0, buffer.length,Base64.DEFAULT);//将图片的字节流数据加密成base64字符输出
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return photo;
     }
 
     @Override
     public void onItemClick(View view, int position) {
         switch (position) {
-            case IMAGE_ITEM_ADD:
+            case IMAGE_ITEM_ADD://打开相册
                 ImagePicker.getInstance().setSelectLimit(maxImgCount - selImageList.size());
                 Intent intent = new Intent(this, com.lzy.imagepicker.ui.ImageGridActivity.class);
                 startActivityForResult(intent, REQUEST_CODE_SELECT);
                 Log.e("carDynamicActivity", "onSelection: " + "成功打开相册");
                 break;
-            default:
-                //打开预览
+            default://打开预览
                 Intent intentPreview = new Intent(this, ImagePreviewDelActivity.class);
                 intentPreview.putExtra(ImagePicker.EXTRA_IMAGE_ITEMS, (ArrayList<ImageItem>) adapter.getImages());
                 intentPreview.putExtra(ImagePicker.EXTRA_SELECTED_IMAGE_POSITION, position);
@@ -259,4 +269,24 @@ public class SendMoodActivity extends Activity implements View.OnClickListener, 
         SendMoodActivity.this.finish();
         overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
     }
+
+//    private SayingModel getUserMessage(){
+//        SayingModel userItem = new SayingModel();
+//        userItem.setId(0);
+//        userItem.setuId(Constants.USER_ID);
+//        userItem.setTitle(editSayingContent.getText().toString());
+//        userItem.setImageNum(imgList.size());
+//        userItem.setImageUrl1(imgList.get(0));
+//        userItem.setImageUrl2(imgList.get(1));
+//        userItem.setImageUrl3("");
+//        userItem.setImageUrl4("");
+//        userItem.setImageUrl5("");
+//        userItem.setImageUrl6("");
+//
+//        userItem.setUserNickName(TextUtils.isEmpty(userModel.getUserNickName()) ? "Limynl" : userModel.getUserNickName());
+//        userItem.setUserPhotoUrl("");
+//        userItem.setUptime("");
+//        userItem.setSayingType(0);
+//        return userItem;
+//    }
 }

@@ -72,7 +72,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="10sp"
                     android:textColor="@color/write"
-                    android:text="积分:50"
+                    android:text="积分:100"
                     android:textStyle="bold"/>
 
                 </LinearLayout>

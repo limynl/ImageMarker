@@ -156,8 +156,8 @@ public class UserModel {
         PushFlag = pushFlag;
     }
 
-    @Override
-    public String toString() {
+    @Override    public String toString() {
+
         return "UserModel{" +
                 "id=" + id +
                 ", phoneNumber='" + phoneNumber + '\'' +

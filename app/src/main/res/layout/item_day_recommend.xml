@@ -15,12 +15,23 @@
         app:cardBackgroundColor="#FFFFFF"
         app:cardCornerRadius="5dp"
         app:cardElevation="3dp"
-        app:cardPreventCornerOverlap="true">
+        app:cardPreventCornerOverlap="false">
 
         <RelativeLayout
             android:id="@+id/item_background"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#88000000" />
+
+            <ImageView
+                android:id="@+id/show_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -36,7 +47,8 @@
                 android:text="骚年 你该换鞋了"
                 android:textColor="#ffffff"
                 android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:visibility="gone"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -54,7 +66,8 @@
                 android:gravity="center"
                 android:background="@mipmap/ic_round_rect_11"
                 android:textSize="12sp"
-                android:textColor="#ffffff" />
+                android:textColor="#ffffff"
+                android:padding="8dp"/>
 
         </LinearLayout>
 

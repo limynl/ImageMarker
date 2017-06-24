@@ -15,6 +15,8 @@ import com.team.imagemarker.entitys.UserIntegralModel;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.tencent.open.utils.Global.getContext;
+
 /**
  * Created by Lmy on 2017/6/20.
  * email 1434117404@qq.com
@@ -37,13 +39,14 @@ public class RankFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        list.add(new UserIntegralModel("http://139.199.23.142:8080/TestShowMessage1/marker/banner/img1.jpg", "Limynl", "100"));
-        list.add(new UserIntegralModel("http://139.199.23.142:8080/TestShowMessage1/marker/banner/img2.jpg", "Limynl", "90"));
-        list.add(new UserIntegralModel("http://139.199.23.142:8080/TestShowMessage1/marker/banner/img3.jpg", "Limynl", "80"));
-        list.add(new UserIntegralModel("http://139.199.23.142:8080/TestShowMessage1/marker/banner/img4.jpg", "Limynl", "70"));
-        list.add(new UserIntegralModel("http://139.199.23.142:8080/TestShowMessage1/marker/banner/img1.jpg", "Limynl", "60"));
-        list.add(new UserIntegralModel("http://139.199.23.142:8080/TestShowMessage1/marker/banner/img2.jpg", "Limynl", "50"));
-        list.add(new UserIntegralModel("http://139.199.23.142:8080/TestShowMessage1/marker/banner/img3.jpg", "Limynl", "40"));
+        list.add(new UserIntegralModel("http://obs.myhwclouds.com/look.admin.image/华为/2017-5-20/手机-桌子.jpg", "Rose", "100"));
+        list.add(new UserIntegralModel("http://obs.myhwclouds.com/look.admin.image/华为/2017-5-20/笔记本电脑-桌子-鼠标-手机.jpg", "Jack", "1000"));
+        list.add(new UserIntegralModel("http://obs.myhwclouds.com/look.admin.image/华为/2017-5-20/笔记本电脑-椅子-眼睛-桌子.jpg", "Tom", "90"));
+        list.add(new UserIntegralModel("http://obs.myhwclouds.com/look.admin.image/华为/2017-5-20/笔记本电脑-水杯-桌子-手机.jpg", "Json", "80"));
+        list.add(new UserIntegralModel("http://obs.myhwclouds.com/look.admin.image/华为/2017-5-20/笔记本电脑-计算机-树木-草坪.jpg", "Gson", "70"));
+        list.add(new UserIntegralModel("http://obs.myhwclouds.com/look.admin.image/华为/2017-5-22/矿用挖掘机-天空-机器.jpg", "Lisi", "60"));
+        list.add(new UserIntegralModel("http://obs.myhwclouds.com/look.admin.image/华为/2017-5-20/键盘-鼠标-桌子.jpg", "Zhhangsan", "50"));
+        list.add(new UserIntegralModel("http://obs.myhwclouds.com/look.admin.image/腾讯/2017-5-23/火车-天空-夕阳-.jpg", "G.qz", "40"));
         adapter = new UserIntegralAdapter(getContext(), list);
         listView.setAdapter(adapter);
     }

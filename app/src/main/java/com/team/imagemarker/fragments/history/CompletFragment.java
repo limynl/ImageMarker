@@ -278,4 +278,12 @@ public class CompletFragment extends Fragment implements btnClickListener, Swipe
 //            sDialog.dismiss();
 //        }
 //    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(list != null){
+            list.clear();
+        }
+    }
 }

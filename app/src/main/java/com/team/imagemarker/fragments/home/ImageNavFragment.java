@@ -279,7 +279,6 @@ public class ImageNavFragment extends Fragment implements View.OnClickListener, 
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.search_bar_root:{
-                Toast.makeText(getActivity(), "兴趣搜索界面", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(getActivity(), UserSearchActivity.class));
                 getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             }

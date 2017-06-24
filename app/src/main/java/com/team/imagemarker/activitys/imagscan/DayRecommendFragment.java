@@ -57,9 +57,11 @@ public class DayRecommendFragment extends Fragment {
 
     private void setData() {
         datas = new ArrayList<>();
-        datas.add(new DayRecommendModel(R.mipmap.scan1, "图片标签"));
-        datas.add(new DayRecommendModel(R.mipmap.scan2, "图片标签"));
-        datas.add(new DayRecommendModel(R.mipmap.scan3, "图片标签"));
+        datas.add(new DayRecommendModel("http://obs.myhwclouds.com/look.admin.image/华为/2017-5-20/笔记本电脑-计算机-树木-草坪.jpg", "草坪，笔记本电脑"));
+        datas.add(new DayRecommendModel("http://obs.myhwclouds.com/look.admin.image/华为/2017-5-20/笔记本电脑-水杯-桌子-手机.jpg", "笔记本电脑"));
+        datas.add(new DayRecommendModel("http://obs.myhwclouds.com/look.admin.image/华为/2017-5-20/笔记本电脑-椅子-眼睛-桌子.jpg", "笔记本电脑，眼镜，桌子"));
+        datas.add(new DayRecommendModel("http://obs.myhwclouds.com/look.admin.image/华为/2017-5-20/笔记本电脑-桌子-鼠标-手机.jpg", "鼠标，笔记本电脑，桌子"));
+        datas.add(new DayRecommendModel("http://obs.myhwclouds.com/look.admin.image/华为/2017-5-20/键盘-鼠标-桌子.jpg", "键盘"));
         adapter = new DayRecommendAdapter(getContext(), datas);
         listView.setAdapter(adapter);
     }

@@ -16,6 +16,7 @@ import com.team.imagemarker.R;
 import com.team.imagemarker.constants.Constants;
 import com.team.imagemarker.utils.EditTextWithDel;
 import com.team.imagemarker.utils.PaperButton;
+import com.team.imagemarker.utils.ToastUtil;
 import com.team.imagemarker.utils.volley.VolleyListenerInterface;
 import com.team.imagemarker.utils.volley.VolleyRequestUtil;
 
@@ -45,6 +46,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener{
     private String iPhone, iCord;
     private int time = 60;//两次获取验证码的时间间隔
     private boolean flag = true;//验证码是否正确标记
+    private ToastUtil toastUtil = new ToastUtil();
 
     @Nullable
     @Override
@@ -91,13 +93,13 @@ public class RegisterFragment extends Fragment implements View.OnClickListener{
                 if(!TextUtils.isEmpty(userPhone.getText().toString().trim())){
                     if(!TextUtils.isEmpty(userPassword.getText().toString().trim())){
                         if(userPhone.getText().toString().trim().length() == 11){
-                            isRegister(userPhone.getText().toString().trim());
-//                            iPhone = userPhone.getText().toString().trim();
-//                            SMSSDK.getVerificationCode("86", iPhone);//向服务器请求发送验证码
-//                            userCode.requestFocus();
+//                            isRegister(userPhone.getText().toString().trim());
+                            iPhone = userPhone.getText().toString().trim();
+                            SMSSDK.getVerificationCode("86", iPhone);//向服务器请求发送验证码
+                            userCode.requestFocus();
 //                            registerUser();
                         }else{
-                            Toast.makeText(getActivity(), "电话号码的位数不对", Toast.LENGTH_SHORT).show();
+                            toastUtil.Short(getContext(), "电话号码的位数不对").show();
                             userPhone.requestFocus();
                         }
                     }else{
@@ -116,9 +118,12 @@ public class RegisterFragment extends Fragment implements View.OnClickListener{
                         if(!TextUtils.isEmpty(userCode.getText().toString().trim())){
                             if(userPhone.getText().toString().trim().length() == 11){
                                 if(userCode.getText().toString().trim().length() == 4){
+                                    registerUser();//将用户的注册信息传至后台进行保存
+
                                     iCord = userCode.getText().toString().trim();
                                     SMSSDK.submitVerificationCode("86", iPhone, iCord);//向服务器提交接收到的验证码
                                     flag = false;
+
                                 }else{
                                     Toast.makeText(getActivity(), "验证码的位数不对", Toast.LENGTH_SHORT).show();
                                     userCode.requestFocus();
@@ -186,25 +191,25 @@ public class RegisterFragment extends Fragment implements View.OnClickListener{
             if (result == SMSSDK.RESULT_COMPLETE) {//回调完成
                 if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {//提交验证码成功,验证通过
                     handlerText.sendEmptyMessage(2);
-                    Toast.makeText(getActivity(), "注册成功", Toast.LENGTH_SHORT).show();
-                    registerUser();//将用户的注册信息传至后台进行保存
+//                    toastUtil.Short(getContext(), "注册成功").show();
+//                    registerUser();//将用户的注册信息传至后台进行保存
                 } else if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE){//服务器验证码发送成功
                     reminderText();
-                    Toast.makeText(getActivity(), "验证码已经发送", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getActivity(), "验证码已经发送", Toast.LENGTH_SHORT).show();
                 }else if (event ==SMSSDK.EVENT_GET_SUPPORTED_COUNTRIES){//返回支持发送验证码的国家列表
-                    Toast.makeText(getActivity(), "获取国家列表成功", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getActivity(), "获取国家列表成功", Toast.LENGTH_SHORT).show();
                 }
             } else {
                 if(flag){
-                    Toast.makeText(getActivity(), "验证码获取失败，请重新获取", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getActivity(), "验证码获取失败，请重新获取", Toast.LENGTH_SHORT).show();
                     userCode.requestFocus();
                 }else{
                     ((Throwable) data).printStackTrace();
                     int resId = getStringRes(getActivity(), "smssdk_network_error");
-                    Toast.makeText(getActivity(), "验证码错误", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getActivity(), "验证码错误", Toast.LENGTH_SHORT).show();
                     userCode.selectAll();
                     if (resId > 0) {
-                        Toast.makeText(getActivity(), "resId", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(getActivity(), "resId", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -240,7 +245,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener{
 
             @Override
             public void onError(VolleyError error) {
-                Toast.makeText(getContext(), "服务器连接错误", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getContext(), "服务器连接错误", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -250,7 +255,6 @@ public class RegisterFragment extends Fragment implements View.OnClickListener{
      */
     private void registerUser(){
         String url = Constants.USER_REGISTER;
-        Toast.makeText(getContext(), "用户的信息注册成功", Toast.LENGTH_SHORT).show();
         Map<String, String> map = new HashMap<>();
         map.put("phoneNumber", userPhone.getText().toString().trim());
         map.put("passWord", userPassword.getText().toString().trim());
@@ -261,13 +265,13 @@ public class RegisterFragment extends Fragment implements View.OnClickListener{
                     JSONObject object = new JSONObject(result);
                     String tag = object.optString("tag");
                     if(tag.equals("success")){
-                        Toast.makeText(getContext(), "注册成功", Toast.LENGTH_SHORT).show();
+                        toastUtil.Short(getContext(), "注册成功").show();
                     }else{
-                        Toast.makeText(getContext(), "注册失败", Toast.LENGTH_SHORT).show();
+                        toastUtil.Short(getContext(), "注册失败").show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    Toast.makeText(getContext(), "服务器连接错误", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getContext(), "服务器连接错误", Toast.LENGTH_SHORT).show();
                 }
             }
 
