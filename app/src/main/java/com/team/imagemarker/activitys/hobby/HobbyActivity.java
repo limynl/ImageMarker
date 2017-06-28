@@ -131,8 +131,8 @@ public class HobbyActivity extends Activity implements RapidFloatingActionConten
 //        list.add(new HotPointModel(Constants.Test_Img1, "Rose", "前端工程师", "2017-01-01 08:59:00", imgTag, "这是测试内容, 这是测试内容, 这是测试内容, 这是测试内容", imgList));
 //        list.add(new HotPointModel(Constants.Test_Img1, "Json", "大数据分析师", "2017-01-01 08:59:00", imgTag, "这是测试内容, 这是测试内容, 这是测试内容, 这是测试内容", imgList));
 //        list.add(new HotPointModel(Constants.Test_Img1, "Gson", "软件架构师", "2017-01-01 08:59:00", imgTag, "这是测试内容, 这是测试内容, 这是测试内容, 这是测试内容", imgList));
-
-        String url = "http://139.199.23.142:8080/TestShowMessage1/marker/data/hobbyHot.json";//兴趣热点地址
+//http://139.199.23.142:8080/TestShowMessage1/marker/data/hobbyHot.json
+        String url = "http://obs.myhwclouds.com/look.admin.info/hotHobby.txt";//兴趣热点地址	https://obs.myhwclouds.com/look.admin.info/hotHobby.txt
         VolleyRequestUtil.RequestGet(context, url, "hobbyHot", new VolleyListenerInterface() {
             @Override
             public void onSuccess(String result) {
@@ -326,9 +326,9 @@ public class HobbyActivity extends Activity implements RapidFloatingActionConten
             String sayContent = data.getStringExtra("sayContent");
             Log.e("tag", "onActivityResult: 内容："+sayContent);
             List<String> imgList = new ArrayList<>();
-            imgList.add("http://obs.myhwclouds.com/look.admin.image/腾讯/2017-5-23/路-道路-树木-落叶.jpg");
-            imgList.add("http://obs.myhwclouds.com/look.admin.image/腾讯/2017-5-23/路-道路-树木-落叶.jpg");
-            HotPointModel item = new HotPointModel("http://obs.myhwclouds.com/look.admin.image/腾讯/2017-5-23/路-道路-树木-落叶.jpg", "NickName", "CEO", str, imgTag, sayContent, imgList);
+            imgList.add("http://obs.myhwclouds.com/look.admin.image/华为/2017-5-20/笔记本电脑-计算机-树木-草坪.jpg");
+            imgList.add("http://obs.myhwclouds.com/look.admin.image/华为/2017-5-20/笔记本电脑-水杯-桌子-手机.jpg");
+            HotPointModel item = new HotPointModel("", "老马识图", "计算机专业", str, new String[]{"风景", "植物", "建筑"}, sayContent, imgList);//http://obs.myhwclouds.com/look.admin.image/腾讯/2017-5-23/路-道路-树木-落叶.jpg
             list.add(0, item);
             mAdapter.notifyDataSetChanged();
             Log.e("tag", "onActivityResult: 添加成功");

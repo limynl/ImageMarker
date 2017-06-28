@@ -153,12 +153,12 @@ public class LookPictureActivity extends FragmentActivity implements View.OnClic
         updateIndicator(imgViewPager.getCurrentItem());//为第一张图片设置标签，并添加指示器
 
         //设置评论数据
-        commentList.add(new CommentInfoModel("http://obs.myhwclouds.com/look.admin.image/华为/2017-5-20/手机-桌子.jpg", "Limynl", "2017-05-01 11:31:00", "这个图片真好看"));
-        commentList.add(new CommentInfoModel("http://obs.myhwclouds.com/look.admin.image/华为/2017-5-20/笔记本电脑-桌子-鼠标-手机.jpg", "Limynl", "2017-05-01 11:31:00", "美图浏览"));
-        commentList.add(new CommentInfoModel("http://obs.myhwclouds.com/look.admin.image/华为/2017-5-20/笔记本电脑-椅子-眼睛-桌子.jpg", "Limynl", "2017-05-01 11:31:00", "用户评论测试"));
-        commentList.add(new CommentInfoModel("http://obs.myhwclouds.com/look.admin.image/华为/2017-5-20/笔记本电脑-水杯-桌子-手机.jpg", "Limynl", "2017-05-01 11:31:00", "美图欣赏"));
-        commentList.add(new CommentInfoModel("http://obs.myhwclouds.com/look.admin.image/华为/2017-5-22/矿用挖掘机-天空-机器.jpg", "Limynl", "2017-05-01 11:31:00", "图片真漂亮"));
-        commentList.add(new CommentInfoModel("http://obs.myhwclouds.com/look.admin.image/华为/2017-5-20/键盘-鼠标-桌子.jpg", "Limynl", "2017-05-01 11:31:00", "用户评论测试"));
+        commentList.add(new CommentInfoModel("http://obs.myhwclouds.com/look.admin.image/华为/2017-5-20/手机-桌子.jpg", "Rose", "2017-05-01 11:31:00", "这个图片真好看"));
+        commentList.add(new CommentInfoModel("http://obs.myhwclouds.com/look.admin.image/华为/2017-5-20/笔记本电脑-桌子-鼠标-手机.jpg", "Jack", "2017-05-01 11:31:00", "美图浏览"));
+        commentList.add(new CommentInfoModel("http://obs.myhwclouds.com/look.admin.image/华为/2017-5-20/笔记本电脑-椅子-眼睛-桌子.jpg", "Tom", "2017-05-01 11:31:00", "用户评论测试"));
+        commentList.add(new CommentInfoModel("http://obs.myhwclouds.com/look.admin.image/华为/2017-5-20/笔记本电脑-水杯-桌子-手机.jpg", "Lili", "2017-05-01 11:31:00", "美图欣赏"));
+        commentList.add(new CommentInfoModel("http://obs.myhwclouds.com/look.admin.image/华为/2017-5-22/矿用挖掘机-天空-机器.jpg", "Json", "2017-05-01 11:31:00", "图片真漂亮"));
+        commentList.add(new CommentInfoModel("http://obs.myhwclouds.com/look.admin.image/华为/2017-5-20/键盘-鼠标-桌子.jpg", "Gson", "2017-05-01 11:31:00", "用户评论测试"));
 
         commentAdapter = new CommentAdapter(this, commentList);
         imgComment.setAdapter(commentAdapter);
@@ -224,7 +224,7 @@ public class LookPictureActivity extends FragmentActivity implements View.OnClic
                 String str=sdf.format(new Date());
                 String commentContent = editTextComment.getText().toString();
                 if(!commentContent.equals("")){
-                    commentList.add(0, new CommentInfoModel("http://obs.myhwclouds.com/look.admin.image/腾讯/2017-5-23/路-道路-树木-落叶.jpg", "Rose", str, commentContent));
+                    commentList.add(0, new CommentInfoModel("http://obs.myhwclouds.com/look.admin.info/man_head.jpg", "老马识图", str, commentContent));
                     commentAdapter.notifyDataSetChanged();
                     editTextComment.setText("");
                 }else{

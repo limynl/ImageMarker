@@ -19,7 +19,7 @@ public class LuckPanLayout extends View {
     private int CircleX,CircleY;
     private Canvas canvas;
     private boolean isYellow = false;
-    private int delayTime = 500;
+    private int delayTime = 300;
 
     public LuckPanLayout(Context context) {
         this(context,null);

@@ -15,8 +15,6 @@ import com.team.imagemarker.entitys.UserIntegralModel;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.tencent.open.utils.Global.getContext;
-
 /**
  * Created by Lmy on 2017/6/20.
  * email 1434117404@qq.com
@@ -45,7 +43,7 @@ public class RankFragment extends Fragment {
         list.add(new UserIntegralModel("http://obs.myhwclouds.com/look.admin.image/华为/2017-5-20/笔记本电脑-水杯-桌子-手机.jpg", "Json", "80"));
         list.add(new UserIntegralModel("http://obs.myhwclouds.com/look.admin.image/华为/2017-5-20/笔记本电脑-计算机-树木-草坪.jpg", "Gson", "70"));
         list.add(new UserIntegralModel("http://obs.myhwclouds.com/look.admin.image/华为/2017-5-22/矿用挖掘机-天空-机器.jpg", "Lisi", "60"));
-        list.add(new UserIntegralModel("http://obs.myhwclouds.com/look.admin.image/华为/2017-5-20/键盘-鼠标-桌子.jpg", "Zhhangsan", "50"));
+        list.add(new UserIntegralModel("http://obs.myhwclouds.com/look.admin.image/华为/2017-5-20/键盘-鼠标-桌子.jpg", "Lili", "50"));
         list.add(new UserIntegralModel("http://obs.myhwclouds.com/look.admin.image/腾讯/2017-5-23/火车-天空-夕阳-.jpg", "G.qz", "40"));
         adapter = new UserIntegralAdapter(getContext(), list);
         listView.setAdapter(adapter);

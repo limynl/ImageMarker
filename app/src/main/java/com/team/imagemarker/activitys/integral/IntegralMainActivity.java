@@ -108,4 +108,6 @@ public class IntegralMainActivity extends FragmentActivity implements TabLayout.
         }
     }
 
+
+
 }

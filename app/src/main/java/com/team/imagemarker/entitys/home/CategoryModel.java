@@ -15,6 +15,9 @@ public class CategoryModel {
     private String name;
     private String simpleMessage;
 
+    private String userName;
+    private String integral;
+
     private String imgUrl;
     private String headUrl;
     private List<MarkerModel> itemList;
@@ -44,6 +47,14 @@ public class CategoryModel {
         this.name = name;
         this.simpleMessage = simpleMessage;
         this.imgUrl = imgUrl;
+    }
+
+    public CategoryModel(int imgId, int imgId1, String name, String userName, String integral){
+        this.imgId = imgId;
+        this.imgId1 = imgId1;
+        this.name = name;
+        this.userName = userName;
+        this.integral = integral;
     }
 
     public int getImgId() {
@@ -100,5 +111,21 @@ public class CategoryModel {
 
     public void setItemList(List<MarkerModel> itemList) {
         this.itemList = itemList;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getIntegral() {
+        return integral;
+    }
+
+    public void setIntegral(String integral) {
+        this.integral = integral;
     }
 }

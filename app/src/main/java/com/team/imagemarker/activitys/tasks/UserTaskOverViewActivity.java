@@ -33,20 +33,22 @@ public class UserTaskOverViewActivity extends Activity implements View.OnClickLi
     private TimeLineAdapter mAdapter;
 
     String[] times = {
-            "2017-06-16 12:00:00",
-            "2017-06-16 12:00:00",
-            "2017-06-16 12:00:00",
-            "2017-06-16 12:00:00",
-            "2017-06-16 12:00:00",
-            "2017-06-16 12:00:00"
+            "2017-06-24 13:21:00",
+            "2017-06-23 09:51:00",
+            "2017-06-23 12:05:22",
+            "2017-06-23 16:00:25",
+            "2017-06-22 18:54:45",
+            "2017-06-21 19:09:05",
+            "2017-06-21 17:02:01"
     };
     String[] events = new String[]{
-            "测试内容",
-            "测试内容",
-            "测试内容",
-            "测试内容",
-            "测试内容",
-            "测试内容"
+            "兴趣推送",
+            "系统推送",
+            "系统推送",
+            "热门种类",
+            "猜你喜欢",
+            "热门分类",
+            "热门分类"
     };
 
     int[] resId = {
@@ -59,12 +61,13 @@ public class UserTaskOverViewActivity extends Activity implements View.OnClickLi
     };
 
     String[] imgs = {
-        "http://obs.myhwclouds.com/look.admin.image/老马识途/2017-5-21/白云岩-高山-水-天空-树.jpg",
+        "http://obs.myhwclouds.com/look.admin.image/老马识途/2017-5-21/狗-海滩-海水-日落.jpg",
         "http://obs.myhwclouds.com/look.admin.image/老马识途/2017-5-22/橙子-水杯-果盘-果汁.jpg",
         "http://obs.myhwclouds.com/look.admin.image/老马识途/2017-5-22/樱桃-蛋糕-花-篮子-甜点-水果.jpg",
         "http://obs.myhwclouds.com/look.admin.image/老马识途/2017-5-22/冰淇淋-草莓-勺子-奶油蛋糕.jpg",
         "http://obs.myhwclouds.com/look.admin.image/老马识途/2017-5-22/草莓-蓝莓-橙子-猕猴桃-盘子.jpg",
         "http://obs.myhwclouds.com/look.admin.image/老马识途/2017-5-22/香蕉-草地-小花.jpg",
+            "http://obs.myhwclouds.com/look.admin.image/老马识途/2017-5-21/白云岩-高山-水-天空-树.jpg"
     };
 
     @Override

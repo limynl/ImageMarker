@@ -73,14 +73,15 @@ public class ShoppingFragment extends Fragment {
                 Intent intent = new Intent(getContext(), LuckDrawActivity.class);
                 startActivity(intent);
                 getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                callBack.setData(10);
             }
         });
     }
 
     private void setTaskBox() {
-        systemPushList.add(new CategoryModel(R.mipmap.task2, R.mipmap.shopping3, "第一名"));
-        systemPushList.add(new CategoryModel(R.mipmap.task1, R.mipmap.shopping2, "第二名"));
-        systemPushList.add(new CategoryModel(R.mipmap.task3, R.mipmap.shopping1, "第三名"));
+        systemPushList.add(new CategoryModel(R.mipmap.task2, R.mipmap.shopping3, "第一名", "Rose", "积分:100"));
+        systemPushList.add(new CategoryModel(R.mipmap.task1, R.mipmap.shopping2, "第二名", "Jack", "积分:90"));
+        systemPushList.add(new CategoryModel(R.mipmap.task3, R.mipmap.shopping1, "第三名", "Tom", "积分:80"));
         adapterSystem = new TaskBoxAdapter(getContext(), systemPushList);
         taskBox.setAdapter(adapterSystem);
         taskBox.setOnItemClickListener(new AdapterView.OnItemClickListener() {

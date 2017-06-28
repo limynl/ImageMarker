@@ -93,7 +93,7 @@ public class SendMoodActivity extends Activity implements View.OnClickListener, 
         selectPicture = (RecyclerView) findViewById(R.id.select_picture);
 
         titleBar.setBackgroundColor(getResources().getColor(R.color.theme1));
-        title.setText("发表动态");
+        title.setText("发表话题");
         rightIcon.setImageResource(R.mipmap.send_mood_finish);
         leftIcon.setOnClickListener(this);
         rightIcon.setOnClickListener(this);

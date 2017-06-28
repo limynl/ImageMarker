@@ -256,15 +256,16 @@ public class AllHistoryFragment extends Fragment implements btnClickListener, Sw
     }
 
     private void getDataFromToHistory(){
-        String url = Constants.USER_HISTORY_DATA;
+//        String url = Constants.USER_HISTORY_DATA;
+        String url = Constants.USER_ALL_HISTORY;
         Map<String, String> userHistory = new HashMap<String, String>();
         userHistory.put("userId", Constants.USER_ID + "");
-        VolleyRequestUtil.RequestGet(getContext(), url, "AllcompletHistory", new VolleyListenerInterface() {
+        VolleyRequestUtil.RequestPost(getContext(), url, "AllcompletHistory", userHistory, new VolleyListenerInterface() {
             @Override
             public void onSuccess(String result) {
                 try {
-                    JSONObject object = new JSONObject(new String(result.getBytes("ISO-8859-1"), "UTF-8"));
-                    String tag = new String(object.optString("TAG").getBytes("ISO-8859-1"), "UTF-8");
+                    JSONObject object = new JSONObject(result);
+//                    String tag = new String(object.optString("TAG").getBytes("ISO-8859-1"), "UTF-8");
                     JSONArray array = object.optJSONArray("picture");
                     Gson gson = null;
                     for (int i = 0; i < array.length(); i++) {

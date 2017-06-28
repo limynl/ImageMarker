@@ -128,7 +128,6 @@ public class UserCenterFragment extends Fragment implements View.OnClickListener
         }else{
             headImg.setImageResource(R.mipmap.man_head);
         }
-
     }
 
     private void setData() {

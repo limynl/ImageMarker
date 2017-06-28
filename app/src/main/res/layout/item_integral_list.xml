@@ -30,22 +30,12 @@
             android:layout_marginLeft="75dp"
             android:layout_centerVertical="true"/>
 
-        <!--<ImageView
-            android:id="@+id/user_integral_flag"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:src="@mipmap/number_one"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@id/integral_user_nick_name"
-            android:layout_marginLeft="15dp"/>-->
-
         <TextView
             android:id="@+id/user_integral_flag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@id/integral_user_nick_name"
-            android:layout_marginLeft="25dp"
+            android:layout_marginLeft="145dp"
             android:text="1"
             android:textSize="16sp"
             android:textStyle="bold|italic"/>

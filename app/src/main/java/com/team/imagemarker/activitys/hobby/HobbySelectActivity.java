@@ -83,7 +83,7 @@ public class HobbySelectActivity extends Activity implements View.OnClickListene
     }
 
     private void initDataOther() {
-        channels_other.add("房产");
+        channels_other.add("花草");
         channels_other.add("娱乐");
         channels_other.add("笑话");
         channels_other.add("游戏");
@@ -104,18 +104,17 @@ public class HobbySelectActivity extends Activity implements View.OnClickListene
     }
 
     private void initData() {
-        channels.add("头条");
+        channels.add("植物");
+        channels.add("动物");
+        channels.add("山水");
+        channels.add("生态");
+        channels.add("城市");
         channels.add("科技");
         channels.add("财经");
         channels.add("军事");
         channels.add("体育");
-        channels.add("足球");
+        channels.add("建筑");
         channels.add("时尚");
-        channels.add("电影");
-        channels.add("移动");
-        channels.add("彩票");
-        channels.add("精选");
-        channels.add("情感");
         channels.add("汽车");
     }
 

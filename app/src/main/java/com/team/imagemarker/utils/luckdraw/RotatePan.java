@@ -176,7 +176,7 @@ public class RotatePan extends View {
     }
 
     //旋转一圈所需要的时间
-    private static final long ONE_WHEEL_TIME = 500;
+    private static final long ONE_WHEEL_TIME = 200;
 
 
     /**

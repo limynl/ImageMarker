@@ -21,7 +21,7 @@ public class ItemEntity implements Serializable{
 
     public ItemEntity(JSONObject jsonObject) {
         this.coverImageUrl = jsonObject.optString("coverImageUrl");
-        this.tags = jsonObject.optString("imgTag").equals("") ? new String[]{} : jsonObject.optString("imgTag").split(",");
+        this.tags = jsonObject.optString("imgTag").equals("") ? new String[]{} : jsonObject.optString("imgTag").split("-");
     }
 
     public ItemEntity(String coverImageUrl, String[] tags){

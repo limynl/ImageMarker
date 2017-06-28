@@ -156,7 +156,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="兴趣推送"
+                            android:text="领域推送"
                             android:textColor="@color/font_light"
                             android:textSize="16dp"
                             android:layout_alignParentLeft="true"
@@ -236,7 +236,8 @@
             rfab:rfab_shadow_radius="3dp"
             rfab:rfab_shadow_color="#999999"
             rfab:rfab_shadow_dx="0dp"
-            rfab:rfab_shadow_dy="5dp" />
+            rfab:rfab_shadow_dy="5dp"
+            android:visibility="gone"/>
 
     </com.wangjie.rapidfloatingactionbutton.RapidFloatingActionLayout>
 

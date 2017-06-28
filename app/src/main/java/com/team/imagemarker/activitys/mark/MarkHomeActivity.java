@@ -77,7 +77,7 @@ public class MarkHomeActivity extends Activity implements View.OnClickListener{
         leftIcon = (ImageView) findViewById(R.id.left_icon);
         rightIcon = (ImageView) findViewById(R.id.right_icon);
 
-        titleBar.setBackgroundColor(getResources().getColor(R.color.theme));
+        titleBar.setBackgroundColor(getResources().getColor(R.color.theme1));
         title.setText("图片标注");
         rightIcon.setVisibility(View.GONE);
         subTitle.setVisibility(View.VISIBLE);
@@ -100,13 +100,18 @@ public class MarkHomeActivity extends Activity implements View.OnClickListener{
             handelMessge((MarkerModel) bundle.getSerializable("completeData"));
 //            dataList = (List<ItemEntity>) bundle.getSerializable("completeData");
         }else if(pageFlag.equals("noCompleteHistory")){//历史记录未完成，继续打标签
-            dataList = (List<ItemEntity>) bundle.getSerializable("noCompleteData");
-//            handelMessge((MarkerModel) bundle.getSerializable("noCompleteData"));
+//            dataList = (List<ItemEntity>) bundle.getSerializable("noCompleteData");
+            handelMessge((MarkerModel) bundle.getSerializable("noCompleteData"));
         }else if(pageFlag.equals("firstPage")){
             handelMessge((MarkerModel) bundle.getSerializable("item"));
         }else if(pageFlag.equals("imgNavPage")){
             handelMessge((MarkerModel) bundle.getSerializable("item"));
         }else if(pageFlag.equals("searchHobby")){
+            dataList = (List<ItemEntity>) bundle.getSerializable("item");
+        }else if(pageFlag.equals("userTask")){
+            tag.setAppendMode(false);//将标签转换成不可编辑状态
+            title.setText("历史标注");
+            subTitle.setVisibility(View.GONE);
             dataList = (List<ItemEntity>) bundle.getSerializable("item");
         }
         pileLayout.setAdapter(new Adapter());//设置底部图片滚动数据
@@ -415,7 +420,7 @@ public class MarkHomeActivity extends Activity implements View.OnClickListener{
                     JSONObject object = new JSONObject(result);
                     String tag = object.optString("tag");
                     if(tag.equals("success")){
-                        Toast.makeText(MarkHomeActivity.this, "上传成功", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(MarkHomeActivity.this, "上传成功", Toast.LENGTH_SHORT).show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

@@ -124,10 +124,10 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Pla
                 dialog = new Dialog(getContext());
                 builder.setView(LayoutInflater.from(getContext()).inflate(R.layout.dialog_loading, null));
                 dialog = builder.create();
-//                UserLogin();
-                dialog.show();
-                Timer timer=new Timer();
-                timer.schedule(new wait(), 3000);
+                UserLogin();
+//                dialog.show();
+//                Timer timer=new Timer();
+//                timer.schedule(new wait(), 2000);
             }
             break;
             case R.id.reset_password:{//重置密码
@@ -178,7 +178,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Pla
                                 Log.e("tag", "onSuccess: 数据表：" + UserDbHelper.getInstance().getUserInfo().toString());
 
                                 Timer timer=new Timer();
-                                timer.schedule(new wait(), 3000);
+                                timer.schedule(new wait(), 1500);
                             }else{
                                 toastUtil.Short(getContext(), "登陆失败").show();
                             }

@@ -116,6 +116,7 @@ public class UpdateUserMessageActivity extends Activity implements View.OnClickL
     private String userHeadPhoto;//用户的头像字节数据流
 
     private ToastUtil toastUtil = new ToastUtil();
+    private EditText zhuanye;
 
     //更新父表与子表中的数据
     private Handler mHandler = new Handler() {
@@ -155,8 +156,9 @@ public class UpdateUserMessageActivity extends Activity implements View.OnClickL
         selectSex = (RelativeLayout) findViewById(R.id.select_sex);
         userHobbySelect = (RelativeLayout) findViewById(R.id.user_hobby_select);
         userMessageSubmit = (PaperButton) findViewById(R.id.user_message_submit);
+        zhuanye = (EditText) findViewById(R.id.zhuanye);
 
-        titleBar.setBackgroundColor(getResources().getColor(R.color.theme));
+        titleBar.setBackgroundColor(getResources().getColor(R.color.theme1));
         title.setText("个人资料");
 //        title.setTextColor(Color.parseColor("#101010"));
 //        leftIcon.setImageResource(R.drawable.back);
@@ -173,6 +175,9 @@ public class UpdateUserMessageActivity extends Activity implements View.OnClickL
 
         UserDbHelper.setInstance(this);
         UserModel userModel = UserDbHelper.getInstance().getUserInfo();
+        userNick.setText(userModel.getUserNickName() + "");
+        userAge.setText(userModel.getUserAge() + "");
+        userSex.setText(userModel.getUserSex() + "");
 
     }
 
@@ -197,7 +202,8 @@ public class UpdateUserMessageActivity extends Activity implements View.OnClickL
                     @Override
                     public void onClick(View v) {
                         getIconFromPhoto();//从相册获取图片
-                        Toast.makeText(UpdateUserMessageActivity.this, "从相册获取", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(UpdateUserMessageActivity.this, "从相册获取", Toast.LENGTH_SHORT).show();
+                        toastUtil.Short(UpdateUserMessageActivity.this, "从相册获取").show();
                         dialog.dismiss();
                     }
                 });
@@ -305,6 +311,7 @@ public class UpdateUserMessageActivity extends Activity implements View.OnClickL
                 UserDbHelper.setInstance(this);
                 UserDbHelper.getInstance().saveUserLoginInfo(userModel);
                 sendUserInfo(userInfo);
+//                toastUtil.Short(this, "修改成功").show();
 
 //                Toast.makeText(UpdateUserMessageActivity.this, "修改成功", Toast.LENGTH_SHORT).show();
 //                Intent intent = new Intent();
@@ -492,8 +499,21 @@ public class UpdateUserMessageActivity extends Activity implements View.OnClickL
 
     private ArrayList<String> getDataOne() {
         ArrayList<String> result = new ArrayList<String>();
-        for (int i = 0; i < 50; i++) {
-            result.add("爱好选择" + i);
+        result.add("风景");
+        result.add("植物");
+        result.add("动物");
+        result.add("建筑");
+        result.add("人文");
+        result.add("活动");
+        result.add("汽车");
+        result.add("山水");
+        result.add("城市");
+        result.add("生态");
+        result.add("人物");
+        result.add("电子");
+
+        for (int i = 0; i < 38; i++) {
+            result.add("爱好兴趣" + i);
         }
         return result;
     }

@@ -193,14 +193,14 @@ public class ImageNavFragment extends Fragment implements View.OnClickListener, 
     }
 
     private void setLikeViewpager() {
-        likeList.add(new CategoryModel(Constants.guessYouLikeImg[0], "这是标题一", "这是简要信息"));
-        likeList.add(new CategoryModel(Constants.guessYouLikeImg[1], "这是标题二", "这是简要信息"));
-        likeList.add(new CategoryModel(Constants.guessYouLikeImg[2], "这是标题三", "这是简要信息"));
-        likeList.add(new CategoryModel(Constants.guessYouLikeImg[3], "这是标题四", "这是简要信息"));
-        likeList.add(new CategoryModel(Constants.guessYouLikeImg[4], "这是标题一", "这是简要信息"));
-        likeList.add(new CategoryModel(Constants.guessYouLikeImg[5], "这是标题二", "这是简要信息"));
-        likeList.add(new CategoryModel(Constants.guessYouLikeImg[6], "这是标题三", "这是简要信息"));
-        likeList.add(new CategoryModel(Constants.guessYouLikeImg[7], "这是标题四", "这是简要信息"));
+        likeList.add(new CategoryModel(Constants.guessYouLikeImg[0], "高山 荒野", "2017-06-02 15:30:02"));
+        likeList.add(new CategoryModel(Constants.guessYouLikeImg[1], "石桥", "2017-06-02 15:30:02"));
+        likeList.add(new CategoryModel(Constants.guessYouLikeImg[2], "船舶", "2017-06-02 15:30:02"));
+        likeList.add(new CategoryModel(Constants.guessYouLikeImg[3], "青山 湖水", "2017-06-02 15:30:02"));
+        likeList.add(new CategoryModel(Constants.guessYouLikeImg[4], "草地", "2017-06-02 15:30:02"));
+        likeList.add(new CategoryModel(Constants.guessYouLikeImg[5], "溪流", "2017-06-02 15:30:02"));
+        likeList.add(new CategoryModel(Constants.guessYouLikeImg[6], "电梯 大厅", "2017-06-02 15:30:02"));
+        likeList.add(new CategoryModel(Constants.guessYouLikeImg[7], "青山 湖水", "2017-06-02 15:30:02"));
         inflater = LayoutInflater.from(getContext());
         pageCount = (int) Math.ceil(likeList.size() * 1.0 / pageSize);//计算总页数
         pagerList = new ArrayList<>();
@@ -216,7 +216,7 @@ public class ImageNavFragment extends Fragment implements View.OnClickListener, 
                     Intent intent = new Intent(getContext(), MarkHomeActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putString("pageTag", "imgNavPage");
-                    bundle.putSerializable("item", guessItemList.get(pos));
+                    bundle.putSerializable("item", guessItemList.get(position));
                     intent.putExtras(bundle);
                     startActivity(intent);
                     getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);

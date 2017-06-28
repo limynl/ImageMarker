@@ -23,7 +23,6 @@ import java.util.List;
 public class TaskBoxAdapter extends BaseAdapter {
     private Context context;
     private List<CategoryModel> list;
-    private ViewHolder viewHolder = null;
 
     public TaskBoxAdapter(Context context, List<CategoryModel> list) {
         this.context = context;
@@ -47,16 +46,15 @@ public class TaskBoxAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-//        ViewHolder viewHolder = null;
+        ViewHolder viewHolder = null;
         if (convertView == null) {
             viewHolder = new ViewHolder();
             convertView = LayoutInflater.from(context).inflate(R.layout.item_task_box, null);
             viewHolder.categoryImg = (ImageView) convertView.findViewById(R.id.category_img);
-//            viewHolder.categoryName = (TextView) convertView.findViewById(R.id.category_name);
-//            viewHolder.categorySimapleMessage = (TextView) convertView.findViewById(R.id.category_simple_message);
-//            viewHolder.userScore = (TextView) convertView.findViewById(R.id.user_score);
             viewHolder.userHead = (CircleImageView) convertView.findViewById(R.id.user_head);
             viewHolder.userRanking = (LabelView) convertView.findViewById(R.id.user_ranking);
+            viewHolder.userName = (TextView) convertView.findViewById(R.id.user_name);
+            viewHolder.userIntegral = (TextView) convertView.findViewById(R.id.integral);
             convertView.setTag(viewHolder);
         }else{
             viewHolder = (ViewHolder) convertView.getTag();
@@ -64,42 +62,19 @@ public class TaskBoxAdapter extends BaseAdapter {
 
         CategoryModel model = list.get(position);
 
-//        Glide.with(context).load("http://139.199.23.142:8080/TestShowMessage1/marker/test.jpg").asBitmap().into(new SimpleTarget<Bitmap>() {
-//            @Override
-//            public void onResourceReady(final Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-//                BitmapBlurUtil.addTask(resource, new Handler(){
-//                    @Override
-//                    public void handleMessage(Message msg) {
-//                        super.handleMessage(msg);
-//                        Drawable drawable = (Drawable) msg.obj;
-//                        viewHolder.categoryImg.setImageDrawable(drawable);
-//                        resource.recycle();
-//                    }
-//                });
-//            }
-//        });
-//        int score = (Integer.parseInt(viewHolder.userScore.getText().toString().split(":")[1]) - position * 10);
-//        viewHolder.userScore.setText("积分:" + score);
-//        Glide.with(context)
-//                .load(model.getName())
-//                .diskCacheStrategy(DiskCacheStrategy.ALL)
-//                .thumbnail(0.8f)
-//                .into(viewHolder.userHead);
         viewHolder.categoryImg.setImageResource(model.getImgId());
-//        viewHolder.categoryName.setText(model.getName());
-//        viewHolder.categorySimapleMessage.setText("");
-        viewHolder.userHead.setImageResource(R.mipmap.shopping1);
+        viewHolder.userHead.setImageResource(model.getImgId1());
         viewHolder.userRanking.setText(model.getName());
-
+        viewHolder.userName.setText(model.getUserName());
+        viewHolder.userIntegral.setText(model.getIntegral());
         return convertView;
     }
 
     class ViewHolder{
         public ImageView categoryImg;
-//        public TextView categoryName;
-//        public TextView categorySimapleMessage;
         public CircleImageView userHead;
         public LabelView userRanking;
-        private TextView userScore;
+        public TextView userName;
+        public TextView userIntegral;
     }
 }

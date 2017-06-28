@@ -57,6 +57,7 @@
                 android:layout_marginTop="4dp">
 
                 <TextView
+                    android:id="@+id/category"
                     android:layout_marginTop="4dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -66,6 +67,7 @@
                     android:textStyle="bold"/>
 
                 <TextView
+                    android:id="@+id/opterator"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
@@ -84,7 +86,7 @@
                     android:textStyle="bold"/>
 
                 <Button
-                    android:id="@+id/system_push_more"
+                    android:id="@+id/toMark"
                     android:layout_width="60dp"
                     android:layout_height="23dp"
                     android:layout_marginTop="6dp"

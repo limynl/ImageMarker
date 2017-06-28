@@ -80,8 +80,8 @@ public class GridViewLikeAdapter extends BaseAdapter {
                 .into(viewHolder.categoryImg);
 
 //        viewHolder.categoryImg.setImageResource(model.getImgId());
-        viewHolder.categoryName.setText("这是标题");
-        viewHolder.categorySimapleMessage.setText("这是一句简要信息");
+        viewHolder.categoryName.setText(model.getName());
+        viewHolder.categorySimapleMessage.setText(model.getSimpleMessage());
         return convertView;
     }
 

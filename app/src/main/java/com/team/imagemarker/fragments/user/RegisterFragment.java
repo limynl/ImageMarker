@@ -119,7 +119,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener{
                             if(userPhone.getText().toString().trim().length() == 11){
                                 if(userCode.getText().toString().trim().length() == 4){
                                     registerUser();//将用户的注册信息传至后台进行保存
-
+//                                    toastUtil.Short(getContext(), "注册成功").show();//.......
                                     iCord = userCode.getText().toString().trim();
                                     SMSSDK.submitVerificationCode("86", iPhone, iCord);//向服务器提交接收到的验证码
                                     flag = false;

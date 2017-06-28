@@ -99,8 +99,8 @@ public class CommonRecyclerHolder extends RecyclerView.ViewHolder {
     public CommonRecyclerHolder setImageByUrl(int viewId, String url){
         Glide.with(context)
                 .load(url)
-                .placeholder(context.getResources().getDrawable(R.drawable.head))
-                .error(context.getResources().getDrawable(R.mipmap.ic_launcher))
+                .placeholder(context.getResources().getDrawable(R.mipmap.man_head))
+                .error(context.getResources().getDrawable(R.mipmap.man_head))
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into((ImageView) getView(viewId));
         return this;

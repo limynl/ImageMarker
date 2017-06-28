@@ -6,19 +6,27 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.team.imagemarker.R;
+import com.team.imagemarker.activitys.mark.MarkHomeActivity;
 import com.team.imagemarker.adapters.task.TaskBoxAdapter;
 import com.team.imagemarker.entitys.home.CategoryModel;
+import com.team.imagemarker.entitys.marker.ItemEntity;
 import com.team.imagemarker.utils.chart.LineChartView;
 import com.team.imagemarker.utils.chart.SlimChart;
 import com.team.imagemarker.utils.scrollview.MyHorizontalScrollView;
 import com.wangjie.rapidfloatingactionbutton.textlabel.LabelView;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.InputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,6 +58,8 @@ public class UserTaskActivity extends AppCompatActivity implements View.OnClickL
 //    private RecyclerView hobbyRecycle;
 //    private List<CategoryModel> hobbyPushList = new ArrayList<>();
 
+    private static List<ItemEntity> dataList = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +68,7 @@ public class UserTaskActivity extends AppCompatActivity implements View.OnClickL
         setSlimChart();//设置Slimart圆圈
         setLineChart();//设置折现统计图
         setTaskBox();
+        initDataList();
     }
 
     private void bindView() {
@@ -74,7 +85,7 @@ public class UserTaskActivity extends AppCompatActivity implements View.OnClickL
         recentTask = (MyHorizontalScrollView) findViewById(R.id.recent_task);
 //        hobbyRecycle = (RecyclerView) findViewById(R.id.hobby_push);
 
-        titleBar.setBackgroundColor(getResources().getColor(R.color.theme));
+        titleBar.setBackgroundColor(getResources().getColor(R.color.theme1));
         title.setText("任务情况");
         subTitle.setVisibility(View.VISIBLE);
         subTitle.setText("概览");
@@ -106,19 +117,19 @@ public class UserTaskActivity extends AppCompatActivity implements View.OnClickL
 
         //设置文本
         slimChart.setStrokeWidth(13);
-        slimChart.setText("234");
+        slimChart.setText("30");
         slimChart.setTextColorInt(Color.parseColor("#464e76"));
         slimChart.setRoundEdges(true);
     }
 
     private void setLineChart() {
-        dateList.add("05-01");
-        dateList.add("05-02");
-        dateList.add("05-03");
-        dateList.add("05-04");
-        dateList.add("05-05");
-        dateList.add("05-06");
-        dateList.add("05-07");
+        dateList.add("06-24");
+        dateList.add("06-23");
+        dateList.add("06-22");
+        dateList.add("06-21");
+        dateList.add("06-20");
+        dateList.add("06-19");
+        dateList.add("06-18");
         earnList.add(12.0);
         earnList.add(31.0);
         earnList.add(16.0);
@@ -133,13 +144,13 @@ public class UserTaskActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void setTaskBox() {
-        taskList.add(new CategoryModel(R.mipmap.task2, R.mipmap.shopping1, "05-01"));
-        taskList.add(new CategoryModel(R.mipmap.task1, R.mipmap.shopping2, "05-02"));
-        taskList.add(new CategoryModel(R.mipmap.task3, R.mipmap.shopping3, "05-03"));
-        taskList.add(new CategoryModel(R.mipmap.task2, R.mipmap.shopping1, "05-04"));
-        taskList.add(new CategoryModel(R.mipmap.task1, R.mipmap.shopping2, "05-05"));
-        taskList.add(new CategoryModel(R.mipmap.task3, R.mipmap.shopping3, "05-06"));
-        taskList.add(new CategoryModel(R.mipmap.task2, R.mipmap.shopping3, "05-07"));
+        taskList.add(new CategoryModel(R.mipmap.task2, R.mipmap.task, "06-24", "风景", "兴趣推送"));
+        taskList.add(new CategoryModel(R.mipmap.task1, R.mipmap.shopping2, "06-23", "植物", "系统推送"));
+        taskList.add(new CategoryModel(R.mipmap.task3, R.mipmap.shopping3, "06-23", "大自然", "系统推送"));
+        taskList.add(new CategoryModel(R.mipmap.task2, R.mipmap.shopping1, "06-23", "动物", "热门种类"));
+        taskList.add(new CategoryModel(R.mipmap.task1, R.mipmap.shopping2, "06-22", "建筑", "猜你喜欢"));
+        taskList.add(new CategoryModel(R.mipmap.task3, R.mipmap.shopping3, "06-21", "风景", "热门分类"));
+        taskList.add(new CategoryModel(R.mipmap.task2, R.mipmap.shopping3, "06-21", "风景", "兴趣推送"));
         View recentItem = null;
         ViewHolder viewHolder = new ViewHolder();
         LinearLayout rootview = new LinearLayout(this);
@@ -150,12 +161,26 @@ public class UserTaskActivity extends AppCompatActivity implements View.OnClickL
             viewHolder.categoryImg = (ImageView) recentItem.findViewById(R.id.category_img);
             viewHolder.userHead = (ImageView) recentItem.findViewById(R.id.user_head);
             viewHolder.userRanking = (LabelView) recentItem.findViewById(R.id.user_ranking);
+            viewHolder.category = (TextView) recentItem.findViewById(R.id.category);
+            viewHolder.opterator = (TextView) recentItem.findViewById(R.id.opterator);
+            viewHolder.toMark = (Button) recentItem.findViewById(R.id.toMark);
             viewHolder.categoryImg.setImageResource(taskList.get(i).getImgId());
             viewHolder.userHead.setImageResource(taskList.get(i).getImgId1());
             viewHolder.userRanking.setText(taskList.get(i).getName());
-//            if(i == taskList.size() - 1){
-//                param.setMargins(0, 0, 0, 0);
-//            }
+            viewHolder.category.setText("所选类别: " + taskList.get(i).getUserName());
+            viewHolder.opterator.setText("操作类型: " + taskList.get(i).getIntegral());
+            viewHolder.toMark.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(UserTaskActivity.this, MarkHomeActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("pageTag", "userTask");
+                    bundle.putSerializable("item", (Serializable) dataList);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                    UserTaskActivity.this.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                }
+            });
             rootview.addView(recentItem, param);
         }
         recentTask.removeAllViews();
@@ -189,5 +214,31 @@ public class UserTaskActivity extends AppCompatActivity implements View.OnClickL
         public ImageView categoryImg;
         public ImageView userHead;
         public LabelView userRanking;
+        public TextView category;
+        public TextView opterator;
+        public Button toMark;
     }
+
+    private void initDataList() {
+        try {
+            InputStream in = getAssets().open("task.json");
+            int size = in.available();
+            byte[] buffer = new byte[size];
+            in.read(buffer);
+            String jsonStr = new String(buffer, "UTF-8");
+            JSONObject jsonObject = new JSONObject(jsonStr);
+            JSONArray jsonArray = jsonObject.optJSONArray("result");
+            if (null != jsonArray) {
+                int len = jsonArray.length();
+                for (int i = 0; i < len; i++) {
+                    JSONObject itemJsonObject = jsonArray.getJSONObject(i);
+                    ItemEntity itemEntity = new ItemEntity(itemJsonObject);
+                    dataList.add(itemEntity);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }
