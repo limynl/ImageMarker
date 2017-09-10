@@ -26,8 +26,6 @@ public class MainActivity extends BaseActivity implements TabLayout.OnTabSelecte
     private TabLayout loginTabs;
     private ViewPager loginViewPager;
     private TabViewPagerAdapter viewPagerAdapter;
-//    private Field mField = null;
-//    private FixedSpeedScroller mScroller = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,15 +77,6 @@ public class MainActivity extends BaseActivity implements TabLayout.OnTabSelecte
 
     @Override
     public void setShowFragment() {
-//        try {
-//            mField =ViewPager.class.getDeclaredField("mScroller");
-//            mField.setAccessible(true);
-//            mScroller = new FixedSpeedScroller(loginViewPager.getContext(),new AccelerateInterpolator());
-//            mField.set(loginViewPager, mScroller);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
         loginViewPager.setCurrentItem(0);
-//        mScroller.setmDuration(2000);
     }
 }
