@@ -14,8 +14,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
@@ -24,6 +24,7 @@ import com.mob.tools.utils.UIHandler;
 import com.team.imagemarker.R;
 import com.team.imagemarker.activitys.home.HomeActivity;
 import com.team.imagemarker.activitys.user.UserResetPassActivity;
+import com.team.imagemarker.constants.Constants;
 import com.team.imagemarker.db.UserDbHelper;
 import com.team.imagemarker.entitys.UserModel;
 import com.team.imagemarker.utils.EditTextWithDel;
@@ -33,7 +34,6 @@ import com.team.imagemarker.utils.volley.VolleyListenerInterface;
 import com.team.imagemarker.utils.volley.VolleyRequestUtil;
 import com.tencent.connect.UserInfo;
 import com.tencent.connect.auth.QQToken;
-import com.tencent.connect.common.Constants;
 import com.tencent.mm.sdk.modelmsg.SendAuth;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
@@ -60,13 +60,13 @@ import cn.sharesdk.sina.weibo.SinaWeibo;
  * email 1434117404@qq.com
  */
 
-public class LoginFragment extends Fragment implements View.OnClickListener, PlatformActionListener, Handler.Callback{
+public class LoginFragment extends Fragment implements View.OnClickListener, PlatformActionListener, Handler.Callback {
     private View view;
 
     private EditTextWithDel userPhone, userPassword;//账号密码
     private PaperButton userLogin;//登录
     private LinearLayout resetPassword;
-    private RadioButton qqLogin, wechatLogin, sinaLogin;//第三方登录
+    private ImageView qqLogin, wechatLogin, sinaLogin;//第三方登录
     private Dialog dialog;
 
     private static final int MSG_TOAST = 1;
@@ -74,11 +74,15 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Pla
     private static final int MSG_CANCEL_NOTIFY = 3;
     final private Context context = getActivity();
     private Platform mPf;
-    private Tencent mTencent;
-    private BaseUiListener mIUiListener;
-    private UserInfo mUserInfo;
-    private  IWXAPI api;
+    private IWXAPI api;
     private ToastUtil toastUtil = new ToastUtil();
+
+    //需要腾讯提供的一个Tencent类
+    private Tencent mTencent;
+    //还需要一个IUiListener 的实现类（LogInListener implements IUiListener）
+    private LogInListener mListener;
+    //用来判断当前是否已经授权登录，若为false，点击登录button时进入授权，否则注销
+    private boolean isLogIned = false;
 
     @Nullable
     @Override
@@ -89,9 +93,9 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Pla
         userPassword = (EditTextWithDel) view.findViewById(R.id.user_password);
         userLogin = (PaperButton) view.findViewById(R.id.user_login);
         resetPassword = (LinearLayout) view.findViewById(R.id.reset_password);
-        qqLogin = (RadioButton) view.findViewById(R.id.qq_login);
-        wechatLogin = (RadioButton) view.findViewById(R.id.wechat_login);
-        sinaLogin = (RadioButton) view.findViewById(R.id.sina_login);
+        qqLogin = (ImageView) view.findViewById(R.id.qq_login);
+        wechatLogin = (ImageView) view.findViewById(R.id.wechat_login);
+        sinaLogin = (ImageView) view.findViewById(R.id.sina_login);
         return view;
     }
 
@@ -111,7 +115,9 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Pla
      */
     private void initMob() {
         ShareSDK.initSDK(getActivity());//mob初始化
-        mTencent = Tencent.createInstance("1105819277",getActivity());//QQ登录初始化
+        mTencent = Tencent.createInstance("1106389984", getContext().getApplicationContext());
+        mListener = new LogInListener();
+
         api = WXAPIFactory.createWXAPI(getActivity(), "wx4868b35061f87885", true);//微信登录初始化
         api.registerApp("wx4868b35061f87885");// 将应用的appid注册到微信
     }
@@ -119,35 +125,35 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Pla
     @Override
     public void onClick(View v) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        switch (v.getId()){
-            case R.id.user_login:{//登录
+        switch (v.getId()) {
+            case R.id.user_login: {//登录
                 dialog = new Dialog(getContext());
                 builder.setView(LayoutInflater.from(getContext()).inflate(R.layout.dialog_loading, null));
                 dialog = builder.create();
                 UserLogin();
 //                dialog.show();
 //                Timer timer=new Timer();
-//                timer.schedule(new wait(), 2000);
+//                timer.schedule(new wait(), 500);
             }
             break;
-            case R.id.reset_password:{//重置密码
+            case R.id.reset_password: {//重置密码
                 startActivity(new Intent(getActivity(), UserResetPassActivity.class));
                 getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             }
             break;
-            case R.id.qq_login:{//QQ登录
+            case R.id.qq_login: {//QQ登录
                 thirdQQLogin();
             }
             break;
-            case R.id.wechat_login:{//微信登录
-                if(!api.isWXAppInstalled()){
+            case R.id.wechat_login: {//微信登录
+                if (!api.isWXAppInstalled()) {
                     toastUtil.Short(getContext(), "请安装微信客户端之后再进行登录").show();
                     return;
                 }
                 getCode();
             }
             break;
-            case R.id.sina_login:{//新浪微博登录
+            case R.id.sina_login: {//新浪微博登录
                 thirdSinaLogin();
             }
             break;
@@ -155,8 +161,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Pla
     }
 
     private void UserLogin() {
-        if(!userPhone.getText().toString().trim().equals("") || userPassword.getText().toString().trim().equals("")){
-            if(userPhone.getText().toString().length() == 11){
+        if (!userPhone.getText().toString().trim().equals("") && !userPassword.getText().toString().trim().equals("")) {
+            if (userPhone.getText().toString().length() == 11) {
                 dialog.show();
                 String url = com.team.imagemarker.constants.Constants.USER_LOGIN;
                 Map<String, String> map = new HashMap<>();
@@ -169,18 +175,22 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Pla
                         try {
                             JSONObject object = new JSONObject(result);
                             String tag = object.optString("tag");
-                            if(tag.equals("success")){
+                            if (tag.equals("success")) {
                                 Gson gson = new Gson();
                                 UserModel userModel = gson.fromJson(object.optString("user"), UserModel.class);
                                 Log.e("tag", "onSuccess: " + userModel.toString());
+                                UserDbHelper.setInstance(getContext());
                                 UserDbHelper.getInstance().saveUserLoginInfo(userModel);
                                 com.team.imagemarker.constants.Constants.USER_ID = userModel.getId();
+                                Log.e("tag", "onSuccess: 用户的ID为：" + com.team.imagemarker.constants.Constants.USER_ID);
                                 Log.e("tag", "onSuccess: 数据表：" + UserDbHelper.getInstance().getUserInfo().toString());
-
-                                Timer timer=new Timer();
-                                timer.schedule(new wait(), 1500);
-                            }else{
-                                toastUtil.Short(getContext(), "登陆失败").show();
+                                UserDbHelper.getInstance().saveLoginState(false);//保存用户的登录状态
+                                Timer timer = new Timer();
+                                timer.schedule(new wait(false), 500);
+                            } else {
+                                toastUtil.Short(getContext(), "账号或密码不正确").show();
+                                Timer timer = new Timer();
+                                timer.schedule(new wait(true), 1000);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -194,10 +204,10 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Pla
                     }
                 });
 
-            }else{
+            } else {
                 toastUtil.Short(getContext(), "电话号码格式不对，请重新输入").show();
             }
-        }else{
+        } else {
             toastUtil.Short(getContext(), "账号和密码不能为空").show();
         }
     }
@@ -206,13 +216,98 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Pla
      * QQ第三方登录
      */
     private void thirdQQLogin() {
-        mIUiListener = new BaseUiListener();
-        if(!mTencent.isSessionValid()){//判断是否登录过
-            mTencent.login(getActivity(),"all", mIUiListener);//all表示获取所有权限
-        }else{//登录过注销之后再登录
-            mTencent.logout(getActivity());
-            mTencent.login(getActivity(),"all", mIUiListener);
+        if (!isLogIned) {
+            isLogIned = true;
+            if (!mTencent.isSessionValid()) {
+                mTencent.login(LoginFragment.this, "all", mListener);
+            }
+        } else {
+            mTencent.logout(getContext());
+            isLogIned = false;
+            mTencent.login(LoginFragment.this, "all", mListener);
         }
+    }
+
+    private class LogInListener implements IUiListener {
+
+        @Override
+        public void onComplete(Object o) {
+            Log.e("tag", "onError: 授权成功");
+            JSONObject jsonObject = (JSONObject) o;
+
+            //设置openid和token，否则获取不到下面的信息
+            String openId = initOpenidAndToken(jsonObject);
+
+            //获取QQ用户的各信息
+            getUserInfo(openId);
+        }
+
+        @Override
+        public void onError(UiError uiError) {
+            Log.e("tag", "onError: 授权出错");
+        }
+
+        @Override
+        public void onCancel() {
+            Log.e("tag", "onError: 授权取消");
+        }
+    }
+
+    private String initOpenidAndToken(JSONObject jsonObject) {
+        try {
+            String openid = jsonObject.getString("openid");
+            String token = jsonObject.getString("access_token");
+            String expires = jsonObject.getString("expires_in");
+            mTencent.setAccessToken(token, expires);
+            mTencent.setOpenId(openid);
+
+            return jsonObject.getString("openid");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return "";
+    }
+
+    private void getUserInfo(final String openId) {
+        //sdk给我们提供了一个类UserInfo，这个类中封装了QQ用户的一些信息，我么可以通过这个类拿到这些信息
+        QQToken mQQToken = mTencent.getQQToken();
+        final UserInfo userInfo = new UserInfo(getContext(), mQQToken);
+        userInfo.getUserInfo(new IUiListener() {
+                                 @Override
+                                 public void onComplete(final Object o) {
+                                     JSONObject userInfoJson = (JSONObject) o;
+                                     try {
+                                         Map<String, String> map = new HashMap<>();
+                                         map.put("otherLogin", openId);
+                                         map.put("userNickName", userInfoJson.getString("nickname"));
+                                         map.put("userHeadImage",userInfoJson.getString("figureurl_qq_2"));
+                                         Log.e("tag", "onComplete: 信息获取成功：" + "用户Id为：" + openId + "  " + userInfoJson.getString("nickname") + userInfoJson.getString("figureurl_qq_1"));
+                                         threeUserLogin(map);
+                                     } catch (JSONException e) {
+                                         e.printStackTrace();
+                                     }
+                                 }
+
+                                 @Override
+                                 public void onError(UiError uiError) {
+                                     Log.e("GET_QQ_INFO_ERROR", "获取qq用户信息错误");
+                                 }
+
+                                 @Override
+                                 public void onCancel() {
+                                     Log.e("GET_QQ_INFO_CANCEL", "获取qq用户信息取消");
+                                 }
+                             }
+        );
+    }
+
+
+    //确保能接收到回调
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Tencent.onActivityResultData(requestCode, resultCode, data, mListener);
     }
 
     /**
@@ -228,25 +323,11 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Pla
     /**
      * 微信登录返回码
      */
-    private void getCode(){
+    private void getCode() {
         final SendAuth.Req req = new SendAuth.Req();
         req.scope = "snsapi_userinfo";
         req.state = "carjob_wx_login";
         api.sendReq(req);
-    }
-
-    /**
-     * 在调用Login的Activity或者Fragment中重写onActivityResult方法
-     * @param requestCode
-     * @param resultCode
-     * @param data
-     */
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == Constants.REQUEST_LOGIN){
-            Tencent.onActivityResultData(requestCode,resultCode,data,mIUiListener);
-        }
     }
 
     @Override
@@ -257,12 +338,13 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Pla
 
     /**
      * 微博登录返回码
+     *
      * @param msg
      * @return
      */
     @Override
     public boolean handleMessage(Message msg) {
-        switch(msg.what) {
+        switch (msg.what) {
             case MSG_TOAST: {
                 String text = String.valueOf(msg.obj);
                 Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
@@ -275,6 +357,13 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Pla
                         //http://open.weibo.com/wiki/2/users/show 新浪微博返回结果字段说明
                         Platform pf = ShareSDK.getPlatform(context, SinaWeibo.NAME);
                         //常用返回字段
+
+                        Map<String, String> map = new HashMap<>();
+                        map.put("otherLogin", pf.getDb().getUserId());
+                        map.put("userNickName", pf.getDb().getUserName());
+                        map.put("userHeadImage", pf.getDb().getUserIcon());
+                        threeUserLogin(map);
+
                         Log.e("sharesdk use_id", pf.getDb().getUserId()); //获取用户id
                         Log.e("sharesdk use_name", pf.getDb().getUserName());//获取用户名称
                         Log.e("sharesdk use_icon", pf.getDb().getUserIcon());//获取用户头像
@@ -308,6 +397,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Pla
 
     /**
      * 新浪微博授权成功回调页面
+     *
      * @param platform
      * @param action
      * @param hashMap
@@ -324,6 +414,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Pla
 
     /**
      * 授权失败
+     *
      * @param platform
      * @param action
      * @param t
@@ -342,6 +433,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Pla
 
     /**
      * 取消授权
+     *
      * @param platform
      * @param action
      */
@@ -355,77 +447,68 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Pla
         UIHandler.sendMessage(msg, this);
     }
 
-    /**
-     * 自定义监听器实现IUiListener接口后，需要实现的3个方法
-     * onComplete完成 onError错误 onCancel取消
-     */
-    private class BaseUiListener implements IUiListener {
-        @Override
-        public void onComplete(Object response) {
-            toastUtil.Short(getContext(), "授权成功").show();
-            JSONObject obj = (JSONObject) response;
-            try {
-                String openID = obj.getString("openid");
-                String accessToken = obj.getString("access_token");
-                String expires = obj.getString("expires_in");
-                mTencent.setOpenId(openID);
-                mTencent.setAccessToken(accessToken,expires);
-                QQToken qqToken = mTencent.getQQToken();
-                mUserInfo = new UserInfo(getActivity(),qqToken);
-                mUserInfo.getUserInfo(new IUiListener() {
-                    @Override
-                    public void onComplete(Object response) {
-                        JSONObject jsonString = (JSONObject)response;
-                        try {
-                            //常用字段
-                            String name = jsonString.getString("nickname");//获取用户名
-                            String iconQQ = jsonString.getString("figureurl_qq_1");//获取QQ用户的头像
-                            String iconQZ = jsonString.getString("figureurl_1");//获取QQ空间头像
-                            String province = jsonString.getString("province");//获取地址
-                            String gender = jsonString.getString("gender");//获取性别
-//                            mThirdLoginResult.setText(name);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        toastUtil.Short(getContext(), "登录成功").show();
-                        Log.e("Mainactivity","登录成功"+response.toString());
-                        /*Intent intent = new Intent(TestLoginActivity.this, TestExampleAsyncActivity.class);
-                        startActivity(intent);
-                        finish();*/
+    private void threeUserLogin(Map<String, String> map) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        dialog = new Dialog(getContext());
+        builder.setView(LayoutInflater.from(getContext()).inflate(R.layout.dialog_loading, null));
+        dialog = builder.create();
+        dialog.show();
+
+        String url = Constants.USER_LOGIN_OTHER;
+        VolleyRequestUtil.RequestPost(getContext(), url, "login", map, new VolleyListenerInterface() {
+            @Override
+            public void onSuccess(String result) {
+                Log.e("tag", "onSuccess: json字符串为：" + result.toString());
+                try {
+                    JSONObject object = new JSONObject(result);
+                    String tag = object.optString("tag");
+                    if (tag.equals("success")) {
+                        Gson gson = new Gson();
+                        UserModel userModel = gson.fromJson(object.optString("user"), UserModel.class);
+                        Log.e("tag", "onSuccess: " + userModel.toString());
+                        UserDbHelper.setInstance(getContext());
+                        UserDbHelper.getInstance().saveUserLoginInfo(userModel);
+                        com.team.imagemarker.constants.Constants.USER_ID = userModel.getId();
+                        Log.e("tag", "onSuccess: 用户的ID为：" + com.team.imagemarker.constants.Constants.USER_ID);
+                        Log.e("tag", "onSuccess: 数据表：" + UserDbHelper.getInstance().getUserInfo().toString());
+                        UserDbHelper.getInstance().saveLoginState(false);//保存用户的登录状态
+                        Timer timer = new Timer();
+                        timer.schedule(new wait(false), 500);
+                    } else {
+//                        toastUtil.Short(getContext(), "账号或密码不正确").show();
+                        Timer timer = new Timer();
+                        timer.schedule(new wait(true), 1000);
                     }
-                    @Override
-                    public void onError(UiError uiError) {
-                        Log.e("Mainactivity","登录失败"+uiError.toString());
-                    }
-                    @Override
-                    public void onCancel() {
-                        Log.e("Mainactivity","登录取消");
-                    }
-                });
-            } catch (JSONException e) {
-                e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    toastUtil.Long(getContext(), "网络好像走丢了！").show();
+                }
             }
-        }
 
-        @Override
-        public void onError(UiError uiError) {
-            Log.e("MainActivity", "onError: " + uiError.toString());
-        }
-
-        @Override
-        public void onCancel() {
-            Toast.makeText(context, "授权取消", Toast.LENGTH_SHORT).show();
-            toastUtil.Short(getContext(), "授权取消").show();
-        }
+            @Override
+            public void onError(VolleyError error) {
+                toastUtil.Short(getContext(), "服务器连接错误").show();
+            }
+        });
     }
 
     class wait extends TimerTask {
 
+        private boolean isError;
+
+        public wait(boolean isError) {
+            this.isError = isError;
+        }
+
         @Override
         public void run() {
-            dialog.dismiss();
-            startActivity(new Intent(getActivity(), HomeActivity.class));
-            getActivity().overridePendingTransition(R.anim.slide_in_up,R.anim.slide_out_down);
+            if(isError){
+                dialog.dismiss();
+            }else{
+                dialog.dismiss();
+                startActivity(new Intent(getActivity(), HomeActivity.class));
+                getActivity().overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_down);
+            }
         }
     }
 }

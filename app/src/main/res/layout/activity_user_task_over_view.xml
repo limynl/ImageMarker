@@ -10,7 +10,6 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/timeline_recycleview"
-        android:layout_marginBottom="10dp"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:layout_width="match_parent"

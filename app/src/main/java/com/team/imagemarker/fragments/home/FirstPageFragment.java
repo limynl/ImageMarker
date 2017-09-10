@@ -4,31 +4,35 @@ import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.team.imagemarker.R;
-import com.team.imagemarker.activitys.home.MoreCategoryActivity;
+import com.team.imagemarker.activitys.imagscan.GuessYouLikeFragment;
 import com.team.imagemarker.activitys.imagscan.ImgScanMainActivity;
-import com.team.imagemarker.activitys.imagscan.PictureGroupScanFragment;
 import com.team.imagemarker.activitys.mark.MarkHomeActivity;
 import com.team.imagemarker.activitys.saying.SayingScanActivity;
 import com.team.imagemarker.adapters.CardPagerAdapter;
 import com.team.imagemarker.adapters.ShadowTransformer;
 import com.team.imagemarker.adapters.home.HobbyPushAdapter;
 import com.team.imagemarker.adapters.home.SystemPushAdapter;
+import com.team.imagemarker.constants.Constants;
+import com.team.imagemarker.db.UserDbHelper;
 import com.team.imagemarker.entitys.CardItem;
 import com.team.imagemarker.entitys.MarkerModel;
+import com.team.imagemarker.entitys.UserModel;
 import com.team.imagemarker.entitys.home.CategoryModel;
 import com.team.imagemarker.utils.MyGridView;
 import com.team.imagemarker.utils.marker.FadeTransitionImageView;
@@ -45,9 +49,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import static com.team.imagemarker.R.id.hobby_push;
 
 /**
  * Created by Lmy on 2017/4/28.
@@ -55,6 +60,7 @@ import static com.team.imagemarker.R.id.hobby_push;
  */
 
 public class FirstPageFragment extends Fragment implements RapidFloatingActionContentLabelList.OnRapidFloatingActionContentLabelListListener, View.OnClickListener{
+    private static final String TAG = FirstPageFragment.class.getSimpleName();
     private View view;
 
     private ViewPager viewPager;
@@ -75,17 +81,34 @@ public class FirstPageFragment extends Fragment implements RapidFloatingActionCo
     //系统推送
     private MyGridView SystemgridView;
     private List<CategoryModel> systemPushList = new ArrayList<>();
-    private static List<MarkerModel> systemPushDatas = new ArrayList<>();
+    private List<MarkerModel> systemPushDatas = new ArrayList<>();
     private SystemPushAdapter adapterSystem;
 
     //兴趣推送
     private MyGridView hobbyGridView;
-    private static List<MarkerModel> hobbyPushList = new ArrayList<>();
+    private List<MarkerModel> hobbyPushList = new ArrayList<>();
     private SystemPushAdapter hobbyAdapter;
 
     private HobbyPushAdapter adapterHobby;
 
     private Button systemPushMore, hobbyPushMore;
+
+    private UserModel userModel;
+
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what){
+                case 1:{
+                    Log.e(TAG, "handleMessage: 执行了");
+                    hobbyPushList.clear();
+                    getDataFromNetToHobbyPush();
+                }
+                break;
+            }
+            super.handleMessage(msg);
+        }
+    };
 
     @Nullable
     @Override
@@ -98,7 +121,7 @@ public class FirstPageFragment extends Fragment implements RapidFloatingActionCo
         rfaButton = (RapidFloatingActionButton) view.findViewById(R.id.rfa_button);
 
         SystemgridView = (MyGridView) view.findViewById(R.id.system_push);
-        hobbyGridView = (MyGridView) view.findViewById(hobby_push);
+        hobbyGridView = (MyGridView) view.findViewById(R.id.hobby_push);
         systemPushMore = (Button) view.findViewById(R.id.system_push_more);
         hobbyPushMore = (Button) view.findViewById(R.id.hobby_push_more);
         return view;
@@ -107,26 +130,18 @@ public class FirstPageFragment extends Fragment implements RapidFloatingActionCo
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getDataFromNetToSystemPush();//系统推送数据
-        getDataFromNetToHobbyPush();//兴趣爱好数据
+        UserDbHelper.setInstance(getContext());
+        userModel = UserDbHelper.getInstance().getUserInfo();
+        getDataFromNetToSystemPush(1);//系统推送数据
         setDataToViewPager();//为ViewPager设置数据
         initAnimationListener();
 
         setFlaotButton();//设置悬浮按钮
-        setSystemDate();//设置系统推送数据
-        setHobbyDate();//设置兴趣推送数据
-    }
-
-    /**
-     * 设置系统推送数据
-     */
-    private void setSystemDate() {
-        adapterSystem = new SystemPushAdapter(getActivity(), systemPushDatas);
-        SystemgridView.setAdapter(adapterSystem);
 
         SystemgridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.e(TAG, "onItemClick: 随机推送--接受到的数据为：" + systemPushDatas.get(position));
                 Intent intent = new Intent(getContext(), MarkHomeActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("pageTag", "firstPage");
@@ -136,17 +151,11 @@ public class FirstPageFragment extends Fragment implements RapidFloatingActionCo
                 getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             }
         });
-    }
 
-    /**
-     * 设置兴趣推送数据
-     */
-    private void setHobbyDate(){
-        hobbyAdapter = new SystemPushAdapter(getActivity(), hobbyPushList);
-        hobbyGridView.setAdapter(hobbyAdapter);
         hobbyGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.e(TAG, "onItemClick: 兴趣推送--接受到的数据为：" + hobbyPushList.get(position));
                 Intent intent = new Intent(getContext(), MarkHomeActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("pageTag", "firstPage");
@@ -156,6 +165,27 @@ public class FirstPageFragment extends Fragment implements RapidFloatingActionCo
                 getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             }
         });
+
+        systemPushMore.setOnClickListener(this);
+        hobbyPushMore.setOnClickListener(this);
+    }
+
+    /**
+     * 设置系统推送数据
+     */
+    private void setSystemDate(List<MarkerModel> datas) {
+        adapterSystem = new SystemPushAdapter(getActivity(), datas);
+        SystemgridView.setAdapter(adapterSystem);
+        adapterSystem.notifyDataSetChanged();
+    }
+
+    /**
+     * 设置兴趣推送数据
+     */
+    private void setHobbyDate(List<MarkerModel> datas){
+        hobbyAdapter = new SystemPushAdapter(getActivity(), datas);
+        hobbyGridView.setAdapter(hobbyAdapter);
+        hobbyAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -300,7 +330,7 @@ public class FirstPageFragment extends Fragment implements RapidFloatingActionCo
     public void onRFACItemIconClick(int position, RFACLabelItem item) {
         switch (position){
             case 0:{//美图欣赏
-                startActivity(new Intent(getActivity(), PictureGroupScanFragment.class));
+                startActivity(new Intent(getActivity(), GuessYouLikeFragment.class));
                 getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             }
             break;
@@ -326,22 +356,24 @@ public class FirstPageFragment extends Fragment implements RapidFloatingActionCo
 //        }, 3000);
 //    }
 
+    /**
+     * 点击进行刷新
+     * @param v
+     */
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.system_push_more:{
-                Intent intent = new Intent(getContext(), MarkHomeActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("pageTag", "firstPage");
-                intent.putExtras(bundle);
-                startActivity(intent);
-                getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                systemPushDatas.clear();
+                Log.e(TAG, "onClick: 当前list大小：" + systemPushDatas.size());
+                getDataFromNetToSystemPush(2);
+                adapterSystem.notifyDataSetChanged();
             }
             break;
             case R.id.hobby_push_more:{
-                Intent intent = new Intent(getContext(), MoreCategoryActivity.class);
-                startActivity(intent);
-                getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                hobbyPushList.clear();
+                getDataFromNetToHobbyPush();
+                hobbyAdapter.notifyDataSetChanged();
             }
             break;
         }
@@ -350,14 +382,13 @@ public class FirstPageFragment extends Fragment implements RapidFloatingActionCo
     /**
      * 系统推送数据接收
      */
-    private void getDataFromNetToSystemPush(){
-        String url  = "http://obs.myhwclouds.com/look.admin.info/systemPush.txt";
+    private void getDataFromNetToSystemPush(final int flag){
+        String url = Constants.FirstPage_System_Push;
         VolleyRequestUtil.RequestGet(getContext(), url, "systemPush", new VolleyListenerInterface() {
             @Override
             public void onSuccess(String result) {
                 try {
-                    JSONObject object = new JSONObject(new String(result.getBytes("ISO-8859-1"), "UTF-8"));
-                    String tag = new String(object.optString("TAG").getBytes("ISO-8859-1"), "UTF-8");
+                    JSONObject object = new JSONObject(result);
                     JSONArray array = object.optJSONArray("picture");
                     Gson gson = null;
                     for (int i = 0; i < array.length(); i++) {
@@ -365,7 +396,12 @@ public class FirstPageFragment extends Fragment implements RapidFloatingActionCo
                         gson = new Gson();
                         MarkerModel model = gson.fromJson(object1.toString(), MarkerModel.class);
                         systemPushDatas.add(model);
-                        adapterSystem.notifyDataSetChanged();
+                    }
+                    setSystemDate(systemPushDatas);
+                    Log.e(TAG, "onSuccess: 系统推送数据接收了");
+                    //当系统推送数据加载完毕后，再加载兴趣推送
+                    if(flag == 1){
+                        handler.sendEmptyMessageDelayed(1, 200);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -374,19 +410,26 @@ public class FirstPageFragment extends Fragment implements RapidFloatingActionCo
 
             @Override
             public void onError(VolleyError error) {
-                Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show();
+                Log.e("FirstPageFragment", "onError: SystemPushGetData:" + error.toString());
+                if(hobbyPushList != null && hobbyPushList.size() != 0){
+                    getDataFromNetToSystemPush(2);//不需要加载兴趣推送
+                }else{
+                    getDataFromNetToSystemPush(1);//需要加载兴趣推送数据
+                }
             }
         });
     }
 
     private void getDataFromNetToHobbyPush(){
-        String url  = "http://obs.myhwclouds.com/look.admin.info/hobbyPush.txt";
-        VolleyRequestUtil.RequestGet(getContext(), url, "hobbyPush", new VolleyListenerInterface() {
+        String url = Constants.FirstPage_Hobby_Push;
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("userId", String.valueOf(userModel.getId()));
+        Log.e(TAG, "getDataFromNetToHobbyPush: 当前用户id为：" + String.valueOf(userModel.getId()));
+        VolleyRequestUtil.RequestPost(getContext(), url, "hobbyPush", map, new VolleyListenerInterface() {
             @Override
             public void onSuccess(String result) {
                 try {
-                    JSONObject object = new JSONObject(new String(result.getBytes("ISO-8859-1"), "UTF-8"));
-                    String tag = new String(object.optString("TAG").getBytes("ISO-8859-1"), "UTF-8");
+                    JSONObject object = new JSONObject(result);
                     JSONArray array = object.optJSONArray("picture");
                     Gson gson = null;
                     for (int i = 0; i < array.length(); i++) {
@@ -394,8 +437,9 @@ public class FirstPageFragment extends Fragment implements RapidFloatingActionCo
                         gson = new Gson();
                         MarkerModel model = gson.fromJson(object1.toString(), MarkerModel.class);
                         hobbyPushList.add(model);
-                        hobbyAdapter.notifyDataSetChanged();
                     }
+                    setHobbyDate(hobbyPushList);
+                    Log.e(TAG, "onSuccess: 兴趣推送数据显示了");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -403,19 +447,31 @@ public class FirstPageFragment extends Fragment implements RapidFloatingActionCo
 
             @Override
             public void onError(VolleyError error) {
-                Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show();
+                Log.e("FirstPageFragment", "onError: HobbyPushGetData:" + error.toString());
+                getDataFromNetToHobbyPush();
             }
         });
     }
 
 
-//    public void setTransitionValue(float transitionValue) {
-//        this.transitionValue = transitionValue;
-//        viewPagerBackground.duringAnimation(transitionValue);
-//    }
-//
-//    public float getTransitionValue() {
-//        return transitionValue;
-//    }
+    public void setTransitionValue(float transitionValue) {
+        this.transitionValue = transitionValue;
+        viewPagerBackground.duringAnimation(transitionValue);
+    }
 
+    public float getTransitionValue() {
+        return transitionValue;
+    }
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(systemPushDatas != null){
+            systemPushDatas = null;
+        }
+        if(hobbyPushList != null){
+            hobbyPushList = null;
+        }
+    }
 }

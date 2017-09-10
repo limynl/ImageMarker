@@ -1,12 +1,14 @@
 package com.team.imagemarker.activitys.user;
 
-import android.app.Activity;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.team.imagemarker.R;
+import com.team.imagemarker.bases.BaseActivity;
 import com.team.imagemarker.utils.EditTextWithDel;
 import com.team.imagemarker.utils.PaperButton;
 
@@ -16,7 +18,7 @@ import com.team.imagemarker.utils.PaperButton;
  * email 1434117404@qq.com
  */
 
-public class UserResetPassActivity extends Activity implements View.OnClickListener{
+public class UserResetPassActivity extends BaseActivity implements View.OnClickListener{
     private ImageView back;
     private EditTextWithDel userPhone, userPassword, userCode;
     private PaperButton submit, sendCode;
@@ -25,6 +27,13 @@ public class UserResetPassActivity extends Activity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_reset_pass);
+        if (Build.VERSION.SDK_INT >= 21) {
+            View decorView = getWindow().getDecorView();
+            int option = View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
+            decorView.setSystemUiVisibility(option);
+            getWindow().setNavigationBarColor(Color.TRANSPARENT);
+            getWindow().setStatusBarColor(Color.TRANSPARENT);
+        }
         back = (ImageView) findViewById(R.id.close_reset);
         userPhone = (EditTextWithDel) findViewById(R.id.user_phone);
         userPassword = (EditTextWithDel) findViewById(R.id.user_password);
@@ -41,11 +50,10 @@ public class UserResetPassActivity extends Activity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.close_reset:{//返回
-                UserResetPassActivity.this.finish();
-                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+                onBackPressed();
             }
             break;
-            case R.id.send_code:{
+            case R.id.send_code:{//获取验证码
                 Toast.makeText(this, "获取验证码", Toast.LENGTH_SHORT).show();
             }
             break;
@@ -54,5 +62,12 @@ public class UserResetPassActivity extends Activity implements View.OnClickListe
             }
             break;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        this.finish();
+        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
     }
 }

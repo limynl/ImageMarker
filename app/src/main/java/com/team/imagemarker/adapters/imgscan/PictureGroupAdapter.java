@@ -16,7 +16,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.team.imagemarker.R;
-import com.team.imagemarker.entitys.PictureGroupModel;
+import com.team.imagemarker.bases.OnItemActionListener;
+import com.team.imagemarker.entitys.imgscan.BrowsePictuerModel;
 
 import java.util.List;
 
@@ -29,7 +30,7 @@ import java.util.List;
 public class PictureGroupAdapter extends RecyclerView.Adapter<PictureGroupAdapter.PictureViewHolder>{
     private LayoutInflater inflater;
     private Context context;
-    private List<PictureGroupModel> list;
+    private List<List<BrowsePictuerModel>> list;
 
     private OnItemActionListener onItemActionListener;
 
@@ -37,7 +38,7 @@ public class PictureGroupAdapter extends RecyclerView.Adapter<PictureGroupAdapte
         this.onItemActionListener = onItemActionListener;
     }
 
-    public PictureGroupAdapter(Context context, List<PictureGroupModel> list){
+    public PictureGroupAdapter(Context context, List<List<BrowsePictuerModel>> list){
         this.context = context;
         this.list = list;
         inflater = LayoutInflater.from(context);
@@ -58,7 +59,14 @@ public class PictureGroupAdapter extends RecyclerView.Adapter<PictureGroupAdapte
 
     @Override
     public void onBindViewHolder(final PictureViewHolder viewHolder, int position) {
-        viewHolder.imgTitle.setText(list.get(position).getImgContent());
+        BrowsePictuerModel model = list.get(position).get(0);
+        String[] lables = model.getLabel();
+        String detailLables = "";
+        for (int i = 0; i < lables.length; i++) {
+            detailLables += lables[i] + "、";
+        }
+        viewHolder.imgTitle.setText(detailLables.subSequence(0, detailLables.length() - 1));
+//        viewHolder.imgTitle.setText(list.get(position).get(0).getLabel());
 
 //        int width = ((Activity)viewHolder.firstImg.getContext()).getWindowManager().getDefaultDisplay().getWidth();
 //        ViewGroup.LayoutParams params = viewHolder.firstImg.getLayoutParams();
@@ -67,7 +75,7 @@ public class PictureGroupAdapter extends RecyclerView.Adapter<PictureGroupAdapte
 //        viewHolder.firstImg.setLayoutParams(params);
 
         Glide.with(context)
-                .load(list.get(position).getImgUrl())
+                .load(model.getImageUrl())
                 .asBitmap()
                 .error(R.mipmap.ic_launcher)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -100,14 +108,14 @@ public class PictureGroupAdapter extends RecyclerView.Adapter<PictureGroupAdapte
     /**
      * 设置监听事件
      */
-    public interface OnItemActionListener{
-        /**
-         * 为图组设置监听事件
-         * @param view 操作的视图
-         * @param position 数据的位置
-         */
-        public void OnItemClickListener(View view, int position);
-    }
+//    public interface OnItemActionListener{
+//        /**
+//         * 为图组设置监听事件
+//         * @param view 操作的视图
+//         * @param position 数据的位置
+//         */
+//        public void OnItemClickListener(View view, int position);
+//    }
 
 
     class PictureViewHolder extends RecyclerView.ViewHolder {

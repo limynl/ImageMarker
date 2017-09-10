@@ -3,32 +3,49 @@ package com.team.imagemarker.activitys.tasks;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.gson.Gson;
 import com.team.imagemarker.R;
 import com.team.imagemarker.activitys.mark.MarkHomeActivity;
 import com.team.imagemarker.adapters.task.TaskBoxAdapter;
+import com.team.imagemarker.constants.Constants;
+import com.team.imagemarker.db.UserDbHelper;
+import com.team.imagemarker.entitys.MarkerModel;
+import com.team.imagemarker.entitys.UserModel;
 import com.team.imagemarker.entitys.home.CategoryModel;
 import com.team.imagemarker.entitys.marker.ItemEntity;
 import com.team.imagemarker.utils.chart.LineChartView;
 import com.team.imagemarker.utils.chart.SlimChart;
 import com.team.imagemarker.utils.scrollview.MyHorizontalScrollView;
+import com.team.imagemarker.utils.volley.VolleyListenerInterface;
+import com.team.imagemarker.utils.volley.VolleyRequestUtil;
 import com.wangjie.rapidfloatingactionbutton.textlabel.LabelView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.InputStream;
-import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 
 /**
  * Created by Lmy on 2017/5/18.
@@ -40,12 +57,10 @@ public class UserTaskActivity extends AppCompatActivity implements View.OnClickL
     private ImageView leftIcon, rightIcon;
     private RelativeLayout titleBar;
 
+    private TextView completeNum, noCompleteNum, allNum;
+
     private SlimChart slimChart;
     private LineChartView chartView;
-//    private MyGridView taskBox;
-//    private ViewPager taskViewPager;
-//    private CardPagerAdapter cardPagerAdapter;
-//    private ShadowTransformer shadowTransformer;//ViewPager切换动画
     private MyHorizontalScrollView recentTask;
     private List<CategoryModel> taskList = new ArrayList<>();
 
@@ -54,11 +69,61 @@ public class UserTaskActivity extends AppCompatActivity implements View.OnClickL
     private List<CategoryModel> systemPushList = new ArrayList<>();
     private TaskBoxAdapter adapterSystem;
 
-//    private HobbyPushAdapter adapterHobby;
-//    private RecyclerView hobbyRecycle;
-//    private List<CategoryModel> hobbyPushList = new ArrayList<>();
-
     private static List<ItemEntity> dataList = new ArrayList<>();
+
+    private List<MarkerModel> detailList = new ArrayList<>();//近一周详细信息
+
+    private UserModel userModel;//得到用户的信息
+
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case 1:{
+                    completeNum.setText(String.valueOf(msg.arg1) + "次");
+                    noCompleteNum.setText(String.valueOf(msg.arg2) + "次");
+                    allNum.setText((String) msg.obj + "次");
+                    slimChart.setText((String) msg.obj + "");
+                    getDataFromNetToDetailHistory();
+                }
+                break;
+                case 2:{
+                    if(detailList.size() != 0){
+                        setTaskBox();
+                        getDataFromNetToSevenDayNum();
+                    }
+                }
+                break;
+                case 3:{
+                    JSONObject object = (JSONObject) msg.obj;
+                    String[] times = object.optString("time").trim().split("a");
+                    String[] numbers = object.optString("number").trim().split("a");
+
+//                    dateList.add("06-24");
+//                    dateList.add("06-23");
+//                    dateList.add("06-22");
+//                    dateList.add("06-21");
+//                    dateList.add("06-20");
+//                    dateList.add("06-19");
+//                    dateList.add("06-18");
+
+                    dateList = Arrays.asList(times);
+//                    for (int i = 0; i < times.length; i++) {
+//                        dateList.add(times[i]);
+//                    }
+                    for (int i = 0; i < numbers.length; i++) {
+                        earnList.add(Double.valueOf(numbers[i].trim()).doubleValue());
+                    }
+                    Log.e("tag", "handleMessage: times:" + dateList.toString());
+                    Log.e("tag", "handleMessage: numbers:" + earnList.toString());
+                    chartView.setTextSize(25, 25, 25, 25);
+                    chartView.setData(earnList,dateList,true);
+                }
+                break;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,9 +131,14 @@ public class UserTaskActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.activity_user_task);
         bindView();
         setSlimChart();//设置Slimart圆圈
-        setLineChart();//设置折现统计图
-        setTaskBox();
-        initDataList();
+//        setLineChart();//设置折现统计图
+//        setTaskBox();
+//        initDataList();
+
+        UserDbHelper.setInstance(this);
+        userModel = UserDbHelper.getInstance().getUserInfo();
+
+        getDataFromNetToTaskNum();//得到用户的任务数量
     }
 
     private void bindView() {
@@ -77,6 +147,10 @@ public class UserTaskActivity extends AppCompatActivity implements View.OnClickL
         subTitle = (TextView) findViewById(R.id.sub_title);
         leftIcon = (ImageView) findViewById(R.id.left_icon);
         rightIcon = (ImageView) findViewById(R.id.right_icon);
+
+        completeNum = (TextView) findViewById(R.id.complete_num);
+        noCompleteNum = (TextView) findViewById(R.id.no_complete_num);
+        allNum = (TextView) findViewById(R.id.all_num);
 
         slimChart = (SlimChart) findViewById(R.id.slimChart);
         chartView = (LineChartView) findViewById(R.id.chartView);
@@ -87,8 +161,8 @@ public class UserTaskActivity extends AppCompatActivity implements View.OnClickL
 
         titleBar.setBackgroundColor(getResources().getColor(R.color.theme1));
         title.setText("任务情况");
-        subTitle.setVisibility(View.VISIBLE);
-        subTitle.setText("概览");
+        subTitle.setVisibility(View.GONE);
+//        subTitle.setText("概览");
         rightIcon.setVisibility(View.GONE);
         leftIcon.setOnClickListener(this);
         subTitle.setOnClickListener(this);
@@ -117,65 +191,48 @@ public class UserTaskActivity extends AppCompatActivity implements View.OnClickL
 
         //设置文本
         slimChart.setStrokeWidth(13);
-        slimChart.setText("30");
+        slimChart.setText("0");
         slimChart.setTextColorInt(Color.parseColor("#464e76"));
         slimChart.setRoundEdges(true);
     }
 
-    private void setLineChart() {
-        dateList.add("06-24");
-        dateList.add("06-23");
-        dateList.add("06-22");
-        dateList.add("06-21");
-        dateList.add("06-20");
-        dateList.add("06-19");
-        dateList.add("06-18");
-        earnList.add(12.0);
-        earnList.add(31.0);
-        earnList.add(16.0);
-        earnList.add(85.0);
-        earnList.add(22.0);
-        earnList.add(52.0);
-        earnList.add(67.0);
-        earnList.add(12.0);
-        // 折线图
-        chartView.setTextSize(25, 25, 25, 25);
-        chartView.setData(earnList,dateList,true);
-    }
-
     private void setTaskBox() {
-        taskList.add(new CategoryModel(R.mipmap.task2, R.mipmap.task, "06-24", "风景", "兴趣推送"));
-        taskList.add(new CategoryModel(R.mipmap.task1, R.mipmap.shopping2, "06-23", "植物", "系统推送"));
-        taskList.add(new CategoryModel(R.mipmap.task3, R.mipmap.shopping3, "06-23", "大自然", "系统推送"));
-        taskList.add(new CategoryModel(R.mipmap.task2, R.mipmap.shopping1, "06-23", "动物", "热门种类"));
-        taskList.add(new CategoryModel(R.mipmap.task1, R.mipmap.shopping2, "06-22", "建筑", "猜你喜欢"));
-        taskList.add(new CategoryModel(R.mipmap.task3, R.mipmap.shopping3, "06-21", "风景", "热门分类"));
-        taskList.add(new CategoryModel(R.mipmap.task2, R.mipmap.shopping3, "06-21", "风景", "兴趣推送"));
+        for (int i = 0; i < detailList.size(); i++) {
+            taskList.add(new CategoryModel(R.mipmap.task2, R.mipmap.task, "", "", ""));
+            taskList.add(new CategoryModel(R.mipmap.task1, R.mipmap.task, "", "", ""));
+            taskList.add(new CategoryModel(R.mipmap.task3, R.mipmap.task, "", "", ""));
+        }
         View recentItem = null;
-        ViewHolder viewHolder = new ViewHolder();
+        final ViewHolder viewHolder = new ViewHolder();
         LinearLayout rootview = new LinearLayout(this);
-        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(250,340);//SizeUtils.px2dip(this, 130),SizeUtils.px2dip(this, 160)250,330
-        param.setMargins(0, 0, 20, 0);
-        for (int i = 0; i < taskList.size(); i++) {
+        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(370, ViewGroup.LayoutParams.WRAP_CONTENT);//SizeUtils.px2dip(this, 130),SizeUtils.px2dip(this, 160)250,340
+        param.setMargins(20, 0, 20, 0);
+        for ( int count = 0; count < detailList.size(); count++) {
             recentItem = LayoutInflater.from(this).inflate(R.layout.item_recent_task, null);
-            viewHolder.categoryImg = (ImageView) recentItem.findViewById(R.id.category_img);
-            viewHolder.userHead = (ImageView) recentItem.findViewById(R.id.user_head);
-            viewHolder.userRanking = (LabelView) recentItem.findViewById(R.id.user_ranking);
-            viewHolder.category = (TextView) recentItem.findViewById(R.id.category);
-            viewHolder.opterator = (TextView) recentItem.findViewById(R.id.opterator);
-            viewHolder.toMark = (Button) recentItem.findViewById(R.id.toMark);
-            viewHolder.categoryImg.setImageResource(taskList.get(i).getImgId());
-            viewHolder.userHead.setImageResource(taskList.get(i).getImgId1());
-            viewHolder.userRanking.setText(taskList.get(i).getName());
-            viewHolder.category.setText("所选类别: " + taskList.get(i).getUserName());
-            viewHolder.opterator.setText("操作类型: " + taskList.get(i).getIntegral());
+            viewHolder.categoryImg = (ImageView) recentItem.findViewById(R.id.category_img);//背景图片
+            viewHolder.userHead = (ImageView) recentItem.findViewById(R.id.user_head);//第一张图片
+            viewHolder.userRanking = (LabelView) recentItem.findViewById(R.id.user_ranking);//时间
+            viewHolder.category = (TextView) recentItem.findViewById(R.id.category);//所属种类
+            viewHolder.opterator = (TextView) recentItem.findViewById(R.id.opterator);//操作类型
+            viewHolder.toMark = (Button) recentItem.findViewById(R.id.toMark);//查看
+            viewHolder.categoryImg.setImageResource(taskList.get(count).getImgId());
+            Glide.with(this)
+                    .load(detailList.get(count).getImageUrl1())
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(viewHolder.userHead);
+            String[] time = detailList.get(count).getSetTime().split(" ")[0].split("-");
+            viewHolder.userRanking.setText(time[1] + "-" + time[2]);
+            viewHolder.toMark.setTag(count);
+            viewHolder.category.setText("所选类别: " + detailList.get(count).getSecondlabelName());
+            viewHolder.opterator.setText("操作类型: " + detailList.get(count).getPushWay());
             viewHolder.toMark.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    int position = (int) v.getTag();
                     Intent intent = new Intent(UserTaskActivity.this, MarkHomeActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putString("pageTag", "userTask");
-                    bundle.putSerializable("item", (Serializable) dataList);
+                    bundle.putSerializable("item", detailList.get(position));
                     intent.putExtras(bundle);
                     startActivity(intent);
                     UserTaskActivity.this.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
@@ -239,6 +296,95 @@ public class UserTaskActivity extends AppCompatActivity implements View.OnClickL
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void getDataFromNetToTaskNum(){
+        String url = Constants.Task_Manager_All_Num;
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("userId", String.valueOf(userModel.getId()));
+        VolleyRequestUtil.RequestPost(this, url, "hobbyPush", map, new VolleyListenerInterface() {
+            @Override
+            public void onSuccess(String result) {
+                try {
+                    JSONObject object = new JSONObject(result);
+                    Message message = new Message();
+                    message.what = 1;
+                    message.arg1 = Integer.parseInt(object.optString("Finish"));
+                    message.arg2 = Integer.parseInt(object.optString("Save"));
+                    message.obj = object.optString("ALL");
+                    handler.sendMessage(message);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(VolleyError error) {
+                Log.e("UserTaskActivity", "onError: getDataFromNetToTaskNum:" + error.toString());
+                getDataFromNetToTaskNum();
+            }
+        });
+    }
+
+    private void getDataFromNetToDetailHistory(){
+        String url = Constants.Task_Manager_Every_Week_Detail;
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("userId", String.valueOf(userModel.getId()));
+        Log.e("tag", "getDataFromNetToDetailHistory: 当前用户Id：" + userModel.getId());
+        VolleyRequestUtil.RequestPost(this, url, "detailHistory", map, new VolleyListenerInterface() {
+            @Override
+            public void onSuccess(String result) {
+                try {
+                    Log.e("tag", "onSuccess: " + result);
+                    JSONObject object = new JSONObject(result);
+                    JSONArray array = object.optJSONArray("picture");
+                    Gson gson = null;
+                    for (int i = 0; i < array.length(); i++) {
+                        JSONObject object1 = array.optJSONObject(i);
+                        gson = new Gson();
+                        MarkerModel model = gson.fromJson(object1.toString(), MarkerModel.class);
+                        detailList.add(model);
+                    }
+                    handler.sendEmptyMessage(2);
+                    Log.e("tag", "onSuccess: detailList" + detailList.toString());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(VolleyError error) {
+                Log.e("UserTaskActivity", "onError: getDataFromNetToDetailHistory:" + error.toString());
+                getDataFromNetToDetailHistory();
+            }
+        });
+    }
+
+    private void getDataFromNetToSevenDayNum(){
+        String url = Constants.Task_Manager_Every_Day_Num;
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("userId", String.valueOf(userModel.getId()));
+        VolleyRequestUtil.RequestPost(this, url, "SevenDayNum", map, new VolleyListenerInterface() {
+            @Override
+            public void onSuccess(String result) {
+                try {
+                    Log.e("tag", "onSuccess: 接受到的数据是：" + result);
+                    JSONObject object = new JSONObject(result);
+                    Message message = new Message();
+                    message.what = 3;
+                    message.obj = object;
+                    handler.sendMessage(message);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(VolleyError error) {
+                Log.e("UserTaskActivity", "onError: getDataFromNetToSevenDayNum:" + error.toString());
+                getDataFromNetToSevenDayNum();
+            }
+        });
     }
 
 }

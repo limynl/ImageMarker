@@ -8,15 +8,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="3dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
         android:layout_marginTop="3dp"
         android:clickable="true"
         android:foreground="?android:attr/selectableItemBackground"
         app:cardBackgroundColor="#FFFFFF"
         app:cardCornerRadius="5dp"
-        app:cardElevation="3dp"
-        app:cardPreventCornerOverlap="true">
+        app:cardElevation="4dp"
+        app:cardMaxElevation="4dp"
+        app:cardPreventCornerOverlap="false"
+        app:cardUseCompatPadding="true">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -134,8 +136,8 @@
 
                 <Button
                     android:id="@+id/edit_history"
-                    android:layout_width="60dp"
-                    android:layout_height="25dp"
+                    android:layout_width="75dp"
+                    android:layout_height="30dp"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:background="@drawable/btn_sztx"
@@ -151,8 +153,8 @@
 
                 <Button
                     android:id="@+id/delete_history"
-                    android:layout_width="60dp"
-                    android:layout_height="25dp"
+                    android:layout_width="75dp"
+                    android:layout_height="30dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:background="@drawable/btn_sztx"

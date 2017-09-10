@@ -12,6 +12,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -37,6 +38,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.team.imagemarker.R;
 import com.team.imagemarker.bases.BaseListAdapter;
@@ -46,6 +49,7 @@ import com.team.imagemarker.entitys.UserModel;
 import com.team.imagemarker.utils.CircleImageView;
 import com.team.imagemarker.utils.CommonAdapter;
 import com.team.imagemarker.utils.CropOption;
+import com.team.imagemarker.utils.FileUtils;
 import com.team.imagemarker.utils.MyGridView;
 import com.team.imagemarker.utils.PaperButton;
 import com.team.imagemarker.utils.ToastUtil;
@@ -59,6 +63,7 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,19 +76,20 @@ import static com.tencent.open.utils.Global.getContext;
  * email 1434117404@qq.com
  */
 
-public class UpdateUserMessageActivity extends Activity implements View.OnClickListener{
+public class UpdateUserMessageActivity extends Activity implements View.OnClickListener {
     private static final int UPDATE_USER_MESSAGE = 1;
+    private UserModel userModel;
     private RelativeLayout titleBar;
     private TextView title;
     private ImageView leftIcon, rightIcon;
     private LinearLayout popupWindowLayout;//弹窗视图。为了改变颜色
-    
+
     private CircleImageView userHeadImg;
     private EditText userNick, userAge, userPhone;
     private TextView userSex, userHobby;
-    private RelativeLayout selectHead, selectSex;
+    private RelativeLayout selectHead, selectSex, selectObject;
     private PaperButton userMessageSubmit;
-    
+
     private Dialog dialog;//弹框
     private Button chooseOne, chooseTwo, cancelDialog;
     private View viewDialog;//弹框视图
@@ -97,13 +103,13 @@ public class UpdateUserMessageActivity extends Activity implements View.OnClickL
     private ViewPager vp_details;//兴趣爱好标签选择ViewPager
     private MyGridView grid_selected;
     private ParentIconAdapter parentIconAdapter = new ParentIconAdapter();
-    private ChildrenIconAdapter adapter_one, adapter_two, adapter_three;//三页ViewPager中的数据适配器
+    private ChildrenIconAdapter adapter_one, adapter_two;//三页ViewPager中的数据适配器 adapter_three
     private List<String> parentList = new ArrayList<String>();//选中的标签
     final int length = 3;
     private MyGridView[] mGridView = new MyGridView[length];//对应于3个ViewPager
     private MyPagerAdapter mMyadapter;
     private List<View> listViews;
-    private ArrayList<String> data_one, data_two, data_three;//各个ViewPager对应的GridView中的数据
+    private ArrayList<String> data_one, data_two;//各个ViewPager对应的GridView中的数据 data_three
     private int mSumOne = 1;//换一批数目调整
     private TextView changeData;//换一批
 
@@ -113,10 +119,18 @@ public class UpdateUserMessageActivity extends Activity implements View.OnClickL
     private Uri imgUri; // 用于存储图片
     private byte[] bitmapByte;//用户头像的byte数组
     private static Bitmap userHeadBitmap;
-    private String userHeadPhoto;//用户的头像字节数据流
+    private String userHeadPhoto = "";//用户的头像字节数据流
+
+    //拍照
+    private String mFilePath;
+    private String mFileName;
 
     private ToastUtil toastUtil = new ToastUtil();
-    private EditText zhuanye;
+    private final int OBJECT_SELECT = 4;
+    private TextView userObject;//只在本地显示
+    private String userObjectContent = "";//将该值上传服务器
+    private String userHobbyId = "";
+    private List<String> hobbyContentList;
 
     //更新父表与子表中的数据
     private Handler mHandler = new Handler() {
@@ -125,7 +139,6 @@ public class UpdateUserMessageActivity extends Activity implements View.OnClickL
                 case 1:// 删除
                     adapter_one.notifyDataSetChanged();
                     adapter_two.notifyDataSetChanged();
-                    adapter_three.notifyDataSetChanged();
                     parentIconAdapter.notifyDataSetChanged();
                     break;
                 case 2:// 添加
@@ -154,47 +167,83 @@ public class UpdateUserMessageActivity extends Activity implements View.OnClickL
         userHobby = (TextView) findViewById(R.id.user_hobby);
         selectHead = (RelativeLayout) findViewById(R.id.select_head);
         selectSex = (RelativeLayout) findViewById(R.id.select_sex);
+        selectObject = (RelativeLayout) findViewById(R.id.select_object);
         userHobbySelect = (RelativeLayout) findViewById(R.id.user_hobby_select);
         userMessageSubmit = (PaperButton) findViewById(R.id.user_message_submit);
-        zhuanye = (EditText) findViewById(R.id.zhuanye);
+        userObject = (TextView) findViewById(R.id.zhuanye);
 
         titleBar.setBackgroundColor(getResources().getColor(R.color.theme1));
         title.setText("个人资料");
-//        title.setTextColor(Color.parseColor("#101010"));
-//        leftIcon.setImageResource(R.drawable.back);
         rightIcon.setVisibility(View.GONE);
         leftIcon.setOnClickListener(this);
         selectHead.setOnClickListener(this);
         selectSex.setOnClickListener(this);
+        selectObject.setOnClickListener(this);
         userHobbySelect.setOnClickListener(this);
         userMessageSubmit.setOnClickListener(this);
 
         initData();
+
+        String[] hobby = getResources().getStringArray(R.array.hobby);
+        hobbyContentList = Arrays.asList(hobby);
+
         //显示PopupWindow
         setPopupWindow();
 
         UserDbHelper.setInstance(this);
-        UserModel userModel = UserDbHelper.getInstance().getUserInfo();
-        userNick.setText(userModel.getUserNickName() + "");
-        userAge.setText(userModel.getUserAge() + "");
-        userSex.setText(userModel.getUserSex() + "");
+        UserModel userModelHistory = UserDbHelper.getInstance().getUserInfo();
+        Log.e("tag", "onCreate: 接受到的用户信息为：" + userModelHistory.toString());
+        Glide.with(this)
+                .load(userModelHistory.getUserHeadImage())
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(userHeadImg);
+        userNick.setText(userModelHistory.getUserNickName() + "");
+        userAge.setText(userModelHistory.getUserAge() + "");
+        userSex.setText(userModelHistory.getUserSex() + "");
+        userPhone.setText(userModelHistory.getPhoneNumber() + "");
 
+        userObjectContent = userModelHistory.getUserHobby();
+        if(userObjectContent.split("-").length == 0){
+            userObject.setText(userObjectContent);
+        }else{
+            userObject.setText(userObjectContent.split("-")[1]);
+        }
+
+        String[] hobbyHistory = new String[0];
+        if(userModelHistory.getUserFlag().contains("-")){
+            hobbyHistory = userModelHistory.getUserFlag().split("-");
+        }else if(userModelHistory.getUserFlag().contains("、")){
+            hobbyHistory = userModelHistory.getUserFlag().split("、");
+        }
+
+        String hobbyHistoryText = "";
+        Log.e("tag", "onCreate: 可选择的兴趣为：" + hobbyContentList.toString());
+        for (int i = 0; i < hobbyHistory.length; i++) {
+            if(hobbyContentList.contains(hobbyHistory[i])){
+                userHobbyId += (hobbyContentList.indexOf(hobbyHistory[i]) + 1) + "-";
+            }
+            hobbyHistoryText += hobbyHistory[i] + "、";
+        }
+
+        Log.e("tag", "onCreate: 兴趣爱好为：" + userHobbyId);
+        userHobby.setText(hobbyHistoryText.subSequence(0, hobbyHistoryText.length() - 1));
+
+        FileUtils.init();//初始化手机拍照
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.left_icon:{//返回
+        switch (v.getId()) {
+            case R.id.left_icon: {//返回
                 onBackPressed();
             }
             break;
-            case R.id.select_head:{//设置头像
+            case R.id.select_head: {//设置头像
                 showDialog("拍照", "从相册获取");
                 chooseOne.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         getIconFromCamera();//拍照获取图片
-                        Toast.makeText(UpdateUserMessageActivity.this, "拍照", Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
                     }
                 });
@@ -202,8 +251,6 @@ public class UpdateUserMessageActivity extends Activity implements View.OnClickL
                     @Override
                     public void onClick(View v) {
                         getIconFromPhoto();//从相册获取图片
-//                        Toast.makeText(UpdateUserMessageActivity.this, "从相册获取", Toast.LENGTH_SHORT).show();
-                        toastUtil.Short(UpdateUserMessageActivity.this, "从相册获取").show();
                         dialog.dismiss();
                     }
                 });
@@ -216,7 +263,7 @@ public class UpdateUserMessageActivity extends Activity implements View.OnClickL
                 dialog.show();//显示对话框主题
             }
             break;
-            case R.id.select_sex:{//设置性别
+            case R.id.select_sex: {//设置性别
                 showDialog("男", "女");
                 chooseOne.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -241,14 +288,19 @@ public class UpdateUserMessageActivity extends Activity implements View.OnClickL
                 dialog.show();//显示对话框主题
             }
             break;
-            case R.id.user_hobby_select:{//用户兴趣爱好标签选择
+            case R.id.select_object: {//专业领域选择
+                startActivityForResult(new Intent(UpdateUserMessageActivity.this, ProfessionalChoiceActivity.class), OBJECT_SELECT);
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+            }
+            break;
+            case R.id.user_hobby_select: {//用户兴趣爱好标签选择
                 showCenterPopupWindow(v);
                 parentList.clear();//清空上一次选中的数据
                 mHandler.sendEmptyMessage(2);//更新父GridView的数据
                 userWaring.setVisibility(View.VISIBLE);
             }
             break;
-            case R.id.tv_change_items:{//换一批
+            case R.id.tv_change_items: {//换一批
                 if (getDataOne().size() == 0) {
                     Toast.makeText(getApplicationContext(), "没有兴趣种类选择", Toast.LENGTH_LONG).show();
                     return;
@@ -276,53 +328,42 @@ public class UpdateUserMessageActivity extends Activity implements View.OnClickL
                 }
             }
             break;
-            case R.id.user_hobby_submit:{//确认用户兴趣标签
-                if(parentList.size() == 0){
+            case R.id.user_hobby_submit: {//确认用户兴趣标签
+                userHobbyId = "";
+                if (parentList.size() == 0) {
                     Toast.makeText(this, "请至少选择一种兴趣爱好", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 String userHobbyContent = "";
                 for (int i = 0; i < parentList.size(); i++) {
-                    userHobbyContent += parentList.get(i).toString().trim() + "-";
+                    if(hobbyContentList.contains(parentList.get(i))){
+                        userHobbyId += (hobbyContentList.indexOf(parentList.get(i)) + 1) + "-";
+                    }
+                    userHobbyContent += parentList.get(i).toString().trim() + "、";
                 }
-                userHobby.setText(userHobbyContent);
+                Log.e("tag", "onClick: " + userHobbyId);
+                userHobby.setText(userHobbyContent.subSequence(0, userHobbyContent.length() - 1));
                 popupWindow.dismiss();
             }
             break;
-            case R.id.user_message_submit:{
-//                Log.e("tag", "onClick: 用户的头像地址为：" + userHeadPhoto.toString());
-                UserModel userModel = new UserModel();
+            case R.id.user_message_submit: {
+                userModel = new UserModel();
                 userModel.setId(UserDbHelper.getInstance().getInegerConfig("userId"));
                 userModel.setUserNickName(userNick.getText().toString().trim());
                 userModel.setUserAge(userAge.getText().toString().trim());
                 userModel.setUserSex(userSex.getText().toString().trim());
                 userModel.setPhoneNumber(userPhone.getText().toString().trim());
-                userModel.setUserHobby(userHobby.toString().trim());
+                userModel.setUserHobby(userObjectContent);
+                userModel.setUserFlag(userHobbyId);
                 userModel.setUserHeadImage(userHeadPhoto);
                 userModel.setPassWord(UserDbHelper.getInstance().getStringConfig("userPassword"));
                 userModel.setIntegral(UserDbHelper.getInstance().getInegerConfig("userIntegral"));
                 userModel.setNum(UserDbHelper.getInstance().getInegerConfig("userTaskNum"));
-                userModel.setUserFlag(UserDbHelper.getInstance().getStringConfig("userFlag"));
                 userModel.setPushFlag(UserDbHelper.getInstance().getStringConfig("PushFlag"));
                 userModel.setOtherLogin(UserDbHelper.getInstance().getStringConfig("OtherLogin"));
                 Gson gson = new Gson();
                 String userInfo = gson.toJson(userModel);
-                //这里发往服务器
-                UserDbHelper.setInstance(this);
-                UserDbHelper.getInstance().saveUserLoginInfo(userModel);
                 sendUserInfo(userInfo);
-//                toastUtil.Short(this, "修改成功").show();
-
-//                Toast.makeText(UpdateUserMessageActivity.this, "修改成功", Toast.LENGTH_SHORT).show();
-//                Intent intent = new Intent();
-//                Bundle bundle = new Bundle();
-//                bundle.putString("userNick", userNick.getText().toString().trim());
-//                bundle.putParcelable("userHead", userHeadBitmap == null ? null : userHeadBitmap);
-//                intent.putExtras(bundle);
-//                Toast.makeText(UpdateUserMessageActivity.this, "信息修改成功", Toast.LENGTH_SHORT).show();
-//                UpdateUserMessageActivity.this.setResult(UPDATE_USER_MESSAGE, intent);
-//                UpdateUserMessageActivity.this.finish();
-//                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
             }
             break;
         }
@@ -338,11 +379,13 @@ public class UpdateUserMessageActivity extends Activity implements View.OnClickL
                 try {
                     JSONObject object = new JSONObject(result);
                     String tag = object.optString("tag");
-                    if(tag.equals("success")){
+                    if (tag.equals("success")) {
                         toastUtil.Short(UpdateUserMessageActivity.this, "修改成功").show();
                         String userImg = object.optString("url");
-                        Log.e("tag", "onSuccess: 头像地址为：" + userImg);
-                        UserDbHelper.getInstance().saveUserHeadImg(userImg);
+                        UserDbHelper.setInstance(UpdateUserMessageActivity.this);
+                        userModel.setUserHeadImage(userImg);
+                        userModel.setUserFlag(userHobby.getText().toString().trim());
+                        UserDbHelper.getInstance().saveUserLoginInfo(userModel);
                         Intent intent = new Intent();
                         Bundle bundle = new Bundle();
                         bundle.putString("userNick", userNick.getText().toString().trim());
@@ -351,18 +394,17 @@ public class UpdateUserMessageActivity extends Activity implements View.OnClickL
                         UpdateUserMessageActivity.this.setResult(UPDATE_USER_MESSAGE, intent);
                         UpdateUserMessageActivity.this.finish();
                         overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-                    }else{
+                    } else {
                         Toast.makeText(UpdateUserMessageActivity.this, "修改失败", Toast.LENGTH_SHORT).show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
-//                    Toast.makeText(UpdateUserMessageActivity.this, "服务器连接错误", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onError(VolleyError error) {
-//                Toast.makeText(UpdateUserMessageActivity.this, "服务器连接错误", Toast.LENGTH_SHORT).show();
+                Log.e("tag", "onError: 服务器连接错误");
             }
         });
     }
@@ -371,7 +413,7 @@ public class UpdateUserMessageActivity extends Activity implements View.OnClickL
      * 弹框显示
      */
     private void showDialog(String value1, String value2) {
-        viewDialog = View.inflate(this,R.layout.photo_choose_dialog, null);
+        viewDialog = View.inflate(this, R.layout.photo_choose_dialog, null);
         chooseOne = (Button) viewDialog.findViewById(R.id.choose_one);
         chooseOne.setText(value1);
         chooseTwo = (Button) viewDialog.findViewById(R.id.choose_two);
@@ -417,7 +459,7 @@ public class UpdateUserMessageActivity extends Activity implements View.OnClickL
         grid_selected = (MyGridView) contentView.findViewById(R.id.grid_selected);
         vp_details = (ViewPager) contentView.findViewById(R.id.vp_details);
 
-        if(parentList.size() > 0){
+        if (parentList.size() > 0) {
             userWaring.setVisibility(View.GONE);
         }
 
@@ -428,11 +470,9 @@ public class UpdateUserMessageActivity extends Activity implements View.OnClickL
 
         data_one = new ArrayList<String>();
         data_two = new ArrayList<String>();
-        data_three = new ArrayList<String>();
         adapter_one = new ChildrenIconAdapter(UpdateUserMessageActivity.this, data_one);
         adapter_two = new ChildrenIconAdapter(UpdateUserMessageActivity.this, data_two);
-        adapter_three = new ChildrenIconAdapter(UpdateUserMessageActivity.this, data_three);
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 2; i++) {
             mGridView[i] = (MyGridView) listViews.get(i).findViewById(R.id.gridview);
         }
 
@@ -449,34 +489,22 @@ public class UpdateUserMessageActivity extends Activity implements View.OnClickL
             for (int i = 12; i < getDataOne().size(); i++) {
                 data_two.add(getDataOne().get(i).toString().trim());
             }
-        } else if (getDataOne().size() > 24) {
-            for (int i = 0; i < 12; i++) {
-                data_one.add(getDataOne().get(i).toString().trim());
-            }
-            for (int i = 12; i < 24; i++) {
-                data_two.add(getDataOne().get(i).toString().trim());
-            }
-            for (int i = 24; i < 36 && i < getDataOne().size(); i++) {
-                data_three.add(getDataOne().get(i).toString().trim());
-            }
         }
 
         for (int i = 0; i < length; i++) {
-        if (i == 0) {
-            mGridView[i].setAdapter(adapter_one);
-        }
-        if (i == 1) {
-            mGridView[i].setAdapter(adapter_two);
-        }
-        if (i == 2) {
-            mGridView[i].setAdapter(adapter_three);
-        }
+            if (i == 0) {
+                mGridView[i].setAdapter(adapter_one);
+            }
+            if (i == 1) {
+                mGridView[i].setAdapter(adapter_two);
+            }
         }
         grid_selected.setAdapter(parentIconAdapter);
     }
 
     /**
      * 显示用户兴趣爱好选择弹框
+     *
      * @param view
      */
     public void showCenterPopupWindow(View view) {
@@ -497,25 +525,13 @@ public class UpdateUserMessageActivity extends Activity implements View.OnClickL
         popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);// 设置PopupWindow显示在中间
     }
 
-    private ArrayList<String> getDataOne() {
-        ArrayList<String> result = new ArrayList<String>();
-        result.add("风景");
-        result.add("植物");
-        result.add("动物");
-        result.add("建筑");
-        result.add("人文");
-        result.add("活动");
-        result.add("汽车");
-        result.add("山水");
-        result.add("城市");
-        result.add("生态");
-        result.add("人物");
-        result.add("电子");
-
-        for (int i = 0; i < 38; i++) {
-            result.add("爱好兴趣" + i);
-        }
-        return result;
+    /**
+     * 兴趣集合
+     * @return
+     */
+    private List<String> getDataOne() {
+        String[] hobby = getResources().getStringArray(R.array.hobby);
+        return  Arrays.asList(hobby);
     }
 
     public class MyPagerAdapter extends PagerAdapter {
@@ -615,11 +631,10 @@ public class UpdateUserMessageActivity extends Activity implements View.OnClickL
 
                     v.setEnabled(false);//将其设置为不能操作
                     parentList.add(mData.get(position));
-                    if(parentList.size() > 0){
+                    if (parentList.size() > 0) {
                         userWaring.setVisibility(View.GONE);
                     }
                     mHandler.sendEmptyMessage(1);//更新父GridView的数据
-//                    mHandler.sendEmptyMessage(2);//更新父GridView的数据
                 }
             });
             return convertView;
@@ -685,7 +700,7 @@ public class UpdateUserMessageActivity extends Activity implements View.OnClickL
                 @Override
                 public void onClick(View v) {
                     parentList.remove(position);
-                    if(parentList.size() == 0){
+                    if (parentList.size() == 0) {
                         userWaring.setVisibility(View.VISIBLE);
                     }
                     mHandler.sendEmptyMessage(1);
@@ -699,62 +714,78 @@ public class UpdateUserMessageActivity extends Activity implements View.OnClickL
     /**
      * 从相册获取图片
      */
-    private void getIconFromPhoto(){
+    private void getIconFromPhoto() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         intent.setType("image/*");
         startActivityForResult(intent, PHOTO_PICKED_FROM_FILE);
     }
 
     /**
-     * 拍照获取图片
+     * 拍照获取图片(适配到7.0)
      */
     private void getIconFromCamera() {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        imgUri = Uri.fromFile(new File(Environment.getExternalStorageDirectory(),"avatar_"+String.valueOf(System.currentTimeMillis())+".png"));
-        intent.putExtra(MediaStore.EXTRA_OUTPUT,imgUri);
-        startActivityForResult(intent,PHOTO_PICKED_FROM_CAMERA);
+        mFilePath = FileUtils.getFileDir() + File.separator;
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            File path = new File(mFilePath);
+            if (!path.exists()) {
+                path.mkdirs();
+            }
+            mFileName = "avatar_" + String.valueOf(System.currentTimeMillis()) + ".png";
+            File file = new File(Environment.getExternalStorageDirectory(), mFileName);
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            imgUri = FileUtils.getUriForFile(this, file);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, imgUri);
+            startActivityForResult(intent, PHOTO_PICKED_FROM_CAMERA);
+        } else {
+            Log.e("UpdateUserMessage", "文件目录不存在");
+        }
+
     }
 
     /**
      * 剪切图片
      */
-    private void doCrop(){
+    private void doCrop() {
         final ArrayList<CropOption> cropOptions = new ArrayList<>();
         final Intent intent = new Intent("com.android.camera.action.CROP");
         intent.setType("image/*");
-        List<ResolveInfo> list = getPackageManager().queryIntentActivities(intent,0);
+        List<ResolveInfo> list = getPackageManager().queryIntentActivities(intent, 0);
         int size = list.size();
-        if (size == 0){
+        if (size == 0) {
             Toast.makeText(this, "当前不支持裁剪图片", Toast.LENGTH_SHORT).show();
             return;
         }
-        intent.setData(imgUri);
-        intent.putExtra("outputX",300);
-        intent.putExtra("outputY",300);
-        intent.putExtra("aspectX",1);
-        intent.putExtra("aspectY",1);
-        intent.putExtra("scale",true);
-        intent.putExtra("return-data",true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);//添加这一句表示对目标应用临时授权该Uri所代表的文件
+        }
+        intent.setDataAndType(imgUri, "image/*");
+        intent.putExtra("crop", true);
+        intent.putExtra("outputX", 300);
+        intent.putExtra("outputY", 300);
+        intent.putExtra("aspectX", 1);
+        intent.putExtra("aspectY", 1);
+        intent.putExtra("scale", true);
+        intent.putExtra("return-data", true);
         //只有一张
-        if (size == 1){
+        if (size == 1) {
             Intent intent1 = new Intent(intent);
             ResolveInfo res = list.get(0);
-            intent1.setComponent(new ComponentName(res.activityInfo.packageName,res.activityInfo.name));
-            startActivityForResult(intent1,CROP_FROM_CAMERA);
-        }else {
+            intent1.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
+            startActivityForResult(intent1, CROP_FROM_CAMERA);
+        } else {
             for (ResolveInfo res : list) {
                 CropOption co = new CropOption();
                 co.title = getPackageManager().getApplicationLabel(res.activityInfo.applicationInfo);
                 co.icon = getPackageManager().getApplicationIcon(res.activityInfo.applicationInfo);
                 co.appIntent = new Intent(intent);
-                co.appIntent.setComponent(new ComponentName(res.activityInfo.packageName,res.activityInfo.name));
+                co.appIntent.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
                 cropOptions.add(co);
             }
-            CommonAdapter<CropOption> adapter = new CommonAdapter<CropOption>(this,cropOptions,R.layout.layout_crop_selector) {
+            CommonAdapter<CropOption> adapter = new CommonAdapter<CropOption>(this, cropOptions, R.layout.layout_crop_selector) {
                 @Override
                 public void convert(ViewHolder holder, CropOption item) {
-                    holder.setImageDrawable(R.id.iv_icon,item.icon);
-                    holder.setText(R.id.tv_name,item.title);
+                    holder.setImageDrawable(R.id.iv_icon, item.icon);
+                    holder.setText(R.id.tv_name, item.title);
                 }
             };
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -762,14 +793,14 @@ public class UpdateUserMessageActivity extends Activity implements View.OnClickL
             builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    startActivityForResult(cropOptions.get(which).appIntent,CROP_FROM_CAMERA);
+                    startActivityForResult(cropOptions.get(which).appIntent, CROP_FROM_CAMERA);
                 }
             });
             builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
                 @Override
                 public void onCancel(DialogInterface dialog) {
-                    if (imgUri != null){
-                        getContentResolver().delete(imgUri,null,null);
+                    if (imgUri != null) {
+                        getContentResolver().delete(imgUri, null, null);
                         imgUri = null;
                     }
                 }
@@ -781,11 +812,12 @@ public class UpdateUserMessageActivity extends Activity implements View.OnClickL
 
     /**
      * 处理剪切后的图片，将其显示到头像处并转换为字节数据流
+     *
      * @param picData
      */
-    private void setCropImg(Intent picData){
+    private void setCropImg(Intent picData) {
         Bundle bundle = picData.getExtras();
-        if (bundle != null){
+        if (bundle != null) {
             userHeadBitmap = bundle.getParcelable("data");
             userHeadImg.setImageBitmap(userHeadBitmap);
             try {
@@ -793,7 +825,7 @@ public class UpdateUserMessageActivity extends Activity implements View.OnClickL
                 userHeadBitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);//将bitmap一字节流输出 Bitmap.CompressFormat.PNG 压缩格式，100：压缩率，baos：字节流
                 bitmapByte = baos.toByteArray();
                 userHeadPhoto = Base64.encodeToString(bitmapByte, 0, bitmapByte.length, Base64.DEFAULT);//将图片的字节流数据加密成base64字符输出
-//                Log.e("lmy", "setCropImg: " + userHeadPhoto);
+                Log.e("lmy", "setCropImg: " + userHeadPhoto);
                 baos.close();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -804,11 +836,12 @@ public class UpdateUserMessageActivity extends Activity implements View.OnClickL
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode != RESULT_OK){
+        if (resultCode != RESULT_OK) {
             return;
         }
         switch (requestCode) {
             case PHOTO_PICKED_FROM_CAMERA:
+                Log.e("tag", "onActivityResult: 开始剪切图片");
                 doCrop();
                 break;
             case PHOTO_PICKED_FROM_FILE:
@@ -816,10 +849,17 @@ public class UpdateUserMessageActivity extends Activity implements View.OnClickL
                 doCrop();
                 break;
             case CROP_FROM_CAMERA:
-                if (data != null){
+                if (data != null) {
                     setCropImg(data);
                 }
                 break;
+            case OBJECT_SELECT: {//为用户的专业领域赋值
+                if(data != null && resultCode == RESULT_OK){
+                    userObjectContent = data.getStringExtra("objectSelect");
+                    userObject.setText(userObjectContent.split("-")[1]);
+                }
+            }
+            break;
             default:
                 break;
         }

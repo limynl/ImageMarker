@@ -2,32 +2,77 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.team.imagemarker">
 
-    <!-- 获取联网请求 -->
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!-- 系统要求的权限 -->
+    <uses-permission android:name="com.lovcreate.xichai_app.permission.JPUSH_MESSAGE" />
+
+    <!-- 系统要求的权限 -->
+    <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
+
+    <!-- 系统要求的权限 -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <!-- 系统要求的权限 -->
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+
+    <!-- 系统要求的权限 -->
+    <uses-permission android:name="android.permission.GET_TASKS" />
+
+    <!-- 系统要求的权限 -->
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+
+    <!-- 访问网络 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- 读取手机当前状态 -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
+    <!-- 读取手机内部存储 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <!-- 写外部存储 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <!-- 获取运营商信息，用于支持提供运营商信息相关的接口 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- 访问wifi网络信息,wifi信息可用于进行网络定位 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
+    <!-- 控制振动器 -->
     <uses-permission android:name="android.permission.VIBRATE" />
 
+    <!-- 读取手机通讯录 -->
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
+    <!-- 接受短信 -->
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+
+    <!-- 读取短信 -->
+    <uses-permission android:name="android.permission.READ_SMS" />
+
+    <!-- 访问GPS定位 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <!-- 使用摄像头 -->
+    <uses-permission android:name="android.permission.CAMERA" />
+
     <application
-        android:name=".app.MyApplication"
+        android:name=".application.MyApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/logo"
+        android:hardwareAccelerated="true"
+        android:icon="@mipmap/m"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <!-- tools:replace="android:icon, android:theme" -->
         <!-- Mob注册声明 -->
-        <activity android:name="com.mob.tools.MobUIShell">
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+        <activity
+            android:name="com.mob.tools.MobUIShell"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustResize" >
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:windowSoftInputMode="stateHidden|adjustResize">
+
             <!-- 调用新浪原生SDK，需要注册的回调activity -->
             <intent-filter>
                 <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY" />
@@ -38,13 +83,12 @@
         </activity>
 
         <!-- 微信分享回调 -->
-        <!-- <activity -->
-        <!-- android:name="cn.sharesdk.wxapi.WXEntryActivity" -->
-        <!-- android:configChanges="keyboardHidden|orientation|screenSize" -->
-        <!-- android:exported="true" -->
-        <!-- android:screenOrientation="portrait" -->
-        <!-- android:theme="@android:style/Theme.Translucent.NoTitleBar" /> -->
-
+        <activity
+            android:name="cn.sharesdk.onekeyshare.wxapi.WXEntryActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
         <!-- QQ第三方登录 -->
         <activity
@@ -57,14 +101,19 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="tencent1105819277" />
+                <data android:scheme="tencent1106389984" />
             </intent-filter>
         </activity>
+
         <activity
             android:name="com.tencent.connect.common.AssistActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-        <activity android:name=".activitys.home.MainActivity">
+
+
+        <activity
+            android:name=".activitys.user.SplashActivity"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -72,11 +121,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".activitys.home.HomeActivity" />
+        <activity android:name=".activitys.home.MainActivity" />
         <activity android:name=".activitys.user.UserResetPassActivity" />
         <activity android:name=".activitys.user.UpdateUserMessageActivity" />
         <activity android:name=".activitys.history.HistoryRecordActivity" />
         <activity android:name=".activitys.user.UserMissionActivity" />
-        <activity android:name=".activitys.imagscan.PictureGroupScanFragment" />
+        <activity android:name=".activitys.imagscan.GuessYouLikeFragment" />
         <activity android:name=".activitys.saying.SendMoodActivity" />
         <activity android:name=".activitys.saying.SayingScanActivity" />
         <activity android:name=".activitys.user.FeedBackActivity" />
@@ -85,21 +135,40 @@
             android:name=".activitys.tasks.UserTaskActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activitys.imagscan.LookPictureActivity" />
-        <activity android:name=".activitys.home.MoreCategoryActivity" />
-        <activity android:name=".activitys.mark.MarkHomeActivity" />
-        <activity android:name=".activitys.tasks.UserTaskOverViewActivity" />
+        <activity android:name=".activitys.imagscan.MajorPushFragment" />
         <activity
-            android:name=".activitys.imagscan.ImgScanMainActivity"
-            android:theme="@style/UserCoordinatorLayout" />
+            android:name=".activitys.mark.MarkHomeActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".activitys.tasks.UserTaskOverViewActivity" />
+        <activity android:name=".activitys.imagscan.ImgScanMainActivity" />
+        <!-- android:theme="@style/UserCoordinatorLayout" -->
+
         <activity android:name=".activitys.home.SplashActivity" />
-        <!--<activity android:name=".activitys.integral.IntegralActivity" />-->
+
+        <!-- <activity android:name=".activitys.integral.IntegralActivity" /> -->
+
         <activity
             android:name=".activitys.integral.LuckDrawActivity"
             android:theme="@style/LuckDrawActivity" />
         <activity android:name=".activitys.hobby.HobbyMainActivity" />
         <activity android:name=".activitys.hobby.HobbySelectActivity" />
         <activity android:name=".activitys.integral.IntegralMainActivity" />
-        <activity android:name=".activitys.hobby.HobbyActivity"></activity>
+        <activity android:name=".activitys.hobby.HobbyActivity" />
+        <activity android:name=".activitys.user.ProfessionalChoiceActivity" />
+        <activity android:name=".activitys.home.DetailGroupActivity" />
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.team.imagemarker.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths" />
+        </provider>
+
+        <activity android:name=".activitys.mark.ErrorCollectionActivity" />
+        <activity android:name=".activitys.integral.IntegralDetail"></activity>
     </application>
 
 </manifest>

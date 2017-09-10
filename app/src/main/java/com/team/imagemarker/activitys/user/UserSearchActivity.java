@@ -1,7 +1,5 @@
 package com.team.imagemarker.activitys.user;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -9,18 +7,26 @@ import android.os.Message;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.VolleyError;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.gson.Gson;
 import com.team.imagemarker.R;
 import com.team.imagemarker.activitys.mark.MarkHomeActivity;
+import com.team.imagemarker.bases.BaseActivity;
+import com.team.imagemarker.constants.Constants;
+import com.team.imagemarker.entitys.MarkerModel;
 import com.team.imagemarker.entitys.home.CateGoryInfo;
 import com.team.imagemarker.entitys.marker.ItemEntity;
 import com.team.imagemarker.utils.EditTextWithDel;
@@ -28,21 +34,25 @@ import com.team.imagemarker.utils.RoundAngleImageView;
 import com.team.imagemarker.utils.ToastUtil;
 import com.team.imagemarker.utils.tag.TagColor;
 import com.team.imagemarker.utils.tag.TagGroup;
+import com.team.imagemarker.utils.volley.VolleyListenerInterface;
+import com.team.imagemarker.utils.volley.VolleyRequestUtil;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.InputStream;
-import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static com.team.imagemarker.R.id.to_search;
 
 /**
  * Created by Lmy on 2017/5/4.
  * email 1434117404@qq.com
  */
 
-public class UserSearchActivity extends Activity implements View.OnClickListener{
+public class UserSearchActivity extends BaseActivity implements View.OnClickListener{
     private TagGroup tagGroup;
     private List<String> tagList = new ArrayList<String>();
     private int hotIndex = 0;
@@ -55,15 +65,53 @@ public class UserSearchActivity extends Activity implements View.OnClickListener
     private ArrayAdapter<String> historyAdapter;//历史记录
     private List<CateGoryInfo> resultList = new ArrayList<>();
     private List<ItemEntity> itemModel;
+    private List<MarkerModel> list = new ArrayList<>();
+    private ResultListAdapter adapter = new ResultListAdapter();
     private ToastUtil toastUtil = new ToastUtil();
-    private TextView searchBack, tvClear, tvChangeWords;//清除历史记录
+    private TextView searchBack, tvClear, tvChangeWords, toSearch;//清除历史记录
     private int[] imgs = {R.mipmap.search1, R.mipmap.search2, R.mipmap.search3, R.mipmap.search4, R.mipmap.search5, R.mipmap.search6};
 
     private static final int DO_SEARCH = 1;
+    private static final int GO_LINE = 2;
     private Handler mHandler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
-            StartSearch();
+            switch (msg.what){
+                case DO_SEARCH:{
+                    StartSearch((String) msg.obj);
+                }
+                break;
+                case GO_LINE:{
+                    if(list .size() != 0){
+                        if(showResult.getVisibility() == View.GONE){
+                            showResult.setVisibility(View.VISIBLE);
+                        }
+                        showResult.setAdapter(adapter);
+                        showResult.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                                Intent intent = new Intent(UserSearchActivity.this, MarkHomeActivity.class);
+//                                Bundle bundle = new Bundle();
+//                                bundle.putString("pageTag", "searchHobby");
+//                                bundle.putSerializable("item", (Serializable) itemModel);
+//                                intent.putExtras(bundle);
+//                                startActivity(intent);
+//                                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                                Intent intent = new Intent(UserSearchActivity.this, MarkHomeActivity.class);
+                                Bundle bundle = new Bundle();
+                                bundle.putString("pageTag", "imgNavPage");
+                                bundle.putSerializable("item", list.get(position));
+                                intent.putExtras(bundle);
+                                startActivity(intent);
+                                UserSearchActivity.this.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                            }
+                        });
+                    }else{
+                        toastUtil.Short(UserSearchActivity.this, "没有相关内容,换换其他搜索词吧").show();
+                    }
+                }
+                break;
+            }
         }
     };
 
@@ -91,6 +139,7 @@ public class UserSearchActivity extends Activity implements View.OnClickListener
         layoutHotWord = (RelativeLayout) findViewById(R.id.layoutHotWord);
         rlHistory = (RelativeLayout) findViewById(R.id.rlHistory);
         searchBack = (TextView) findViewById(R.id.search_back);
+        toSearch = (TextView) findViewById(to_search);
         tvClear = (TextView) findViewById(R.id.tvClear);
         tvChangeWords = (TextView) findViewById(R.id.tvChangeWords);
 
@@ -103,11 +152,13 @@ public class UserSearchActivity extends Activity implements View.OnClickListener
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if(s.length() == 0){//搜索框为空时，结果列表隐藏
+                    list.clear();
+                    adapter.notifyDataSetChanged();
                     showResult.setVisibility(View.GONE);
                 }else{
                     showResult.setVisibility(View.VISIBLE);
                 }
-                mHandler.sendEmptyMessageDelayed(DO_SEARCH,1000);//延迟一秒进行搜索，提高性能，节约流量
+//                mHandler.sendEmptyMessageDelayed(DO_SEARCH,1000);//延迟一秒进行搜索，提高性能，节约流量
             }
 
             @Override
@@ -122,6 +173,7 @@ public class UserSearchActivity extends Activity implements View.OnClickListener
         initSearchHistory();
 
         searchBack.setOnClickListener(this);
+        toSearch.setOnClickListener(this);
         tvClear.setOnClickListener(this);
         tvChangeWords.setOnClickListener(this);
     }
@@ -129,73 +181,42 @@ public class UserSearchActivity extends Activity implements View.OnClickListener
     /**
      * 联网进行实时搜索
      */
-    private void StartSearch() {
-        String content = searchContent.getText().toString();
-        if(TextUtils.isEmpty(content)){
-            return;
+    private void StartSearch(final String searchContent) {
+        if(list.size() != 0){
+            list.clear();
+            adapter.notifyDataSetChanged();
         }
-        layoutHotWord.setVisibility(View.GONE);
-        rlHistory.setVisibility(View.GONE);
-        saveHistory(content);//缓存搜索内容
-        getData();
-        if(resultList != null){
-            if(showResult.getVisibility() == View.GONE){
-                showResult.setVisibility(View.VISIBLE);
-            }
-            showResult.setAdapter(new ResultListAdapter());
-            showResult.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Intent intent = new Intent(UserSearchActivity.this, MarkHomeActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putString("pageTag", "searchHobby");
-                    bundle.putSerializable("item", (Serializable) itemModel);
-                    intent.putExtras(bundle);
-                    startActivity(intent);
-                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        String url = Constants.Hobby_Nav_Free_Search;
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("search", searchContent);
+        VolleyRequestUtil.RequestPost(this, url, "freeSearch", map, new VolleyListenerInterface() {
+            @Override
+            public void onSuccess(String result) {
+                Log.e("tag", "onSuccess: " + result);
+                try {
+                    JSONObject object = new JSONObject(result);
+                    JSONArray array = object.optJSONArray("picture");
+                    Gson gson = null;
+                    for (int i = 0; i < array.length(); i++) {
+                        JSONObject object1 = array.optJSONObject(i);
+                        gson = new Gson();
+                        MarkerModel model = gson.fromJson(object1.toString(), MarkerModel.class);
+                        list.add(model);
+                    }
+//                    setHobbyDate(hobbyPushList);
+                    mHandler.sendEmptyMessage(GO_LINE);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            });
-            //收起软键盘
-            InputMethodManager manager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            manager.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
-        }else{
-            toastUtil.Short(this, "没有相关内容,换换其他搜索词吧").show();
-        }
-    }
+            }
 
-    /**
-     * 加载数据
-     */
-    private void getData() {
-        if(resultList != null){
-            resultList.clear();
-        }
-        resultList.add(new CateGoryInfo("上传时间: 2017-06-01 17:23:00", "天空 植物 枯树", ""));
-        resultList.add(new CateGoryInfo("上传时间: 2017-06-01 17:23:00", "海滩 树木 莱利湾", ""));
-        resultList.add(new CateGoryInfo("上传时间: 2017-06-01 17:23:00", "帕太神庙 建筑 天空", ""));
-        resultList.add(new CateGoryInfo("上传时间: 2017-06-01 17:23:00", "喷泉 草地", ""));
-        resultList.add(new CateGoryInfo("上传时间: 2017-06-01 17:23:00", "道路 树木 落叶", ""));
-        resultList.add(new CateGoryInfo("上传时间: 2017-06-01 17:23:00", "高山 湖水", ""));
-        try {
-            itemModel = new ArrayList<>();
-            InputStream in = getAssets().open("mark.json");
-            int size = in.available();
-            byte[] buffer = new byte[size];
-            in.read(buffer);
-            String jsonStr = new String(buffer, "UTF-8");
-            JSONObject jsonObject = new JSONObject(jsonStr);
-            JSONArray jsonArray = jsonObject.optJSONArray("result");
-            if (null != jsonArray) {
-                int len = jsonArray.length();
-                for (int i = 0; i < len; i++) {
-                    JSONObject itemJsonObject = jsonArray.getJSONObject(i);
-                    ItemEntity itemEntity = new ItemEntity(itemJsonObject);
-                    itemModel.add(itemEntity);
-                }
+            @Override
+            public void onError(VolleyError error) {
+                Log.e("FirstPageFragment", "onError: HobbyPushGetData:" + error.toString());
+                StartSearch(searchContent);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        });
+
     }
 
     /**
@@ -248,7 +269,7 @@ public class UserSearchActivity extends Activity implements View.OnClickListener
     }
 
     /**
-     * 显示人们搜索
+     * 显示热门标签
      */
     private void showHotWord(List<String> list) {
         int tagSize = 8;//每次显示8个
@@ -288,6 +309,23 @@ public class UserSearchActivity extends Activity implements View.OnClickListener
                 showHotWord(list);
             }
             break;
+            case R.id.to_search:{
+//                InputMethodManager manager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+//                manager.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+                String content = searchContent.getText().toString();
+                if(TextUtils.isEmpty(content)){
+                    Toast.makeText(this, "搜索内容不能为空", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                layoutHotWord.setVisibility(View.GONE);
+                rlHistory.setVisibility(View.GONE);
+                saveHistory(content);//缓存搜索内容
+                Message message = new Message();
+                message.what = DO_SEARCH;
+                message.obj = content;
+                mHandler.sendMessage(message);
+            }
+            break;
         }
     }
 
@@ -295,12 +333,12 @@ public class UserSearchActivity extends Activity implements View.OnClickListener
 
         @Override
         public int getCount() {
-            return resultList.size();
+            return list.size();
         }
 
         @Override
         public Object getItem(int position) {
-            return resultList.get(position);
+            return list.get(position);
         }
 
         @Override
@@ -321,15 +359,15 @@ public class UserSearchActivity extends Activity implements View.OnClickListener
             }else{
                 viewHolder = (ViewHolder) convertView.getTag();
             }
-            CateGoryInfo info = resultList.get(position);
-//            Glide.with(UserSearchActivity.this)
-//                    .load(info.getImgUrl())
-//                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-//                    .thumbnail(0.8f)
-//                    .into(viewHolder.itemImg);
-            viewHolder.itemImg.setImageResource(imgs[position]);
-            viewHolder.itemName.setText(info.getName());
-            viewHolder.itemTime.setText(info.getMainTitle());
+            MarkerModel info = list.get(position);
+            Glide.with(UserSearchActivity.this)
+                    .load(info.getImageUrl1())
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .thumbnail(0.8f)
+                    .into(viewHolder.itemImg);
+//            viewHolder.itemImg.setImageResource(imgs[position]);
+//            viewHolder.itemName.setText(info.getName());
+//            viewHolder.itemTime.setText(info.getMainTitle());
             return convertView;
         }
     }

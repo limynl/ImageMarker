@@ -38,6 +38,11 @@ public class MarkerModel implements Serializable {
     public MarkerModel() {
     }
 
+    public MarkerModel(String imageUrl1, String SecondlabelName){
+        this.imageUrl1 = imageUrl1;
+        this.SecondlabelName = SecondlabelName;
+    }
+
     public int getUserId() {
         return userId;
     }

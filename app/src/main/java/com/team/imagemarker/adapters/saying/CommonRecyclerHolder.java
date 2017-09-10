@@ -14,6 +14,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.lzy.ninegrid.NineGridView;
 import com.lzy.ninegrid.preview.NineGridViewClickAdapter;
 import com.team.imagemarker.R;
+import com.team.imagemarker.activitys.hobby.SodukuGridView;
 import com.team.imagemarker.utils.tag.TagColor;
 import com.team.imagemarker.utils.tag.TagGroup;
 
@@ -120,6 +121,12 @@ public class CommonRecyclerHolder extends RecyclerView.ViewHolder {
     public CommonRecyclerHolder setNineGridAdapter(int viewId, NineGridViewClickAdapter clickAdapter){
         NineGridView nineGridView = getView(viewId);
         nineGridView.setAdapter(clickAdapter);
+        return this;
+    }
+
+    public CommonRecyclerHolder setMyGridViewAdapter(int viewId, MyGrideViewAdapter adapter){
+        SodukuGridView myGridView = getView(viewId);
+        myGridView.setAdapter(adapter);
         return this;
     }
 

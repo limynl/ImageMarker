@@ -8,8 +8,10 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.team.imagemarker.R;
-import com.team.imagemarker.entitys.home.CategoryModel;
+import com.team.imagemarker.entitys.UserModel;
 import com.team.imagemarker.utils.CircleImageView;
 import com.wangjie.rapidfloatingactionbutton.textlabel.LabelView;
 
@@ -22,9 +24,9 @@ import java.util.List;
 
 public class TaskBoxAdapter extends BaseAdapter {
     private Context context;
-    private List<CategoryModel> list;
+    private List<UserModel> list;
 
-    public TaskBoxAdapter(Context context, List<CategoryModel> list) {
+    public TaskBoxAdapter(Context context, List<UserModel> list) {
         this.context = context;
         this.list = list;
     }
@@ -60,13 +62,25 @@ public class TaskBoxAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        CategoryModel model = list.get(position);
+        UserModel model = list.get(position);
 
-        viewHolder.categoryImg.setImageResource(model.getImgId());
-        viewHolder.userHead.setImageResource(model.getImgId1());
-        viewHolder.userRanking.setText(model.getName());
-        viewHolder.userName.setText(model.getUserName());
-        viewHolder.userIntegral.setText(model.getIntegral());
+        if(position == 0){
+            viewHolder.categoryImg.setImageResource(R.mipmap.task2);
+            viewHolder.userRanking.setText("第一名");
+        }else if(position == 1){
+            viewHolder.categoryImg.setImageResource(R.mipmap.task1);
+            viewHolder.userRanking.setText("第二名");
+        }else if(position == 2){
+            viewHolder.categoryImg.setImageResource(R.mipmap.task3);
+            viewHolder.userRanking.setText("第三名");
+        }
+
+        Glide.with(context)
+                .load(model.getUserHeadImage())
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(viewHolder.userHead);
+        viewHolder.userName.setText(model.getUserNickName());
+        viewHolder.userIntegral.setText("积分:" + model.getIntegral());
         return convertView;
     }
 

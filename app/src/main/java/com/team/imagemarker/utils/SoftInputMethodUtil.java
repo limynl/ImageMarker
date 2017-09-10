@@ -6,7 +6,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
-import com.team.imagemarker.app.MyApplication;
+import com.team.imagemarker.application.MyApplication;
 
 /**
  * 软键盘控制

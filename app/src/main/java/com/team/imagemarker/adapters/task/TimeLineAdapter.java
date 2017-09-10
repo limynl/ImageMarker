@@ -16,10 +16,10 @@ import java.util.List;
 
 public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineAdapter.ViewHolder> {
     private Context mContext;
-    private List<Event> mList;
+    private List<PictureCollection> mList;
     private int[] colors = {0xffFFAD6C, 0xff62f434, 0xffdeda78, 0xff7EDCFF, 0xff58fdea, 0xfffdc75f};//颜色组
 
-    public TimeLineAdapter(Context context, List<Event> list) {
+    public TimeLineAdapter(Context context, List<PictureCollection> list) {
         mContext = context;
         mList = list;
     }
@@ -32,16 +32,19 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.time.setText(mList.get(position).getTime());
-        holder.textView.setText(mList.get(position).getEvent());
-        holder.time.setTextColor(colors[(int)(Math.random() * 6 + 1) % colors.length]);
+
+        //2000-08-31-20-21-30
+        String[] collectionTime = mList.get(position).getSaveTime().split("-");
+        holder.time.setText(collectionTime[0] + "-" + collectionTime[1] + "-" + collectionTime[2] + " " + collectionTime[3] + ":" + collectionTime[4] + ":" + collectionTime[5]);
+        int num = (int)(Math.random() * 6 + 1) % colors.length;
+        holder.time.setTextColor(colors[num]);
+        holder.textView.setTextColor(colors[num]);
 
         Glide.with(mContext)
-                .load(mList.get(position).getImgUrl())
+                .load(mList.get(position).getImageUrl())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .thumbnail(0.8f)
                 .into(holder.image);
-//        holder.image.setImageResource(mList.get(position).getImgId());
     }
 
     @Override

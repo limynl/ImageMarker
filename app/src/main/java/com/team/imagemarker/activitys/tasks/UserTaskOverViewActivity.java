@@ -3,15 +3,13 @@ package com.team.imagemarker.activitys.tasks;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.team.imagemarker.R;
-import com.team.imagemarker.adapters.task.Event;
-import com.team.imagemarker.adapters.task.ItemDecoration;
+import com.team.imagemarker.adapters.task.PictureCollection;
 import com.team.imagemarker.adapters.task.TimeLineAdapter;
 import com.team.imagemarker.entitys.task.TaskHistory;
 import com.team.imagemarker.entitys.task.TimeLineModel;
@@ -29,7 +27,7 @@ public class UserTaskOverViewActivity extends Activity implements View.OnClickLi
     private RelativeLayout titleBar;
 
     private RecyclerView mRecyclerView;
-    private  List<Event> mList = new ArrayList<>();
+    private  List<PictureCollection> mList = new ArrayList<>();
     private TimeLineAdapter mAdapter;
 
     String[] times = {
@@ -39,7 +37,8 @@ public class UserTaskOverViewActivity extends Activity implements View.OnClickLi
             "2017-06-23 16:00:25",
             "2017-06-22 18:54:45",
             "2017-06-21 19:09:05",
-            "2017-06-21 17:02:01"
+            "2017-06-21 17:02:01",
+            "2017-06-24 13:21:00"
     };
     String[] events = new String[]{
             "兴趣推送",
@@ -48,7 +47,8 @@ public class UserTaskOverViewActivity extends Activity implements View.OnClickLi
             "热门种类",
             "猜你喜欢",
             "热门分类",
-            "热门分类"
+            "热门分类",
+            "兴趣推送"
     };
 
     int[] resId = {
@@ -67,7 +67,8 @@ public class UserTaskOverViewActivity extends Activity implements View.OnClickLi
         "http://obs.myhwclouds.com/look.admin.image/老马识途/2017-5-22/冰淇淋-草莓-勺子-奶油蛋糕.jpg",
         "http://obs.myhwclouds.com/look.admin.image/老马识途/2017-5-22/草莓-蓝莓-橙子-猕猴桃-盘子.jpg",
         "http://obs.myhwclouds.com/look.admin.image/老马识途/2017-5-22/香蕉-草地-小花.jpg",
-            "http://obs.myhwclouds.com/look.admin.image/老马识途/2017-5-21/白云岩-高山-水-天空-树.jpg"
+        "http://obs.myhwclouds.com/look.admin.image/老马识途/2017-5-21/白云岩-高山-水-天空-树.jpg",
+        "http://obs.myhwclouds.com/look.admin.image/华为/2017-5-21/天空-云朵-船-树-湖水.jpg",
     };
 
     @Override
@@ -75,7 +76,7 @@ public class UserTaskOverViewActivity extends Activity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_task_over_view);
         bindView();
-        setTimeLine();
+//        setTimeLine();
     }
 
     private void bindView() {
@@ -91,21 +92,21 @@ public class UserTaskOverViewActivity extends Activity implements View.OnClickLi
         leftIcon.setOnClickListener(this);
     }
 
-    private void setTimeLine() {
-        mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
-        mRecyclerView.addItemDecoration(new ItemDecoration(this, 50));
-
-        for (int i = 0; i < times.length; i++) {
-            Event event = new Event();
-            event.setTime(times[i]);
-            event.setEvent(events[i]);
-            event.setImgUrl(imgs[i]);
-            mList.add(event);
-        }
-
-        mAdapter = new TimeLineAdapter(this, mList);
-        mRecyclerView.setAdapter(mAdapter);
-    }
+//    private void setTimeLine() {
+//        mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+//        mRecyclerView.addItemDecoration(new ItemDecoration(this, 50));
+//
+//        for (int i = 0; i < times.length; i++) {
+//            PictureCollection event = new PictureCollection();
+//            event.setTime(times[i]);
+//            event.setEvent(events[i]);
+//            event.setImgUrl(imgs[i]);
+//            mList.add(event);
+//        }
+//
+//        mAdapter = new TimeLineAdapter(this, mList);
+//        mRecyclerView.setAdapter(mAdapter);
+//    }
 
     private void getDataFromNet() {
         try {

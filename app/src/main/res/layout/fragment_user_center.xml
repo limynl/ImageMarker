@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:widget="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -19,67 +20,10 @@
             android:background="@color/background"
             android:orientation="vertical">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:background="@color/write"
-                android:paddingBottom="15dp"
-                android:paddingTop="15dp"
-                android:visibility="gone">
-
-                <com.team.imagemarker.utils.CircleImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_alignParentLeft="true"
-                    android:layout_marginLeft="20dp"
-                    android:src="@mipmap/default_avatar"
-                    app:border_color="@color/gray1"
-                    app:border_width="1dp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="105dp"
-                    android:text="Limynl"
-                    android:textColor="#808080"
-                    android:textSize="15dp" />
-
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="150dp"
-                    android:src="@mipmap/jifen" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="95dp"
-                    android:gravity="center"
-                    android:text="30积分"
-                    android:textColor="#808080"
-                    android:textSize="15dp" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="25dp"
-                    android:src="@mipmap/ic_open" />
-
-            </RelativeLayout>
-
             <LinearLayout
                 android:id="@+id/lay_header"
                 android:layout_width="match_parent"
-                android:layout_height="215dp"
+                android:layout_height="235dp"
                 android:background="@mipmap/user_center_bg"
                 android:orientation="vertical">
 
@@ -87,7 +31,7 @@
                     android:id="@+id/v_statusbar"
                     android:layout_width="match_parent"
                     android:layout_height="0.0dp"
-                    android:background="@color/translate" />
+                    android:background="@color/translate"/>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -150,7 +94,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/write"
+                android:background="@android:color/white"
                 android:orientation="horizontal"
                 android:paddingBottom="8dp"
                 android:paddingTop="8dp">
@@ -164,8 +108,8 @@
                     android:orientation="vertical">
 
                     <ImageView
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
+                        android:layout_width="55dp"
+                        android:layout_height="55dp"
                         android:scaleType="fitXY"
                         android:src="@mipmap/ic_shopcar_my" />
 
@@ -185,8 +129,8 @@
 
                     <ImageView
                         android:id="@+id/imageView"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
+                        android:layout_width="55dp"
+                        android:layout_height="55dp"
                         android:scaleType="fitXY"
                         android:src="@mipmap/ic_consume_history" />
 
@@ -207,8 +151,8 @@
                     android:orientation="vertical">
 
                     <ImageView
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
+                        android:layout_width="55dp"
+                        android:layout_height="55dp"
                         android:scaleType="fitXY"
                         android:src="@mipmap/ic_wallet" />
 
@@ -238,8 +182,8 @@
                     android:paddingTop="17dp">
 
                     <ImageView
-                        android:layout_width="21dp"
-                        android:layout_height="21dp"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
                         android:layout_centerVertical="true"
                         android:src="@mipmap/lsjl_icon" />
 
@@ -248,11 +192,11 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="32dp"
+                        android:layout_marginLeft="37dp"
                         android:gravity="center"
                         android:text="历史记录"
                         android:textColor="#424242"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"/>
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -279,8 +223,8 @@
                     android:paddingTop="17dp">
 
                     <ImageView
-                        android:layout_width="21dp"
-                        android:layout_height="21dp"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
                         android:layout_centerVertical="true"
                         android:src="@mipmap/rwwc_icon" />
 
@@ -289,7 +233,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="32dp"
+                        android:layout_marginLeft="37dp"
                         android:gravity="center"
                         android:text="任务情况"
                         android:textColor="#424242"
@@ -311,6 +255,7 @@
                     android:background="@color/background" />
 
                 <RelativeLayout
+                    android:id="@+id/clean_cache_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/write"
@@ -319,8 +264,8 @@
                     android:paddingTop="17dp">
 
                     <ImageView
-                        android:layout_width="21dp"
-                        android:layout_height="21dp"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
                         android:layout_centerVertical="true"
                         android:src="@mipmap/xtts_icon" />
 
@@ -329,18 +274,28 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="32dp"
+                        android:layout_marginLeft="37dp"
                         android:gravity="center"
-                        android:text="系统推送"
+                        android:text="清除缓存"
                         android:textColor="#424242"
                         android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/clean_cache"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="25dp"
+                        android:layout_centerVertical="true"
+                        android:text="1.2M"/>
 
                     <com.team.imagemarker.utils.SlideSwitch
                         android:id="@+id/system_slide_switch"
                         android:layout_width="45dp"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
-                        android:layout_marginRight="15dp" />
+                        android:layout_marginRight="15dp"
+                        android:visibility="gone"/>
 
                 </RelativeLayout>
 
@@ -362,8 +317,8 @@
                     android:paddingTop="17dp">
 
                     <ImageView
-                        android:layout_width="21dp"
-                        android:layout_height="21dp"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
                         android:layout_centerVertical="true"
                         android:src="@mipmap/shareapp_icon" />
 
@@ -372,7 +327,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="32dp"
+                        android:layout_marginLeft="37dp"
                         android:gravity="center"
                         android:text="分享App"
                         android:textColor="#424242"
@@ -403,8 +358,8 @@
                     android:paddingTop="17dp">
 
                     <ImageView
-                        android:layout_width="21dp"
-                        android:layout_height="21dp"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
                         android:layout_centerVertical="true"
                         android:src="@mipmap/fadeback_icon" />
 
@@ -413,7 +368,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="32dp"
+                        android:layout_marginLeft="37dp"
                         android:gravity="center"
                         android:text="意见反馈"
                         android:textColor="#424242"
@@ -432,17 +387,17 @@
             </LinearLayout>
 
             <com.team.imagemarker.utils.PaperButton
-                android:id="@+id/user_center_test"
+                android:id="@+id/login_out"
                 android:layout_width="match_parent"
-                android:layout_height="45dp"
+                android:layout_height="50dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginLeft="40dp"
                 android:layout_marginRight="40dp"
                 android:layout_marginTop="30dp"
                 android:gravity="center"
                 widget:paper_color="@color/button"
-                widget:paper_corner_radius="19dp"
-                widget:paper_text="退 出 应 用"
+                widget:paper_corner_radius="21dp"
+                widget:paper_text="退 出 登 录"
                 widget:paper_text_color="#ffffff"
                 widget:paper_text_size="16sp" />
 
@@ -454,13 +409,4 @@
 
     </com.team.imagemarker.utils.scrollview.TranslucentScrollView>
 
-    <RelativeLayout
-        android:id="@+id/notification"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentStart="true"
-        android:clipChildren="true">
-
-    </RelativeLayout>
-
-</RelativeLayout>
+</LinearLayout>

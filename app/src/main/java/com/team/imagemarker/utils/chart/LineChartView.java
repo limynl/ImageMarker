@@ -394,7 +394,7 @@ public class LineChartView extends View {
 
         for (int i = 0; i < dates.size(); i++) {
             Path path = new Path();
-            path.moveTo(marginLeft + i * widthInterval - getTextWidth(xSize, dates.get(i)) / 2, height + textHeight * 7/ 2+50);// 只用于移动移动画笔。
+            path.moveTo(marginLeft + i * widthInterval - getTextWidth(xSize, dates.get(i)) / 2, height + textHeight * 7/ 2+25);// 只用于移动移动画笔。
             path.lineTo(marginLeft + i * widthInterval + getTextWidth(xSize, dates.get(i)) / 2, height + textHeight * 7 / 2);// 用于进行直线绘制。
             canvas.drawTextOnPath(dates.get(i), path, 0, 0, paint);
         }

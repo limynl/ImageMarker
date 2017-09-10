@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.team.imagemarker.R;
-import com.team.imagemarker.entitys.UserIntegralModel;
+import com.team.imagemarker.entitys.UserModel;
 import com.team.imagemarker.utils.CircleImageView;
 
 import java.util.List;
@@ -25,9 +25,9 @@ import java.util.List;
 
 public class UserIntegralAdapter extends BaseAdapter {
     private Context context;
-    private List<UserIntegralModel> list;
+    private List<UserModel> list;
 
-    public UserIntegralAdapter(Context context, List<UserIntegralModel> list) {
+    public UserIntegralAdapter(Context context, List<UserModel> list) {
         this.context = context;
         this.list = list;
     }
@@ -63,7 +63,7 @@ public class UserIntegralAdapter extends BaseAdapter {
         }else{
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        UserIntegralModel model = list.get(position);
+        UserModel model = list.get(position);
 //        if(position == 0){
 //            viewHolder.userIntegralFlag.setImageResource(R.mipmap.number_one);
 //            Log.d("UserIntegralAdapter", "第一名");
@@ -84,14 +84,14 @@ public class UserIntegralAdapter extends BaseAdapter {
 //                .into(viewHolder.headImageView);
 
         Glide.with(context)
-                .load(model.getUserHeadUrl())
+                .load(model.getUserHeadImage())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(viewHolder.headImageView);
 //        ImageLoader imageLoader = new ImageLoader.Builder().url(model.getUserHeadUrl()).imgView(viewHolder.headImageView).build();
 //        ImageLoaderUtil.getInstance().loadImage(context, imageLoader);
         viewHolder.rank.setText((position + 1) + "");
         viewHolder.userNickName.setText(model.getUserNickName());
-        viewHolder.userIntegral.setText(model.getUserIntegralCount() + "积分");
+        viewHolder.userIntegral.setText(model.getIntegral() + "积分");
 
         return convertView;
     }

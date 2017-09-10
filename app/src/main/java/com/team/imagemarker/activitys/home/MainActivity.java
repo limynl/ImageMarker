@@ -1,12 +1,17 @@
 package com.team.imagemarker.activitys.home;
 
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
+import android.view.View;
 
 import com.team.imagemarker.R;
 import com.team.imagemarker.adapters.TabViewPagerAdapter;
+import com.team.imagemarker.bases.BaseActivity;
+import com.team.imagemarker.constants.Constants;
 import com.team.imagemarker.fragments.user.LoginFragment;
 import com.team.imagemarker.fragments.user.RegisterFragment;
 
@@ -17,20 +22,32 @@ import com.team.imagemarker.fragments.user.RegisterFragment;
  * email 1434117404@qq.com
  */
 
-public class MainActivity extends FragmentActivity implements TabLayout.OnTabSelectedListener{
+public class MainActivity extends BaseActivity implements TabLayout.OnTabSelectedListener, RegisterFragment.CallBack{
     private TabLayout loginTabs;
     private ViewPager loginViewPager;
     private TabViewPagerAdapter viewPagerAdapter;
+//    private Field mField = null;
+//    private FixedSpeedScroller mScroller = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        if (Build.VERSION.SDK_INT >= 21) {
+            View decorView = getWindow().getDecorView();
+            int option = View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
+            decorView.setSystemUiVisibility(option);
+            getWindow().setNavigationBarColor(Color.TRANSPARENT);
+            getWindow().setStatusBarColor(Color.TRANSPARENT);
+        }
         //初始化控件
         loginTabs = (TabLayout) findViewById(R.id.login_tabs);
         loginViewPager = (ViewPager) findViewById(R.id.login_viewpager);
 
         //显示tabViewPager
         setTabViewPager();
+
+        Log.e("tag", "onCreate: 当前服务器IP地址为" + Constants.HOST_PORT);
     }
 
     private void setTabViewPager() {
@@ -58,5 +75,19 @@ public class MainActivity extends FragmentActivity implements TabLayout.OnTabSel
     @Override
     public void onTabReselected(TabLayout.Tab tab) {
 
+    }
+
+    @Override
+    public void setShowFragment() {
+//        try {
+//            mField =ViewPager.class.getDeclaredField("mScroller");
+//            mField.setAccessible(true);
+//            mScroller = new FixedSpeedScroller(loginViewPager.getContext(),new AccelerateInterpolator());
+//            mField.set(loginViewPager, mScroller);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+        loginViewPager.setCurrentItem(0);
+//        mScroller.setmDuration(2000);
     }
 }

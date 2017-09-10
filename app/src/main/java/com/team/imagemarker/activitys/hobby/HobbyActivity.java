@@ -15,6 +15,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.jcodecraeer.xrecyclerview.ProgressStyle;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.lzy.ninegrid.ImageInfo;
@@ -27,6 +29,7 @@ import com.team.imagemarker.constants.Constants;
 import com.team.imagemarker.db.UserDbHelper;
 import com.team.imagemarker.entitys.UserModel;
 import com.team.imagemarker.entitys.hobby.HotPointModel;
+import com.team.imagemarker.entitys.hobby.share;
 import com.team.imagemarker.utils.CircleImageView;
 import com.team.imagemarker.utils.ToastUtil;
 import com.team.imagemarker.utils.volley.VolleyListenerInterface;
@@ -41,9 +44,7 @@ import com.wangjie.rapidfloatingactionbutton.contentimpl.labellist.RapidFloating
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class HobbyActivity extends Activity implements RapidFloatingActionContentLabelList.OnRapidFloatingActionContentLabelListListener, View.OnClickListener, XRecyclerView.LoadingListener{
@@ -69,6 +70,8 @@ public class HobbyActivity extends Activity implements RapidFloatingActionConten
     private ToastUtil toastUtil = new ToastUtil();
     private View headView;
 
+    private UserModel userModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,6 +94,9 @@ public class HobbyActivity extends Activity implements RapidFloatingActionConten
         rfaLayout = (RapidFloatingActionLayout) findViewById(R.id.rfa_layout);
         rfaButton = (RapidFloatingActionButton) findViewById(R.id.rfa_button);
 
+        UserDbHelper.setInstance(this);
+        userModel = UserDbHelper.getInstance().getUserInfo();
+
         initData();
         setDate();
         setFlaotButton();//设置悬浮按钮
@@ -100,14 +106,14 @@ public class HobbyActivity extends Activity implements RapidFloatingActionConten
         Log.e("tag", "onCreate: 用户的信息为：" + userModel.getUserNickName() + " " + userModel.getUserHeadImage());
 //        userNick.setText(TextUtils.isEmpty(userModel.getUserNickName()) ? "Limynl" : userModel.getUserNickName());
         userNick.setText(userModel.getUserNickName());
-//        if(!userModel.getUserHeadImage().equals("")){
-//            Glide.with(this)
-//                    .load(userModel.getUserHeadImage())
-//                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-//                    .into(userHead);
-//        }else{
-            userHead.setImageResource(R.mipmap.man_head);
-//        }
+        if(!userModel.getUserHeadImage().equals("")){
+            Glide.with(this)
+                    .load(userModel.getUserHeadImage())
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(userHead);
+        }else{
+        userHead.setImageResource(R.mipmap.man_head);
+        }
     }
 
     @Override
@@ -132,7 +138,7 @@ public class HobbyActivity extends Activity implements RapidFloatingActionConten
 //        list.add(new HotPointModel(Constants.Test_Img1, "Json", "大数据分析师", "2017-01-01 08:59:00", imgTag, "这是测试内容, 这是测试内容, 这是测试内容, 这是测试内容", imgList));
 //        list.add(new HotPointModel(Constants.Test_Img1, "Gson", "软件架构师", "2017-01-01 08:59:00", imgTag, "这是测试内容, 这是测试内容, 这是测试内容, 这是测试内容", imgList));
 //http://139.199.23.142:8080/TestShowMessage1/marker/data/hobbyHot.json
-        String url = "http://obs.myhwclouds.com/look.admin.info/hotHobby.txt";//兴趣热点地址	https://obs.myhwclouds.com/look.admin.info/hotHobby.txt
+        String url = "http://139.199.23.142:8080/TestShowMessage1/marker/hotHobby.txt";//兴趣热点地址	https://obs.myhwclouds.com/look.admin.info/hotHobby.txt
         VolleyRequestUtil.RequestGet(context, url, "hobbyHot", new VolleyListenerInterface() {
             @Override
             public void onSuccess(String result) {
@@ -169,7 +175,8 @@ public class HobbyActivity extends Activity implements RapidFloatingActionConten
 
             @Override
             public void onError(VolleyError error) {
-                Toast.makeText(HobbyActivity.this, "服务器错误", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(HobbyActivity.this, "服务器错误", Toast.LENGTH_SHORT).show();
+                initData();
             }
         });
     }
@@ -280,7 +287,8 @@ public class HobbyActivity extends Activity implements RapidFloatingActionConten
             }
             break;
             case 1:{
-                startActivity(new Intent(this, SendMoodActivity.class));
+                Intent intent = new Intent(this, SendMoodActivity.class);
+                startActivityForResult(intent, 2);
                 this.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             }
             break;
@@ -321,17 +329,26 @@ public class HobbyActivity extends Activity implements RapidFloatingActionConten
             mAdapter.notifyDataSetChanged();
             Log.e("tag", "onActivityResult: 兴趣选择界面值获取成功!");
         }else if(requestCode == 2 && resultCode == 2){
-            SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            String str=sdf.format(new Date());
-            String sayContent = data.getStringExtra("sayContent");
-            Log.e("tag", "onActivityResult: 内容："+sayContent);
+//            SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//            String str=sdf.format(new Date());
+//            String sayContent = data.getStringExtra("sayContent");
+//            Log.e("tag", "onActivityResult: 内容："+sayContent);
+//            List<String> imgList = new ArrayList<>();
+//            imgList.add("http://obs.myhwclouds.com/look.admin.image/华为/2017-5-20/笔记本电脑-计算机-树木-草坪.jpg");
+//            imgList.add("http://obs.myhwclouds.com/look.admin.image/华为/2017-5-20/笔记本电脑-水杯-桌子-手机.jpg");
+//            HotPointModel item = new HotPointModel(userModel.getUserHeadImage(), userModel.getUserNickName(), userModel.getUserHobby().split("-")[0], str, userModel.getUserFlag().split("-"), sayContent, imgList);//http://obs.myhwclouds.com/look.admin.image/腾讯/2017-5-23/路-道路-树木-落叶.jpg
+//            list.add(0, item);
+//            mAdapter.notifyDataSetChanged();
+//            Log.e("tag", "onActivityResult: 添加成功");
+
+            Bundle bundle = data.getExtras();
+            share sayingShare = (share) bundle.getSerializable("sayingItem");
+            Log.e("tag", "onActivityResult: 说说列表界面中接受到的数据为：" + sayingShare.toString());
             List<String> imgList = new ArrayList<>();
-            imgList.add("http://obs.myhwclouds.com/look.admin.image/华为/2017-5-20/笔记本电脑-计算机-树木-草坪.jpg");
-            imgList.add("http://obs.myhwclouds.com/look.admin.image/华为/2017-5-20/笔记本电脑-水杯-桌子-手机.jpg");
-            HotPointModel item = new HotPointModel("", "老马识图", "计算机专业", str, new String[]{"风景", "植物", "建筑"}, sayContent, imgList);//http://obs.myhwclouds.com/look.admin.image/腾讯/2017-5-23/路-道路-树木-落叶.jpg
+            imgList.add(sayingShare.getImageUrl1());
+            HotPointModel item = new HotPointModel(userModel.getUserHeadImage(), userModel.getUserNickName(), userModel.getUserHobby().split("-")[0], sayingShare.getUptime(), userModel.getUserFlag().split("-"), sayingShare.getTitle(), imgList);
             list.add(0, item);
             mAdapter.notifyDataSetChanged();
-            Log.e("tag", "onActivityResult: 添加成功");
         }
     }
 
@@ -354,7 +371,6 @@ public class HobbyActivity extends Activity implements RapidFloatingActionConten
                 toastUtil.Short(HobbyActivity.this, "刷新完成").show();
             }
         }, 1000);
-
     }
 
     @Override

@@ -18,6 +18,13 @@ public class HotPointModel implements Serializable {
     private String userContent;
     private List<String> userImgList;
 
+    //用户本条分享图片数目
+    private int imageNum;
+
+    private int id;
+    //用户id
+    private int uId;
+
     public HotPointModel() {
     }
 
@@ -87,6 +94,30 @@ public class HotPointModel implements Serializable {
         this.userImgList = userImgList;
     }
 
+    public int getImageNum() {
+        return imageNum;
+    }
+
+    public void setImageNum(int imageNum) {
+        this.imageNum = imageNum;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getuId() {
+        return uId;
+    }
+
+    public void setuId(int uId) {
+        this.uId = uId;
+    }
+
     @Override
     public String toString() {
         return "HotPointModel{" +
@@ -97,6 +128,9 @@ public class HotPointModel implements Serializable {
                 ", userHobbyTags=" + Arrays.toString(userHobbyTags) +
                 ", userContent='" + userContent + '\'' +
                 ", userImgList=" + userImgList +
+                ", imageNum=" + imageNum +
+                ", id=" + id +
+                ", uId=" + uId +
                 '}';
     }
 }

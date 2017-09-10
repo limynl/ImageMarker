@@ -5,13 +5,16 @@
     android:orientation="vertical"
     android:background="@color/background_fragment">
 
-    <ListView
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/refresh_img"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/day_recommend"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="3dp"
-        android:divider="@null"
-        android:scrollbars="none"
-        android:cacheColorHint="#fafafa"/>
+        android:layout_height="wrap_content" />
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </LinearLayout>

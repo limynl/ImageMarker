@@ -29,9 +29,11 @@
                 android:layout_marginTop="1dp"
                 android:clickable="false"
                 android:foreground="?selectableItemBackground"
-                app:cardElevation="2dp"
+                app:cardElevation="3dp"
+                app:cardMaxElevation="3dp"
                 app:cardPreventCornerOverlap="false"
-                card_view:cardCornerRadius="4dp">
+                card_view:cardCornerRadius="4dp"
+                app:cardUseCompatPadding="true">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -99,6 +101,7 @@
                             android:textColor="@color/gray2" />
 
                         <TextView
+                            android:id="@+id/complete_num"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="4dp"
@@ -122,6 +125,7 @@
                             android:textColor="@color/gray2" />
 
                         <TextView
+                            android:id="@+id/no_complete_num"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="4dp"
@@ -144,10 +148,11 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="6dp"
-                            android:text="总共:"
+                            android:text="共计:"
                             android:textColor="@color/gray2" />
 
                         <TextView
+                            android:id="@+id/all_num"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="4dp"
@@ -177,7 +182,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="近七次详细情况"
+                    android:text="近一周详细情况"
                     android:textColor="@color/font_light"
                     android:textSize="16dp"
                     android:layout_alignParentLeft="true"
@@ -206,9 +211,11 @@
                 android:layout_marginTop="3dp"
                 android:clickable="false"
                 android:foreground="?selectableItemBackground"
-                app:cardElevation="2dp"
+                app:cardElevation="3dp"
+                app:cardMaxElevation="3dp"
                 app:cardPreventCornerOverlap="false"
-                card_view:cardCornerRadius="4dp">
+                card_view:cardCornerRadius="4dp"
+                app:cardUseCompatPadding="true">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -239,7 +246,8 @@
                         android:id="@+id/chartView"
                         android:layout_width="match_parent"
                         android:layout_height="240dp"
-                        android:layout_marginTop="10dp" />
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"/>
 
                 </LinearLayout>
 

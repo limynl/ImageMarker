@@ -6,37 +6,50 @@ package com.team.imagemarker.entitys;
  */
 
 public class UserModel {
+
     //用户id
-    private int id;//
+    private int id;
+
     //用户登陆用的电话号码
-    private String phoneNumber;//
+    private String phoneNumber;
+
     //用户密码
     private String passWord;
+
     //用户头像地址
-    private String userHeadImage;//
+    private String userHeadImage;
+
     //用户昵称
-    private String userNickName;//
+    private String userNickName;
+
     //用户性别
-    private String userSex;//
+    private String userSex;
+
     //用户年龄
-    private String userAge;//
-    //用户兴趣
-    private String userHobby;//
+    private String userAge;
+
+    //专业领域
+    private String userHobby;
+
     //积分
     private int integral;
-    //用户登陆状态
+
+    //用户兴趣
     private String userFlag;
-    //用户完成任务次数
-    private int num;
+
     //第三方登录账号
     private String otherLogin;
+
+    //用户完成任务次数
+    private int num;
+
     //推送状态  Y:开  N：关
     private String PushFlag;
 
     public UserModel() {
     }
 
-    public UserModel(int id, String phoneNumber, String passWord, String userHeadImage, String userNickName, String userSex, String userAge, String userHobby, int integral, String userFlag, int num, String otherLogin, String pushFlag) {
+    public UserModel(int id, String phoneNumber, String passWord, String userHeadImage, String userNickName, String userSex, String userAge, String userHobby, int integral, String userFlag, String otherLogin, int num, String pushFlag) {
         this.id = id;
         this.phoneNumber = phoneNumber;
         this.passWord = passWord;
@@ -47,8 +60,8 @@ public class UserModel {
         this.userHobby = userHobby;
         this.integral = integral;
         this.userFlag = userFlag;
-        this.num = num;
         this.otherLogin = otherLogin;
+        this.num = num;
         PushFlag = pushFlag;
     }
 
@@ -132,20 +145,20 @@ public class UserModel {
         this.userFlag = userFlag;
     }
 
-    public int getNum() {
-        return num;
-    }
-
-    public void setNum(int num) {
-        this.num = num;
-    }
-
     public String getOtherLogin() {
         return otherLogin;
     }
 
     public void setOtherLogin(String otherLogin) {
         this.otherLogin = otherLogin;
+    }
+
+    public int getNum() {
+        return num;
+    }
+
+    public void setNum(int num) {
+        this.num = num;
     }
 
     public String getPushFlag() {
@@ -156,8 +169,8 @@ public class UserModel {
         PushFlag = pushFlag;
     }
 
-    @Override    public String toString() {
-
+    @Override
+    public String toString() {
         return "UserModel{" +
                 "id=" + id +
                 ", phoneNumber='" + phoneNumber + '\'' +
@@ -169,8 +182,8 @@ public class UserModel {
                 ", userHobby='" + userHobby + '\'' +
                 ", integral=" + integral +
                 ", userFlag='" + userFlag + '\'' +
-                ", num=" + num +
                 ", otherLogin='" + otherLogin + '\'' +
+                ", num=" + num +
                 ", PushFlag='" + PushFlag + '\'' +
                 '}';
     }

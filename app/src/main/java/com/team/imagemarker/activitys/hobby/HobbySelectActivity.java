@@ -10,10 +10,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.team.imagemarker.R;
+import com.team.imagemarker.constants.Constants;
 import com.team.imagemarker.fragments.hobby.DragAdapter;
 import com.team.imagemarker.fragments.hobby.DragGridView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class HobbySelectActivity extends Activity implements View.OnClickListener{
     private RelativeLayout titleBar;
@@ -83,45 +86,47 @@ public class HobbySelectActivity extends Activity implements View.OnClickListene
     }
 
     private void initDataOther() {
-        channels_other.add("花草");
-        channels_other.add("娱乐");
-        channels_other.add("笑话");
-        channels_other.add("游戏");
-        channels_other.add("电台");
-        channels_other.add("NAB");
-        channels_other.add("数码");
+        channels_other.add("植物");
+        channels_other.add("动物");
+        channels_other.add("风景");
+        channels_other.add("山水");
+        channels_other.add("生活");
+        channels_other.add("都市");
+        channels_other.add("科技");
+        channels_other.add("建筑");
+        channels_other.add("工具");
+        channels_other.add("机械");
         channels_other.add("教育");
-        channels_other.add("论坛");
-        channels_other.add("旅游");
-        channels_other.add("手机");
-        channels_other.add("博客");
-        channels_other.add("社会");
-        channels_other.add("家具");
-        channels_other.add("暴雪");
-        channels_other.add("亲子");
-        channels_other.add("CBA");
-        channels_other.add("消息");
+        channels_other.add("汽车");
+        channels_other.add("人文");
+        channels_other.add("历史");
+        channels_other.add("游戏");
+        channels_other.add("影视");
+        channels_other.add("动漫");
+        channels_other.add("运动");
+        channels_other.add("文艺");
+        channels_other.add("数码");
+        channels_other.add("美食");
+        channels_other.add("旅行");
+        channels_other.add("工业");
+        channels_other.add("化学");
     }
 
     private void initData() {
-        channels.add("植物");
-        channels.add("动物");
-        channels.add("山水");
-        channels.add("生态");
-        channels.add("城市");
-        channels.add("科技");
-        channels.add("财经");
-        channels.add("军事");
-        channels.add("体育");
-        channels.add("建筑");
-        channels.add("时尚");
-        channels.add("汽车");
+//        channels.add("");
+
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.left_icon:{
+            case R.id.left_icon:{//返回时进行刷新接界面
+                String url= Constants.Hobby_Commity_Search_Content;
+                Map<String, String> map = new HashMap<>();
+                map.put("Flag", "");
+
+
+
                 Intent intent = new Intent();
                 intent.putExtra("resultCode", "test");
                 this.setResult(1, intent);
@@ -135,10 +140,7 @@ public class HobbySelectActivity extends Activity implements View.OnClickListene
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-//        Intent intent = new Intent();
-//        intent.putExtra("resultCode", "test");
-//        this.setResult(1, intent);
-//        this.finish();
-//        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+        this.finish();
+        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
     }
 }

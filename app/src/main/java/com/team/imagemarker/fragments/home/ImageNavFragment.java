@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -17,46 +18,57 @@ import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.team.imagemarker.R;
-import com.team.imagemarker.activitys.home.MoreCategoryActivity;
+import com.team.imagemarker.activitys.home.DetailGroupActivity;
+import com.team.imagemarker.activitys.mark.ErrorCollectionActivity;
 import com.team.imagemarker.activitys.mark.MarkHomeActivity;
 import com.team.imagemarker.activitys.user.UserSearchActivity;
+import com.team.imagemarker.adapters.home.ErrorCollectionAdapter;
 import com.team.imagemarker.adapters.imgnav.GridViewLikeAdapter;
 import com.team.imagemarker.adapters.imgnav.HotCategroyAdapter;
 import com.team.imagemarker.adapters.imgnav.LikeViewPagerAdapter;
-import com.team.imagemarker.adapters.imgnav.SelectCateGoryAdapter;
+import com.team.imagemarker.bases.OnItemActionListener;
 import com.team.imagemarker.constants.Constants;
+import com.team.imagemarker.db.UserDbHelper;
 import com.team.imagemarker.entitys.MarkerModel;
-import com.team.imagemarker.entitys.home.CateGoryInfo;
+import com.team.imagemarker.entitys.UserModel;
 import com.team.imagemarker.entitys.home.CategoryModel;
-import com.team.imagemarker.entitys.home.SelectCategoryModel;
+import com.team.imagemarker.entitys.home.appAbnormalChangeModel;
+import com.team.imagemarker.navbanner.BannerLayout;
+import com.team.imagemarker.navbanner.GlideImageLoader;
 import com.team.imagemarker.utils.EditTextWithDel;
 import com.team.imagemarker.utils.MyGridView;
 import com.team.imagemarker.utils.scrollview.MyScrollView;
 import com.team.imagemarker.utils.volley.VolleyListenerInterface;
 import com.team.imagemarker.utils.volley.VolleyRequestUtil;
-import com.team.imagemarker.viewpager.navbanner.BannerLayout;
-import com.team.imagemarker.viewpager.navbanner.GlideImageLoader;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static android.app.Activity.RESULT_OK;
+import static android.content.ContentValues.TAG;
 
 /**
  * Created by Lmy on 2017/4/28.
  * email 1434117404@qq.com
  */
 
-public class ImageNavFragment extends Fragment implements View.OnClickListener, MyScrollView.ScrollViewListener, SwipeRefreshLayout.OnRefreshListener, AdapterView.OnItemClickListener{
+public class ImageNavFragment extends Fragment implements View.OnClickListener, MyScrollView.ScrollViewListener, SwipeRefreshLayout.OnRefreshListener, OnItemActionListener {
     private View view;
+
+    private UserModel userModel;
 
     //搜索框与banner
     private SwipeRefreshLayout refreshLayout;
@@ -69,7 +81,7 @@ public class ImageNavFragment extends Fragment implements View.OnClickListener, 
 
     //热门分类
     private MyGridView hotCategory;
-    private static List<CategoryModel> hotList = new ArrayList<>();
+    private List<CategoryModel> hotList = new ArrayList<>();
     private HotCategroyAdapter hotCategroyAdapter;
 
     //猜你喜欢
@@ -84,12 +96,66 @@ public class ImageNavFragment extends Fragment implements View.OnClickListener, 
     private int pageSize = 4;//每页显示的条目数
     private int currentIndex = 0;//显示当前页数
 
-    //精选种类
-    private ListView selectListView;
-    private static List<SelectCategoryModel> selectCategoryList = new ArrayList<SelectCategoryModel>();;
-    private SelectCateGoryAdapter selectCateGoryAdapter;
+//    //精选种类
+//    private ListView selectListView;
+//    private static List<SelectCategoryModel> selectCategoryList = new ArrayList<SelectCategoryModel>();;
+//    private SelectCateGoryAdapter selectCateGoryAdapter;
+
+    //图片纠错
+    private MyGridView errorGridView;
+    private ErrorCollectionAdapter errorCollectionAdapter;
+    private List<appAbnormalChangeModel> errorList = new ArrayList<>();
+
 
     private static List<MarkerModel> itemList = new ArrayList<>();
+
+    public Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case 1:{
+                    inflater = LayoutInflater.from(getContext());
+                    pageCount = (int) Math.ceil(guessItemList.size() * 1.0 / pageSize);//计算总页数
+                    Log.e(TAG, "handleMessage: 当前页数：" + pageCount);
+                    pagerList = new ArrayList<>();
+                    for (int i = 0; i < pageCount; i++) {
+                        GridView gridView = (GridView) inflater.inflate(R.layout.like_gridview, likeViewPager, false);
+                        gridView.setAdapter(new GridViewLikeAdapter(getContext(), guessItemList, i, pageSize));
+                        pagerList.add(gridView);
+
+                        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                int pos = position + currentIndex * pageSize;
+                                Intent intent = new Intent(getContext(), MarkHomeActivity.class);
+                                Bundle bundle = new Bundle();
+                                bundle.putString("pageTag", "imgNavPage");
+                                bundle.putSerializable("item", guessItemList.get(pos));
+                                intent.putExtras(bundle);
+                                startActivity(intent);
+                                getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                            }
+                        });
+                    }
+                    likeViewPagerAdapter = new LikeViewPagerAdapter(pagerList);
+                    likeViewPager.setAdapter(likeViewPagerAdapter);
+                    //设置指示器
+                    setOvalLayout(pageCount);
+                }
+                break;
+                case 2:{
+                    errorCollectionAdapter = new ErrorCollectionAdapter(getContext(), errorList);
+                    errorGridView.setAdapter(errorCollectionAdapter);
+//                    errorGridView.setOnItemClickListener(ImageNavFragment.this);
+                    errorCollectionAdapter.setOnItemActionListener(ImageNavFragment.this);
+
+
+                }
+                break;
+            }
+        }
+    };
 
     @Nullable
     @Override
@@ -107,20 +173,25 @@ public class ImageNavFragment extends Fragment implements View.OnClickListener, 
         likeViewPager = (ViewPager) view.findViewById(R.id.like_viewpager);
         dot = (LinearLayout) view.findViewById(R.id.viewpager_indicator);
 
-        selectListView = (ListView) view.findViewById(R.id.select_category);
+//        selectListView = (ListView) view.findViewById(R.id.select_category);
+        errorGridView = (MyGridView) view.findViewById(R.id.error_correction);
         return view;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getDataFromToHotCategroy();//热门分类数据
+        UserDbHelper.setInstance(getContext());
+        userModel = UserDbHelper.getInstance().getUserInfo();
+
+//        getDataFromToHotCategroy();//热门分类数据
         getDataFromToGuessYouLike();//猜你喜欢
-        getDataFromToSelectCategroy();
+//        getDataFromToSelectCategroy();
+        getDataFromToErrorCollection();//图片纠错
         //初始化刷新控件
         refreshLayout.setColorSchemeResources(R.color.colorAccent, R.color.write, R.color.yellow);
         refreshLayout.setProgressBackgroundColor(R.color.theme);
-        refreshLayout.setProgressViewOffset(false,0,150);
+        refreshLayout.setProgressViewOffset(false,0,200);
         refreshLayout.setOnRefreshListener(this);
 
         titleBarRoot.setGravity(Gravity.CENTER);
@@ -129,7 +200,7 @@ public class ImageNavFragment extends Fragment implements View.OnClickListener, 
         setTopBanner();//viewpager滚动
         setHotCateGroy();//热门分类
         setLikeViewpager();//猜你喜欢
-        setSelectCategory();//精选分类
+//        setSelectCategory();//精选分类
     }
 
     /**
@@ -148,10 +219,7 @@ public class ImageNavFragment extends Fragment implements View.OnClickListener, 
         topBanner.setOnBannerItemClickListener(new BannerLayout.OnBannerItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                Toast.makeText(getActivity(), "这是第" + (position + 1) +"张图片", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(getContext(), MoreCategoryActivity.class);
-                startActivity(intent);
-                getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+
             }
         });
 
@@ -181,11 +249,8 @@ public class ImageNavFragment extends Fragment implements View.OnClickListener, 
         hotCategory.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getContext(), MarkHomeActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("pageTag", "imgNavPage");
-                bundle.putSerializable("item", itemList.get(position));
-                intent.putExtras(bundle);
+                Intent intent = new Intent(getContext(), DetailGroupActivity.class);
+                intent.putExtra("type", hotList.get(position).getName());
                 startActivity(intent);
                 getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             }
@@ -193,57 +258,49 @@ public class ImageNavFragment extends Fragment implements View.OnClickListener, 
     }
 
     private void setLikeViewpager() {
-        likeList.add(new CategoryModel(Constants.guessYouLikeImg[0], "高山 荒野", "2017-06-02 15:30:02"));
-        likeList.add(new CategoryModel(Constants.guessYouLikeImg[1], "石桥", "2017-06-02 15:30:02"));
-        likeList.add(new CategoryModel(Constants.guessYouLikeImg[2], "船舶", "2017-06-02 15:30:02"));
-        likeList.add(new CategoryModel(Constants.guessYouLikeImg[3], "青山 湖水", "2017-06-02 15:30:02"));
-        likeList.add(new CategoryModel(Constants.guessYouLikeImg[4], "草地", "2017-06-02 15:30:02"));
-        likeList.add(new CategoryModel(Constants.guessYouLikeImg[5], "溪流", "2017-06-02 15:30:02"));
-        likeList.add(new CategoryModel(Constants.guessYouLikeImg[6], "电梯 大厅", "2017-06-02 15:30:02"));
-        likeList.add(new CategoryModel(Constants.guessYouLikeImg[7], "青山 湖水", "2017-06-02 15:30:02"));
-        inflater = LayoutInflater.from(getContext());
-        pageCount = (int) Math.ceil(likeList.size() * 1.0 / pageSize);//计算总页数
-        pagerList = new ArrayList<>();
-        for (int i = 0; i < pageCount; i++) {
-            GridView gridView = (GridView) inflater.inflate(R.layout.like_gridview, likeViewPager, false);
-            gridView.setAdapter(new GridViewLikeAdapter(getContext(), likeList, i, pageSize));
-            pagerList.add(gridView);
-
-            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    int pos = position + currentIndex * pageSize;
-                    Intent intent = new Intent(getContext(), MarkHomeActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putString("pageTag", "imgNavPage");
-                    bundle.putSerializable("item", guessItemList.get(position));
-                    intent.putExtras(bundle);
-                    startActivity(intent);
-                    getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                }
-            });
-        }
-        likeViewPagerAdapter = new LikeViewPagerAdapter(pagerList);
-        likeViewPager.setAdapter(likeViewPagerAdapter);
-        //设置指示器
-        setOvalLayout(pageCount);
-    }
-
-    private void setSelectCategory() {
-        selectCateGoryAdapter = new SelectCateGoryAdapter(getContext(), selectCategoryList);
-        selectListView.setAdapter(selectCateGoryAdapter);
-        selectListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        String url = Constants.Hobby_Nav_Guess_You_Like;
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("userId", String.valueOf(userModel.getId()));
+        VolleyRequestUtil.RequestPost(getContext(), url, "guessYouLike", map, new VolleyListenerInterface() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getContext(), MarkHomeActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("pageTag", "imgNavPage");
-                bundle.putSerializable("item", guessItemList.get(position));
-                intent.putExtras(bundle);
-                startActivity(intent);
-                getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+            public void onSuccess(String result) {
+                try {
+                    JSONObject object = new JSONObject(result);
+                    JSONArray array = object.optJSONArray("picture");
+                    Gson gson = null;
+                    for (int i = 0; i < array.length(); i++) {
+                        JSONObject object1 = array.optJSONObject(i);
+                        gson = new Gson();
+                        MarkerModel model = gson.fromJson(object1.toString(), MarkerModel.class);
+                        guessItemList.add(model);
+                    }
+                    handler.sendEmptyMessageDelayed(1, 200);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(VolleyError error) {
+                Log.e("ImageNavFragment", "onError: setLikeViewpager:" + error.toString());
+                setLikeViewpager();
             }
         });
+    }
+
+    /**
+     * 下拉刷新
+     */
+    @Override
+    public void onRefresh() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                guessItemList.clear();
+                setLikeViewpager();
+                refreshLayout.setRefreshing(false);
+            }
+        }, 1500);
     }
 
     /**
@@ -253,6 +310,7 @@ public class ImageNavFragment extends Fragment implements View.OnClickListener, 
         if (page == 0){
             return;
         }
+        dot.removeAllViews();
         for (int i = 0; i < page; i++) {
             dot.addView(inflater.inflate(R.layout.dot, null));
         }
@@ -292,69 +350,14 @@ public class ImageNavFragment extends Fragment implements View.OnClickListener, 
     @Override
     public void onScrollChanged(MyScrollView scrollView, int x, int y, int oldx, int oldy) {
         if (y <= 0) {   //设置标题的背景颜色
-            titleBar.setBackgroundColor(Color.argb((int) 0, 51,56,80));
+            titleBar.setBackgroundColor(Color.argb((int) 0, 37,46,57));
         } else if (y > 0 && y <= bannerHeight) { //滑动距离小于banner图的高度时，设置背景和字体颜色颜色透明度渐变
             float scale = (float) y / bannerHeight;
             float alpha = (255 * scale);
-            titleBar.setBackgroundColor(Color.argb((int) alpha, 51,56,80));
+            titleBar.setBackgroundColor(Color.argb((int) alpha, 37,46,57));
         } else {    //滑动到banner下面设置普通颜色
-            titleBar.setBackgroundColor(Color.argb((int) 255, 51,56,80));
+            titleBar.setBackgroundColor(Color.argb((int) 255, 37,46,57));
         }
-    }
-
-    /**
-     * 下拉刷新
-     */
-    @Override
-    public void onRefresh() {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(getContext(), "刷新完成", Toast.LENGTH_SHORT).show();
-                refreshLayout.setRefreshing(false);
-            }
-        }, 3000);
-    }
-
-    /**
-     * GridView点击事件
-     * @param parent
-     * @param view
-     * @param position
-     * @param id
-     */
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-    }
-
-    private void getDataFromToHotCategroy() {
-        String url = "http://obs.myhwclouds.com/look.admin.info/hotCateGroy.txt";
-        VolleyRequestUtil.RequestGet(getContext(), url, "hotCateGory", new VolleyListenerInterface() {
-            @Override
-            public void onSuccess(String result) {
-                try {
-                    JSONObject object = new JSONObject(new String(result.getBytes("ISO-8859-1"), "UTF-8"));
-                    String tag = new String(object.optString("TAG").getBytes("ISO-8859-1"), "UTF-8");
-                    JSONArray array = object.optJSONArray("picture");
-                    Gson gson = null;
-                    for (int i = 0; i < array.length(); i++) {
-                        JSONObject object1 = array.optJSONObject(i);
-                        gson = new Gson();
-                        MarkerModel model = gson.fromJson(object1.toString(), MarkerModel.class);
-                        itemList.add(model);
-                    }
-                    hotCategroyAdapter.notifyDataSetChanged();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onError(VolleyError error) {
-
-            }
-        });
     }
 
     private void getDataFromToGuessYouLike() {
@@ -364,8 +367,7 @@ public class ImageNavFragment extends Fragment implements View.OnClickListener, 
             public void onSuccess(String result) {
                 JSONObject object = null;
                 try {
-                    object = new JSONObject(new String(result.getBytes("ISO-8859-1"), "UTF-8"));
-                    String tag = new String(object.optString("TAG").getBytes("ISO-8859-1"), "UTF-8");
+                    object = new JSONObject(result);
                     JSONArray array = object.optJSONArray("picture");
                     Gson gson = null;
                     for (int i = 0; i < array.length(); i++) {
@@ -387,41 +389,59 @@ public class ImageNavFragment extends Fragment implements View.OnClickListener, 
         });
     }
 
-    private void getDataFromToSelectCategroy(){
-        String url = "http://obs.myhwclouds.com/look.admin.info/selectCateGory.txt";
-        VolleyRequestUtil.RequestGet(getContext(), url, "selectCateGory", new VolleyListenerInterface() {
+    @Override
+    public void OnItemClickListener(View view, int position) {
+        Intent intent = new Intent(getActivity(), ErrorCollectionActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("errorItem", (Serializable) errorList.get(position));
+        intent.putExtras(bundle);
+        startActivityForResult(intent, 10);
+        getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+    }
+
+    private void getDataFromToErrorCollection(){
+        String url = Constants.Hobby_Nav_Img_Error;
+        VolleyRequestUtil.RequestGet(getContext(), url, "getErrorImg", new VolleyListenerInterface() {
             @Override
             public void onSuccess(String result) {
-                JSONObject object = null;
                 try {
-                    object = new JSONObject(new String(result.getBytes("ISO-8859-1"), "UTF-8"));
-                    String tag = new String(object.optString("TAG").getBytes("ISO-8859-1"), "UTF-8");
-                    JSONArray array = object.optJSONArray("picture");
-                    Gson gson = null;
-                    for (int i = 0; i < array.length(); i++) {
-                        JSONObject object1 = array.optJSONObject(i);
-                        gson = new Gson();
-                        MarkerModel model = gson.fromJson(object1.toString(), MarkerModel.class);
-                        List<CateGoryInfo> itemList = new ArrayList<>();
-                        itemList.add(new CateGoryInfo("标题一", model.getImageUrl1()));
-                        itemList.add(new CateGoryInfo("标题二", model.getImageUrl2()));
-                        itemList.add(new CateGoryInfo("标题三", model.getImageUrl3()));
-                        itemList.add(new CateGoryInfo("标题四", model.getImageUrl4()));
-                        itemList.add(new CateGoryInfo("标题五", model.getImageUrl5()));
-                        itemList.add(new CateGoryInfo("标题六", model.getImageUrl6()));
-                        selectCategoryList.add(new SelectCategoryModel(model.getSecondlabelName(), itemList));
-                    }
-                    Log.e("tag", "onSuccess: 接收到的数据为：" + selectCategoryList.toString());
-                    selectCateGoryAdapter.notifyDataSetChanged();
-                } catch (Exception e) {
+                    JSONObject object = new JSONObject(result);
+                    JSONArray array = object.optJSONArray("errorPicture");
+                    errorList = stringToArrayThree(array.toString(),appAbnormalChangeModel[].class);
+                    handler.sendEmptyMessage(2);
+                } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
 
             @Override
             public void onError(VolleyError error) {
-
+                getDataFromToErrorCollection();
             }
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 10 && resultCode == RESULT_OK && data != null){
+            getDataFromToErrorCollection();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(guessItemList != null){
+            guessItemList = null;
+        }
+        if(hotList != null){
+            hotList = null;
+        }
+    }
+
+    public static <T> List<T> stringToArrayThree(String s, Class<T[]> clazz) {
+        T[] arr = new Gson().fromJson(s, clazz);
+        return Arrays.asList(arr);
     }
 }

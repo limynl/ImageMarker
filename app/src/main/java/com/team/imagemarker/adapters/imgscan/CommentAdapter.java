@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.team.imagemarker.R;
-import com.team.imagemarker.entitys.image.CommentInfoModel;
+import com.team.imagemarker.entitys.imgscan.Comment;
 import com.team.imagemarker.utils.CircleImageView;
 
 import java.util.List;
@@ -22,9 +22,9 @@ import java.util.List;
 
 public class CommentAdapter extends BaseAdapter {
     private Context context;
-    private List<CommentInfoModel> list;
+    private List<Comment> list;
 
-    public CommentAdapter(Context context, List<CommentInfoModel> list) {
+    public CommentAdapter(Context context, List<Comment> list) {
         this.context = context;
         this.list = list;
     }
@@ -54,15 +54,14 @@ public class CommentAdapter extends BaseAdapter {
         }else{
             viewHolder = (ViewHolder) convertView.getTag();
         }
-
         Glide.with(context)
-                .load(list.get(position).getUserHead())
+                .load(list.get(position).getUserHeadImage())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(viewHolder.userHead);
-//        viewHolder.userHead.setImageResource(R.mipmap.system_push4);
-        viewHolder.userNick.setText(list.get(position).getNickName());
-        viewHolder.sendTime.setText(list.get(position).getSendTime());
-        viewHolder.commentContent.setText(list.get(position).getSendContent());
+        viewHolder.userNick.setText(list.get(position).getUserName());
+        String[] collectionTime = list.get(position).getSayTime().split("-");
+        viewHolder.sendTime.setText(collectionTime[0] + "-" + collectionTime[1] + "-" + collectionTime[2] + " " + collectionTime[3] + ":" + collectionTime[4] + ":" + collectionTime[5]);
+        viewHolder.commentContent.setText(list.get(position).getCommentTitle());
         return convertView;
     }
 

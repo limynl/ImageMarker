@@ -1,6 +1,5 @@
 package com.team.imagemarker.activitys.saying;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Point;
@@ -15,24 +14,37 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
+import com.google.gson.Gson;
 import com.lzy.imagepicker.ImagePicker;
 import com.lzy.imagepicker.bean.ImageItem;
 import com.lzy.imagepicker.ui.ImagePreviewDelActivity;
 import com.team.imagemarker.R;
 import com.team.imagemarker.adapters.ImagePickerAdapter;
+import com.team.imagemarker.bases.BaseActivity;
+import com.team.imagemarker.constants.Constants;
+import com.team.imagemarker.db.UserDbHelper;
 import com.team.imagemarker.entitys.UserModel;
+import com.team.imagemarker.entitys.hobby.share;
 import com.team.imagemarker.utils.ToastUtil;
 import com.team.imagemarker.utils.WavyLineView;
 import com.team.imagemarker.utils.imageloder.BitmapUtil;
+import com.team.imagemarker.utils.volley.VolleyListenerInterface;
+import com.team.imagemarker.utils.volley.VolleyRequestUtil;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class SendMoodActivity extends Activity implements View.OnClickListener, ImagePickerAdapter.OnRecyclerViewItemClickListener{
+public class SendMoodActivity extends BaseActivity implements View.OnClickListener, ImagePickerAdapter.OnRecyclerViewItemClickListener{
     private ToastUtil toastUtil = new ToastUtil();
     private RelativeLayout titleBar;
     private TextView title;
@@ -62,9 +74,8 @@ public class SendMoodActivity extends Activity implements View.OnClickListener, 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_send_mood);
-//        UserDbHelper.setInstance(this);
-//        userModel = UserDbHelper.getInstance().getUserInfo();
-//        tvName.setText(TextUtils.isEmpty(userModel.getUserNickName()) ? "Limynl" : userModel.getUserNickName());
+        UserDbHelper.setInstance(this);
+        userModel = UserDbHelper.getInstance().getUserInfo();
         updatePixel();
         bindView();
         initDate();
@@ -73,7 +84,6 @@ public class SendMoodActivity extends Activity implements View.OnClickListener, 
     private void updatePixel() {
         point = new Point();
         getWindowManager().getDefaultDisplay().getSize(point);
-//        Log.e("carDynamicActivity","宽:"+point.x+",高："+point.y + "hahha.............");
         reqWidth = point.x ;
         reqHeight = point.y ;
     }
@@ -125,11 +135,9 @@ public class SendMoodActivity extends Activity implements View.OnClickListener, 
                     toastUtil.Short(this, "说说的内容不能为空").show();
                 }else{
                     toastUtil.Short(this, "发送成功").show();
-                    //显示进度条
-//                    tryDecodeSmallImg2();
-                    //取消进度条
+                    tryDecodeSmallImg2();
                 }
-                sendMessage();
+//                sendMessage();
             }
             break;
         }
@@ -148,15 +156,70 @@ public class SendMoodActivity extends Activity implements View.OnClickListener, 
     }
 
     /**
+     * 发送内容到后台服务器
+     */
+    private void sendSayContentToNet(){
+        String url = Constants.Hobby_Commity_User_Send_Item_Content;
+        share shareSaying = new share();
+        shareSaying.setuId(userModel.getId());
+        shareSaying.setTitle(editSayingContent.getText().toString());
+        shareSaying.setImageUrl1(imgList.get(0));
+        shareSaying.setImageUrl2("");
+        shareSaying.setImageUrl3("");
+        shareSaying.setImageUrl4("");
+        shareSaying.setImageUrl5("");
+        shareSaying.setImageUrl6("");
+        shareSaying.setImageNum(1);
+        shareSaying.setUserNickName(userModel.getUserNickName());
+        shareSaying.setUserPhotoUrl(userModel.getUserHeadImage());
+        shareSaying.setUptime("");
+        shareSaying.setSayingType("");
+        shareSaying.setUseHobby(userModel.getUserHobby());
+        Gson gson = new Gson();
+        String shareInfo = gson.toJson(shareSaying);
+        Map<String, String> map = new HashMap<>();
+        map.put("share", shareInfo);
+        VolleyRequestUtil.RequestPost(this, url, "sendSayingContent", map, new VolleyListenerInterface() {
+            @Override
+            public void onSuccess(String result) {
+                try {
+                    JSONObject object = new JSONObject(result);
+                    Gson gson = new Gson();
+                    share sayingItem = gson.fromJson(object.optString("share"), share.class);
+                    Intent intent = new Intent();
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("sayingItem", sayingItem);
+                    intent.putExtras(bundle);
+                    SendMoodActivity.this.setResult(2, intent);
+                    SendMoodActivity.this.finish();
+                    SendMoodActivity.this.overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                Log.e("tag", "onSuccess: 接受成功：" + result);
+            }
+
+            @Override
+            public void onError(VolleyError error) {
+
+            }
+        });
+
+
+    }
+
+
+    /**
      * 压缩图片为小图片
      */
     private void tryDecodeSmallImg2() {
         for (int i = 0; i < selImageList.size(); i++) {
             String filePath = selImageList.get(i).path;
-            reqHeight = selImageList.get(i).height; /* 这里假设只对 200k 以上 并且 宽高小的像素 > 400的图片进行裁剪*/
+            reqHeight = selImageList.get(i).height; //这里假设只对 200k 以上 并且 宽高小的像素 > 400的图片进行裁剪
             reqWidth = selImageList.get(i).width;
             int minSize = Math.min(reqHeight,reqWidth);
-            int size = (int) (selImageList.get(i).size/1024);//当前图片的大小
+            int size = (int) (selImageList.get(i).size/1024); //当前图片的大小
             while (minSize > 350 && size >= 200){
                 reqWidth /= 2;
                 reqHeight /= 2;
@@ -172,6 +235,7 @@ public class SendMoodActivity extends Activity implements View.OnClickListener, 
             saveBitmapFile(bitmap,filePath);
         }
         toastUtil.Short(this, "发表成功").show();
+        sendSayContentToNet();
     }
 
     /**
@@ -217,7 +281,6 @@ public class SendMoodActivity extends Activity implements View.OnClickListener, 
                 ImagePicker.getInstance().setSelectLimit(maxImgCount - selImageList.size());
                 Intent intent = new Intent(this, com.lzy.imagepicker.ui.ImageGridActivity.class);
                 startActivityForResult(intent, REQUEST_CODE_SELECT);
-                Log.e("carDynamicActivity", "onSelection: " + "成功打开相册");
                 break;
             default://打开预览
                 Intent intentPreview = new Intent(this, ImagePreviewDelActivity.class);

@@ -28,7 +28,7 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:text="未完成"
+                android:text="保存"
                 android:gravity="center"
                 android:textSize="15sp"
                 android:id="@+id/all_history"
@@ -38,7 +38,7 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:text="已完成"
+                android:text="提交"
                 android:id="@+id/complete"
                 android:gravity="center"
                 android:textSize="15sp"

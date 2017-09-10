@@ -3,6 +3,9 @@
 
 
     <corners android:radius="5dp"/>
-    <solid android:color="#E1E5B8"/>
+    <solid android:color="@color/background"/>
+    <!--
+    棕色：#E1E5B8
+    -->
 
 </shape>

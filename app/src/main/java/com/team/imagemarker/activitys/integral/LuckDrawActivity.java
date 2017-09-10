@@ -3,6 +3,7 @@ package com.team.imagemarker.activitys.integral;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -82,10 +83,18 @@ public class LuckDrawActivity extends Activity implements RotatePan.AnimationEnd
         goBtn.setEnabled(true);
         luckPanLayout.setDelayTime(300);
         dialog = new Dialog(this);
+
+        if (isFinishing()) {
+            return;
+        }
         AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
         dialogMessage = LayoutInflater.from(this).inflate(R.layout.dialog_alter, null);
         TextView operateMessage = (TextView) dialogMessage.findViewById(R.id.operate_message);
-        operateMessage.setText("恭喜您获得" + strs[position]);
+        if(strs[position].equals("谢谢惠顾")){
+            operateMessage.setText(strs[position]);
+        }else{
+            operateMessage.setText("恭喜您获得" + strs[position]);
+        }
         builder1.setView(dialogMessage);
         dialog = builder1.create();
         dialog.show();
@@ -93,10 +102,19 @@ public class LuckDrawActivity extends Activity implements RotatePan.AnimationEnd
         timer.schedule(new Wait(), 2000);
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        this.finish();
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+    }
+
     class Wait extends TimerTask {
         @Override
         public void run() {
             dialog.dismiss();
+            Intent intent = new Intent();
+            LuckDrawActivity.this.setResult(RESULT_OK, intent);
             LuckDrawActivity.this.finish();
             LuckDrawActivity.this.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         }

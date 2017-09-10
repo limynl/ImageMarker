@@ -2,7 +2,7 @@ package com.team.imagemarker.activitys.mark;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
-import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -15,8 +15,11 @@ import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.team.imagemarker.R;
+import com.team.imagemarker.bases.BaseActivity;
 import com.team.imagemarker.constants.Constants;
+import com.team.imagemarker.db.UserDbHelper;
 import com.team.imagemarker.entitys.MarkerModel;
+import com.team.imagemarker.entitys.UserModel;
 import com.team.imagemarker.entitys.marker.ItemEntity;
 import com.team.imagemarker.utils.marker.FadeTransitionImageView;
 import com.team.imagemarker.utils.marker.HorizontalTransitionLayout;
@@ -45,7 +48,7 @@ import java.util.TimerTask;
  * email 1434117404@qq.com
  */
 
-public class MarkHomeActivity extends Activity implements View.OnClickListener{
+public class MarkHomeActivity extends BaseActivity implements View.OnClickListener{
     private TextView title, subTitle;
     private ImageView leftIcon, rightIcon;
     private RelativeLayout titleBar;
@@ -62,10 +65,17 @@ public class MarkHomeActivity extends Activity implements View.OnClickListener{
     private Animator.AnimatorListener animatorListener;
     private TagGroup tag;
     private String[] tempTags;//暂存每张图片的先前的标签
-    private List<TagColor> colors = TagColor.getRandomColors(7);//随机生成标签颜色
+    private List<TagColor> colors = TagColor.getRandomColors(15);//随机生成标签颜色
 
     private String pageFlag;//页面标志，用于判断是哪一个界面进入的
-    private MarkerModel item;//用于最后提交的图片对象
+    private MarkerModel item = new MarkerModel();//用于最后提交的图片对象
+    private UserModel userModel;//得到用户的信息
+
+    public static RefrshData refrshIntegralFromMark;
+
+    public static void setRefrshIntegral(RefrshData refrshIntegral) {
+        MarkHomeActivity.refrshIntegralFromMark = refrshIntegral;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +98,9 @@ public class MarkHomeActivity extends Activity implements View.OnClickListener{
         pileLayout = (PileLayout) findViewById(R.id.pileLayout);
         markImg = (FadeTransitionImageView) findViewById(R.id.mark_img);
         tag = (TagGroup) findViewById(R.id.image_tag);
+
+        UserDbHelper.setInstance(this);
+        userModel = UserDbHelper.getInstance().getUserInfo();
 
         initAnimationListener();//初始化动画属性
 
@@ -112,8 +125,9 @@ public class MarkHomeActivity extends Activity implements View.OnClickListener{
             tag.setAppendMode(false);//将标签转换成不可编辑状态
             title.setText("历史标注");
             subTitle.setVisibility(View.GONE);
-            dataList = (List<ItemEntity>) bundle.getSerializable("item");
+            handelMessge((MarkerModel) bundle.getSerializable("item"));
         }
+        pileLayout.getInstance(this);
         pileLayout.setAdapter(new Adapter());//设置底部图片滚动数据
     }
 
@@ -213,6 +227,7 @@ public class MarkHomeActivity extends Activity implements View.OnClickListener{
     private void initSecene(int position) {
         countIndicator.firstInit((position + 1) + "/" + dataList.size());
         markImg.firstInit(dataList.get(position).getCoverImageUrl());
+        Log.e("tag", "initSecene: " + "颜色：" + colors.size() + "标签：" + dataList.get(position).getTags().length);
         tag.setTags(colors, dataList.get(position).getTags());
     }
 
@@ -290,9 +305,8 @@ public class MarkHomeActivity extends Activity implements View.OnClickListener{
                         .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
                             @Override
                             public void onClick(SweetAlertDialog sDialog) {
-//                                String imgUrl = "http://172.20.10.10:8080/look/picture/judgeUserUpInageLabelInfo";
                                 String imgUrl = Constants.USER_SUBMIT_TAG;
-                                submitTags(imgUrl);//提交操作
+                                submitTags(imgUrl, true);//提交操作
                                 sDialog.setTitleText("提交成功")
                                         .setContentText("已赠送30积分到您的账户!")
                                         .showConfirmButton(false)
@@ -307,9 +321,8 @@ public class MarkHomeActivity extends Activity implements View.OnClickListener{
                         .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                             @Override
                             public void onClick(SweetAlertDialog sDialog) {
-//                                saveTags();//保存操作
                                 String url = Constants.USER_SAVE_TAG;
-                                submitTags(url);//提交操作
+                                submitTags(url, false);//保存操作
                                 sDialog.setTitleText("保存成功")
                                         .setContentText("您可以在历史记录中查询，并继续修改")
                                         .setConfirmText("OK")
@@ -349,8 +362,16 @@ public class MarkHomeActivity extends Activity implements View.OnClickListener{
         @Override
         public void run() {
             sDialog.dismiss();
-            MarkHomeActivity.this.finish();
-            MarkHomeActivity.this.overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+            if(pageFlag.equals("noCompleteHistory")){
+                Log.e("执行了", "run: ");
+                Intent intent = new Intent();
+                MarkHomeActivity.this.setResult(RESULT_OK, intent);
+                MarkHomeActivity.this.finish();
+                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+            }else{
+                MarkHomeActivity.this.finish();
+                MarkHomeActivity.this.overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+            }
         }
     }
 
@@ -394,14 +415,16 @@ public class MarkHomeActivity extends Activity implements View.OnClickListener{
     /**
      * 上传标签:提交、保存
      */
-    private void submitTags(String url) {
-        for (ItemEntity itemImag : dataList){
-            if(itemImag.getTags().equals("") || itemImag.getTags() == null){
-                Toast.makeText(this, "您还有为标签化的图片，请全部完成后再提交!", Toast.LENGTH_SHORT).show();
-                return;
+    private void submitTags(String url, final boolean flag) {
+        if(flag){
+            for (ItemEntity itemImag : dataList){
+                if(itemImag.getTags() == null || itemImag.getTags().equals("")){
+                    Toast.makeText(this, "您还有为标签化的图片，请全部完成后再提交!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
             }
         }
-        item.setUserId(Constants.USER_ID);
+        item.setUserId(userModel.getId());
         item.setLabel1(changeTags(dataList.get(0).getTags()));
         item.setLabel2(changeTags(dataList.get(1).getTags()));
         item.setLabel3(changeTags(dataList.get(2).getTags()));
@@ -422,6 +445,12 @@ public class MarkHomeActivity extends Activity implements View.OnClickListener{
                     if(tag.equals("success")){
 //                        Toast.makeText(MarkHomeActivity.this, "上传成功", Toast.LENGTH_SHORT).show();
                     }
+
+                    if(flag){
+                        Log.e("tag", "submitTags: 执行了。。");
+                        refrshIntegralFromMark.getIntegralFromMark();
+                    }
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -452,6 +481,11 @@ public class MarkHomeActivity extends Activity implements View.OnClickListener{
         super.onDestroy();
         if(dataList != null){
             dataList.clear();
+//            dataList = null;
         }
+    }
+
+    public static interface RefrshData{
+        void getIntegralFromMark();
     }
 }

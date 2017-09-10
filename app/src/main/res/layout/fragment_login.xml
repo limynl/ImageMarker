@@ -12,7 +12,7 @@
         <RelativeLayout
             android:id="@+id/rela_name"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="45dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginLeft="40dp"
             android:layout_marginRight="40dp"
@@ -41,27 +41,27 @@
                 android:inputType="number"
                 android:textColor="#ffffff"
                 android:textColorHint="#ffffff"
-                android:textSize="13sp" />
+                android:textSize="14sp" />
 
         </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/rela_pass"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="45dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginLeft="40dp"
             android:layout_marginRight="40dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="30dp"
             android:background="@drawable/bg_border_color_black">
 
             <ImageView
                 android:id="@+id/codeicon"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="15dp"
+                android:layout_marginLeft="12dp"
                 android:src="@mipmap/codeicon" />
 
             <com.team.imagemarker.utils.EditTextWithDel
@@ -69,7 +69,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="6dp"
                 android:layout_marginRight="10dp"
                 android:layout_toEndOf="@+id/codeicon"
                 android:background="@null"
@@ -77,29 +77,29 @@
                 android:inputType="textPassword"
                 android:textColor="#ffffff"
                 android:textColorHint="#ffffff"
-                android:textSize="13sp" />
+                android:textSize="14sp" />
         </RelativeLayout>
 
         <com.team.imagemarker.utils.PaperButton
             android:id="@+id/user_login"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="45dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginLeft="40dp"
             android:layout_marginRight="40dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="30dp"
             android:gravity="center"
             widget:paper_color="@color/button"
-            widget:paper_corner_radius="19dp"
+            widget:paper_corner_radius="22dp"
             widget:paper_text="登 录"
             widget:paper_text_color="#ffffff"
-            widget:paper_text_size="15sp" />
+            widget:paper_text_size="16sp" />
 
         <LinearLayout
             android:id="@+id/reset_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="30dp"
             android:gravity="center_horizontal"
             android:orientation="horizontal"
             android:paddingBottom="10dp"
@@ -120,7 +120,7 @@
                 android:drawableRight="@mipmap/reseat"
                 android:text="忘记登录密码？"
                 android:textColor="#ffffff"
-                android:textSize="13sp" />
+                android:textSize="15sp" />
 
             <View
                 android:layout_width="50dp"
@@ -145,41 +145,61 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:layout_marginBottom="55dp"
-        android:layout_marginLeft="40dp"
-        android:layout_marginRight="40dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
         android:layout_marginTop="10dp"
-        android:orientation="horizontal"
-        android:weightSum="3">
+        android:orientation="horizontal">
 
-        <RadioButton
-            android:id="@+id/qq_login"
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:button="@null"
-            android:drawableTop="@mipmap/qq"
-            android:gravity="center" />
+            android:layout_height="wrap_content"
+            android:gravity="center">
 
-        <RadioButton
-            android:id="@+id/wechat_login"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:button="@null"
-            android:drawableTop="@mipmap/weixin"
-            android:gravity="center" />
+            <ImageView
+                android:id="@+id/qq_login"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@mipmap/bg_qq"
+                android:gravity="center" />
 
-        <RadioButton
-            android:id="@+id/sina_login"
+            </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:button="@null"
-            android:drawableTop="@mipmap/weibo"
-            android:gravity="center" />
+            android:layout_height="wrap_content"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/wechat_login"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@mipmap/bg_wechat"
+                android:gravity="center" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/sina_login"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@mipmap/bg_weibo"
+                android:gravity="center" />
+
+        </LinearLayout>
 
     </LinearLayout>
 

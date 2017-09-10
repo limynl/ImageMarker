@@ -81,10 +81,22 @@
         android:id="@+id/hobby_img"
         android:layout_below="@+id/hobby_content"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="90dp"
         android:padding="5dp"
         app:ngv_maxSize="6"
-        app:ngv_gridSpacing="6dp"/>
+        app:ngv_gridSpacing="5dp"/>
+
+    <!--<com.team.imagemarker.activitys.hobby.SodukuGridView-->
+        <!--android:id="@+id/hobby_img"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@+id/hobby_content"-->
+        <!--android:columnWidth="90dp"-->
+        <!--android:horizontalSpacing="3dp"-->
+        <!--android:numColumns="3"-->
+        <!--android:padding="5dp"-->
+        <!--android:stretchMode="columnWidth"-->
+        <!--android:verticalSpacing="3dp" />-->
 
     <View
         android:id="@+id/divider"
@@ -106,7 +118,8 @@
         android:layout_below="@+id/divider"
         android:background="@android:color/white"
         android:layout_marginLeft="6dp"
-        android:layout_marginRight="6dp">
+        android:layout_marginRight="6dp"
+        android:visibility="gone">
 
         <RelativeLayout
             android:id="@+id/btnLike"

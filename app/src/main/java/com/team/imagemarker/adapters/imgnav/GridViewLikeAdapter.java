@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.team.imagemarker.R;
-import com.team.imagemarker.entitys.home.CategoryModel;
+import com.team.imagemarker.entitys.MarkerModel;
 import com.team.imagemarker.utils.CircleImageView;
 
 import java.util.List;
@@ -24,12 +24,12 @@ import java.util.List;
 
 public class GridViewLikeAdapter extends BaseAdapter {
     private Context context;
-    private List<CategoryModel> datas;
+    private List<MarkerModel> datas;
     private LayoutInflater inflater;
     private int currentindex;//当前页数
     private int pageSize;//每一页显示的个数
 
-    public GridViewLikeAdapter(Context context, List<CategoryModel> datas, int currentindex, int pageSize){
+    public GridViewLikeAdapter(Context context, List<MarkerModel> datas, int currentindex, int pageSize){
         this.context = context;
         inflater = LayoutInflater.from(context);
         this.datas = datas;
@@ -71,17 +71,17 @@ public class GridViewLikeAdapter extends BaseAdapter {
         }else{
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        CategoryModel model = datas.get(position + currentindex * pageSize);
+        MarkerModel model = datas.get(position + currentindex * pageSize);
         viewHolder.managerHead.setVisibility(View.GONE);
             Glide.with(context)
-                    .load(model.getImgUrl())
+                    .load(model.getImageUrl1())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .thumbnail(0.8f)
                 .into(viewHolder.categoryImg);
 
 //        viewHolder.categoryImg.setImageResource(model.getImgId());
-        viewHolder.categoryName.setText(model.getName());
-        viewHolder.categorySimapleMessage.setText(model.getSimpleMessage());
+//        viewHolder.categoryName.setText(model.getName());
+//        viewHolder.categorySimapleMessage.setText(model.getSimpleMessage());
         return convertView;
     }
 

@@ -2,15 +2,12 @@ package com.team.imagemarker.utils.tag;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PathEffect;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.Parcel;
@@ -37,7 +34,6 @@ import com.team.imagemarker.constants.Constants;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.team.imagemarker.R.attr.roundHeight;
 
 public class TagGroup extends ViewGroup {
     private final int default_border_color = Color.rgb(0x49, 0xC1, 0x20);
@@ -404,7 +400,7 @@ public class TagGroup extends ViewGroup {
         for (final String tag : tags) {
             TagColor color = null;
             if(colors != null) {
-                    color = colors.get(i++);
+                color = colors.get(i++);
             }
             appendTag(color, tag);
         }

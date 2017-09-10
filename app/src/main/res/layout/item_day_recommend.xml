@@ -15,7 +15,9 @@
         app:cardBackgroundColor="#FFFFFF"
         app:cardCornerRadius="5dp"
         app:cardElevation="3dp"
-        app:cardPreventCornerOverlap="false">
+        app:cardMaxElevation="3dp"
+        app:cardPreventCornerOverlap="false"
+        app:cardUseCompatPadding="true">
 
         <RelativeLayout
             android:id="@+id/item_background"

@@ -18,7 +18,7 @@ public class TagColor {
         List<TagColor> list = new ArrayList<>();
         for(int i=0; i< size; i++){
             TagColor color = new TagColor();
-            color.borderColor = color.backgroundColor = Constants.tagColors[(int)(Math.random() * 7 + 1) % Constants.tagColors.length];
+            color.borderColor = color.backgroundColor = Constants.tagColors[(int)(Math.random() * 12 + 1) % Constants.tagColors.length];
             list.add(color);
         }
         return list;

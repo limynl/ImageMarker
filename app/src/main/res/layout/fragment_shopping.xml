@@ -33,12 +33,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="红人榜"
-                    android:textColor="@color/font_light"
-                    android:textSize="16dp"
+                    android:textColor="@color/theme1"
+                    android:textSize="16sp"
                     android:layout_alignParentLeft="true"
                     android:layout_marginLeft="16dp"
-                    android:layout_centerVertical="true"
-                    android:textAppearance="@style/cardHeadTitle"/>
+                    android:layout_centerVertical="true"/>
 
             </RelativeLayout>
 
@@ -115,12 +114,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="积分兑换"
-                    android:textColor="@color/font_light"
-                    android:textSize="16dp"
+                    android:textColor="@color/theme1"
+                    android:textSize="16sp"
                     android:layout_alignParentLeft="true"
                     android:layout_marginLeft="16dp"
-                    android:layout_centerVertical="true"
-                    android:textAppearance="@style/cardHeadTitle"/>
+                    android:layout_centerVertical="true"/>
 
             </RelativeLayout>
 
@@ -166,7 +164,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:background="@drawable/rule_background"
+                    android:background="@drawable/hit_backgroud"
                     android:paddingTop="5dp"
                     android:paddingBottom="5dp"
                     android:paddingRight="8dp"

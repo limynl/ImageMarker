@@ -1,8 +1,10 @@
 package com.team.imagemarker.utils.marker;
 
 import android.animation.ObjectAnimator;
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -55,10 +57,20 @@ public class PileLayout extends ViewGroup {
     private ObjectAnimator animator;
     private Interpolator interpolator = new DecelerateInterpolator(1.6f);
     private Adapter adapter;
+    private Activity activity;
     private boolean hasSetAdapter = false;
     private float displayCount = 1.6f;
     private FrameLayout animatingView;
     private VelocityTracker mVelocityTracker;
+
+    private boolean isShow = false;//记录键盘是否显示
+    private String flag = "ed";//记录键盘状态
+
+    public void getInstance(Activity activity){
+        this.activity = activity;
+    }
+
+
 
     public PileLayout(Context context) {
         this(context, null);
@@ -146,6 +158,19 @@ public class PileLayout extends ViewGroup {
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
+
+        isShow = isSoftShowing();
+        if(flag.equals("ing")){//表示键盘上一次是打开操作
+            flag = "ed";
+            return;
+        }
+
+        if(isShow){
+            flag = "ing";
+            return;
+        }
+        flag = "ed";
+
         int num = getChildCount();
         for (int i = 0; i < num; i++) {
             View itemView = getChildAt(i);
@@ -527,4 +552,15 @@ public class PileLayout extends ViewGroup {
         public void onItemClick(View view, int position) {
         }
     }
+
+    /**
+     * 判断系统软键盘是否显示
+     */
+    private boolean isSoftShowing() {
+        int screenHeight = activity.getWindow().getDecorView().getHeight();//获取当前屏幕内容的高度
+        Rect rect = new Rect();//获取View可见区域的bottom
+        activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(rect);
+        return screenHeight - rect.bottom != 0;
+    }
+
 }

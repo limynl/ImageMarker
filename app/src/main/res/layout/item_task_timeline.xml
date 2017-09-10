@@ -11,7 +11,9 @@
         android:clickable="false"
         app:cardPreventCornerOverlap="false"
         app:cardCornerRadius="1dp"
-        app:cardElevation="5dp">
+        app:cardElevation="5dp"
+        app:cardMaxElevation="6dp"
+        app:cardUseCompatPadding="true">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -20,7 +22,7 @@
             <ImageView
                 android:id="@+id/category_img"
                 android:layout_width="match_parent"
-                android:layout_height="120dp"
+                android:layout_height="140dp"
                 android:scaleType="fitXY"/>
 
             <View
@@ -41,12 +43,25 @@
                 android:gravity="left">
 
                 <TextView
+                    android:id="@+id/text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/time"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:gravity="center_vertical"
+                    android:singleLine="true"
+                    android:text="收藏时间: "
+                    android:textColor="#212121"
+                    android:textSize="14sp"/>
+
+                <TextView
                     android:id="@+id/time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
-                    android:layout_marginTop="5dp"
                     android:layout_marginBottom="3dp"
                     android:gravity="center_vertical"
                     android:singleLine="true"
@@ -54,19 +69,6 @@
                     android:textColor="#212121"
                     android:textSize="12sp" />
 
-                <TextView
-                    android:id="@+id/text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/time"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:gravity="center_vertical"
-                    android:singleLine="true"
-                    android:text="2017-06-15 12:00:00"
-                    android:textColor="#808080"
-                    android:textSize="10sp" />
 
             </LinearLayout>
 

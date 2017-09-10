@@ -28,6 +28,7 @@ public class ShowHistoryAdapter extends BaseAdapter {
     private final int NO_COMPLETE = 2;
 
     private int type;
+    private View rootView;
 
     private Context context;
     private List<MarkerModel> list;
@@ -64,6 +65,7 @@ public class ShowHistoryAdapter extends BaseAdapter {
         if (convertView == null) {
             viewHolder = new ViewHolder();
             convertView = LayoutInflater.from(context).inflate(R.layout.item_show_history, null);
+            rootView = convertView;
             viewHolder.firstImg = (RoundAngleImageView) convertView.findViewById(R.id.first_img);
             viewHolder.recordName = (TextView) convertView.findViewById(R.id.record_name);
             viewHolder.operateType = (TextView) convertView.findViewById(R.id.operate_type);
@@ -116,6 +118,7 @@ public class ShowHistoryAdapter extends BaseAdapter {
                     viewHolder.deleteHistory.setText("删除");
             }
         }
+
         /**
          * 继续操作
          */
@@ -132,7 +135,7 @@ public class ShowHistoryAdapter extends BaseAdapter {
         viewHolder.deleteHistory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.btnDeleteClick(position);
+                listener.btnDeleteClick(rootView, position);
             }
         });
 

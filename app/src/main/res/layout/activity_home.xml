@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:layout_alignParentBottom="true"
-        app:space_item_icon_only_size="45dp"
+        app:space_item_icon_only_size="60dp"
         app:space_background_color="@color/theme1"
         app:centre_button_color="@color/button"/>
 

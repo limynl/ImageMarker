@@ -4,22 +4,23 @@
     android:id="@+id/fg_regist"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#808080"
+    android:background="@mipmap/loginback"
+    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
     <ImageView
         android:id="@+id/close_reset"
         android:layout_width="38dp"
         android:layout_height="38dp"
-        android:background="@mipmap/close"
-        android:layout_marginTop="15dp"
+        android:layout_marginBottom="35dp"
         android:layout_marginLeft="10dp"
-        android:layout_marginBottom="35dp"/>
+        android:layout_marginTop="25dp"
+        android:background="@mipmap/close" />
 
     <RelativeLayout
         android:id="@+id/rela_rephone"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="45dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
@@ -57,21 +58,21 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="30dp"
         android:orientation="horizontal">
 
         <RelativeLayout
             android:id="@+id/rela_recode"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="45dp"
             android:layout_gravity="center_horizontal"
             android:layout_weight="1"
             android:background="@drawable/bg_border_color_black">
 
             <ImageView
                 android:id="@+id/keyicon"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="15dp"
@@ -82,7 +83,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="6dp"
                 android:layout_marginRight="10dp"
                 android:layout_toEndOf="@+id/keyicon"
                 android:background="@null"
@@ -90,14 +91,14 @@
                 android:inputType="number"
                 android:textColor="#ffffff"
                 android:textColorHint="#ffffff"
-                android:textSize="13sp" />
+                android:textSize="14sp" />
 
         </RelativeLayout>
 
         <com.team.imagemarker.utils.PaperButton
             android:id="@+id/send_code"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="45dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginLeft="20dp"
             android:layout_weight="1"
@@ -106,24 +107,24 @@
             widget:paper_corner_radius="19dp"
             widget:paper_text="发送验证码"
             widget:paper_text_color="#ffffff"
-            widget:paper_text_size="13sp" />
+            widget:paper_text_size="14sp" />
 
     </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/rela_repass"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="45dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="30dp"
         android:background="@drawable/bg_border_color_black">
 
         <ImageView
             android:id="@+id/codeicon"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="15dp"
@@ -134,7 +135,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="6dp"
             android:layout_marginRight="10dp"
             android:layout_toEndOf="@+id/codeicon"
             android:background="@null"
@@ -142,22 +143,23 @@
             android:inputType="textPassword"
             android:textColor="#ffffff"
             android:textColorHint="#ffffff"
-            android:textSize="13sp" />
+            android:textSize="14sp" />
 
     </RelativeLayout>
 
-        <com.team.imagemarker.utils.PaperButton
+    <com.team.imagemarker.utils.PaperButton
         android:id="@+id/user_submit"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="45dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="30dp"
         android:gravity="center"
-        widget:paper_color="#ff7474"
-        widget:paper_corner_radius="19dp"
+        widget:paper_color="@color/button"
+        widget:paper_corner_radius="22dp"
         widget:paper_text="确 定"
-        widget:paper_text_color="#ffffff" />
+        widget:paper_text_color="#ffffff"
+        widget:paper_text_size="16sp" />
 
 </LinearLayout>

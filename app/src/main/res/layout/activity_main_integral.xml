@@ -51,6 +51,7 @@
             android:layout_marginLeft="30dp">
 
             <TextView
+                android:id="@+id/today_integral"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="30"
@@ -79,6 +80,7 @@
             android:layout_marginRight="30dp">
 
             <TextView
+                android:id="@+id/my_rank"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="10"

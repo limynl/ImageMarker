@@ -67,6 +67,21 @@ public class UserDbHelper {
     }
 
     /**
+     * 保存用户的登录状态
+     */
+    public void saveLoginState(boolean loginState){
+        saveBooleanConfig("loginState", loginState);
+    }
+
+    /**
+     * 得到用户的登录状态
+     */
+    public boolean getLoginState(){
+        return getBooleanConfig("loginState");
+    }
+
+
+    /**
      * 保存用户的头像
      */
     public void saveUserHeadImg(String value){
@@ -112,7 +127,7 @@ public class UserDbHelper {
      * 得到Boolean类型的数据
      */
     public boolean getBooleanConfig(String key){
-        return sharedPreferences.getBoolean(key, false);
+        return sharedPreferences.getBoolean(key, true);
     }
 
     /**

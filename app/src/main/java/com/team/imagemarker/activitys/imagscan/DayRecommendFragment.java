@@ -1,31 +1,76 @@
 package com.team.imagemarker.activitys.imagscan;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
+import com.android.volley.VolleyError;
+import com.google.gson.Gson;
 import com.team.imagemarker.R;
 import com.team.imagemarker.adapters.imgscan.DayRecommendAdapter;
-import com.team.imagemarker.entitys.imgscan.DayRecommendModel;
+import com.team.imagemarker.bases.OnItemActionListener;
+import com.team.imagemarker.constants.Constants;
+import com.team.imagemarker.db.UserDbHelper;
+import com.team.imagemarker.entitys.UserModel;
+import com.team.imagemarker.entitys.imgscan.BrowsePictuerModel;
+import com.team.imagemarker.utils.volley.VolleyListenerInterface;
+import com.team.imagemarker.utils.volley.VolleyRequestUtil;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Lmy on 2017/5/27.
  * email 1434117404@qq.com
  */
 
-public class DayRecommendFragment extends Fragment {
+public class DayRecommendFragment extends Fragment implements OnItemActionListener, SwipeRefreshLayout.OnRefreshListener{
     private static final String ARG_TITLE = "title";
     private String mTitle;
-    private ListView listView;
+    private RecyclerView recyclerView;
     private DayRecommendAdapter adapter;
-    private List<DayRecommendModel> datas;
+
+    private SwipeRefreshLayout refreshLayout;
+
+    private List<List<BrowsePictuerModel>> detailList=new ArrayList<List<BrowsePictuerModel>>();
+
+    private UserModel userModel;
+
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case 1:{
+                    adapter = new DayRecommendAdapter(getContext(), detailList);
+                    LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+                    layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+                    recyclerView.setLayoutManager(layoutManager);
+//                    recyclerView.addItemDecoration(new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL_LIST));
+                    recyclerView.setAdapter(adapter);
+                    adapter.setOnItemActionListener(DayRecommendFragment.this);
+                }
+                break;
+            }
+        }
+    };
 
     public static DayRecommendFragment getInstance(String title) {
         DayRecommendFragment fra = new DayRecommendFragment();
@@ -40,30 +85,96 @@ public class DayRecommendFragment extends Fragment {
         super.onCreate(savedInstanceState);
         Bundle bundle = getArguments();
         mTitle = bundle.getString(ARG_TITLE);
+
+        UserDbHelper.setInstance(getContext());
+        userModel = UserDbHelper.getInstance().getUserInfo();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_day_recommend, container, false);
-        listView = (ListView) v.findViewById(R.id.day_recommend);
+        recyclerView = (RecyclerView) v.findViewById(R.id.day_recommend);
+        refreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.refresh_img);
         return v;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        setData();
+        refreshLayout.setColorSchemeResources(R.color.colorAccent, R.color.write, R.color.yellow);
+        refreshLayout.setProgressBackgroundColor(R.color.theme);
+        refreshLayout.setProgressViewOffset(false,0,80);
+        refreshLayout.setOnRefreshListener(this);
+
+        getDataFromNet();
     }
 
-    private void setData() {
-        datas = new ArrayList<>();
-        datas.add(new DayRecommendModel("http://obs.myhwclouds.com/look.admin.image/华为/2017-5-20/笔记本电脑-计算机-树木-草坪.jpg", "草坪，笔记本电脑"));
-        datas.add(new DayRecommendModel("http://obs.myhwclouds.com/look.admin.image/华为/2017-5-20/笔记本电脑-水杯-桌子-手机.jpg", "笔记本电脑"));
-        datas.add(new DayRecommendModel("http://obs.myhwclouds.com/look.admin.image/华为/2017-5-20/笔记本电脑-椅子-眼睛-桌子.jpg", "笔记本电脑，眼镜，桌子"));
-        datas.add(new DayRecommendModel("http://obs.myhwclouds.com/look.admin.image/华为/2017-5-20/笔记本电脑-桌子-鼠标-手机.jpg", "鼠标，笔记本电脑，桌子"));
-        datas.add(new DayRecommendModel("http://obs.myhwclouds.com/look.admin.image/华为/2017-5-20/键盘-鼠标-桌子.jpg", "键盘"));
-        adapter = new DayRecommendAdapter(getContext(), datas);
-        listView.setAdapter(adapter);
+    private void getDataFromNet(){
+        String url = Constants.Img_Scan_Every_Day_Push;
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("userId", String.valueOf(userModel.getId()));
+        VolleyRequestUtil.RequestPost(getContext(), url, "DayRecommendFragment", map, new VolleyListenerInterface() {
+            @Override
+            public void onSuccess(String result) {
+                try {
+
+                    JSONObject SH=new JSONObject(result);
+                    JSONArray S=SH.optJSONArray("list");
+                    for (int i = 0; i < S.length(); i++) {
+                        JSONArray Q=S.getJSONArray(i);
+                        List<BrowsePictuerModel> temp= stringToArray(Q.toString(),BrowsePictuerModel[].class);
+                        detailList.add(temp);
+                    }
+                    handler.sendEmptyMessage(1);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(VolleyError error) {
+                Log.e("DayRecommendFragment", "onError:" + error.toString());
+                getDataFromNet();
+            }
+        });
     }
 
+    public static <T> List<T> stringToArray(String s, Class<T[]> clazz) {
+        T[] arr = new Gson().fromJson(s, clazz);
+        return Arrays.asList(arr);
+    }
+
+    @Override
+    public void OnItemClickListener(View view, int position) {
+        Intent intent = new Intent(getContext(), LookPictureActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("detailGroup", (Serializable) detailList.get(position));
+        intent.putExtras(bundle);
+        startActivity(intent);
+        getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+    }
+
+    @Override
+    public void onRefresh() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if(detailList != null && detailList.size() > 0){
+                    detailList.clear();
+                    getDataFromNet();
+                    refreshLayout.setRefreshing(false);
+                }
+            }
+        }, 1500);
+    }
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(detailList != null){
+            detailList.clear();
+            detailList = null;
+        }
+    }
 }
