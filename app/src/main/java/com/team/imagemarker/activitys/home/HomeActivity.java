@@ -107,7 +107,7 @@ public class HomeActivity extends FragmentActivity{
     }
 
     /**
-     * 进入中间的订单中心
+     * 进入首页
      */
     private void gotoCenterFragment() {
         hideFragment();
